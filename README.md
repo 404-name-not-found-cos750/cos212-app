@@ -21,6 +21,8 @@ app/       The COS212 app prototype
 docs/se/   Software Engineering document (approach, requirements, design)
 docs/id/   Instructional Design document (objectives, theories, assessment)
 docs/PROMPTS.md  Log of all GenAI use (required for the ID document)
+docs/decisions/  Decision log (why we chose what we chose)
+docs/meetings/   Meeting notes
 slides/    Presentation for the 16/17 November demo
 ```
 
