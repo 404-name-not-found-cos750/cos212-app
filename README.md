@@ -37,7 +37,7 @@ slides/    Presentation for the 16/17 November demo
 
 ## Running the app
 
-_To be added once the stack is chosen._
+Open [`app/index.html`](app/index.html) in a browser. No install or build step is needed. See [`app/README.md`](app/README.md) for hosting options and how the app works.
 
 ## How we work
 
