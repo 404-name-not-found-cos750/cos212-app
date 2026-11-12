@@ -12,7 +12,7 @@ The COS212 app gives Data Structures and Algorithms students a tutor-style intro
 | Hendré Beyer | [@HendreB](https://github.com/HendreB) |
 | Mthobisi Khoza | [@themthobisikhoza](https://github.com/themthobisikhoza) |
 | Francois Scholtz | [@SchoItz](https://github.com/SchoItz) |
-| Shekinah Maja | _TBC_ |
+| Shekinah Maja | [@ShekinahMaja] (https://github/ShekinahMaja) |
 
 ## Repository layout
 
