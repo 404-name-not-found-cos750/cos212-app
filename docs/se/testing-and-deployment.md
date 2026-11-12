@@ -45,7 +45,7 @@ Manual testing follows the demo path: home page, all six tutorial steps, each ga
 | What is served | The static files in `app/` as they are in the repository: HTML, CSS and JavaScript, with no build step |
 | Backend | None. There are no accounts and no server-side data |
 | Saved progress | The browser's `localStorage`, on that device only |
-| Live URL | [TODO Galen: live URL] |
+| Live URL | https://cos212-tree-hop.vercel.app |
 
 Decision 004 planned GitHub Pages. We moved to Vercel because the repository stays private until the presentation, and GitHub Pages does not serve private repositories on a free organisation. Because the app is static, the move needed no code changes, and the same files can be served by any static host or opened straight from disk.
 

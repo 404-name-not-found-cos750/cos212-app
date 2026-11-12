@@ -15,7 +15,7 @@
   - Shekinah Maja – [student number]
 - **Module:** COS750 Educational Software Development, Department of Computer Science, University of Pretoria
 - **Date:** [TODO Galen: submission date, 15 or 16 November 2026]
-- **Code:** [TODO Galen: GitHub link] · **Live app:** [TODO Galen: Vercel URL]
+- **Code:** https://github.com/404-name-not-found-cos750/cos212-app · **Live app:** https://cos212-tree-hop.vercel.app
 
 ## Contents
 
@@ -104,6 +104,6 @@ Include the final text of each record:
 - [001 – Data structure and algorithm](../decisions/001-data-structure-and-algorithm.md)
 - [002 – SE methodology](../decisions/002-se-methodology.md)
 - [004 – Tech stack and hosting](../decisions/004-tech-stack-and-hosting.md)
-- [TODO Galen: update 004 to say Vercel instead of GitHub Pages (see PLAN.md, 12 Nov) and set the status of 001, 002 and 004 to Accepted once the group has agreed.]
+- [TODO Galen: set the status of 001, 002 and 004 to Accepted once the group has agreed.]
 
 Decision 003 (ID model) belongs in the ID document.

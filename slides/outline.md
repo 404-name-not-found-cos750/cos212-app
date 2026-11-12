@@ -201,7 +201,7 @@
 
 **Speaker:** Galen · 0:10 (leave this up during Q&A)
 
-- **Try it:** [TODO Galen: Vercel URL] (also as a QR code)
+- **Try it:** https://cos212-tree-hop.vercel.app (also as a QR code)
 - **Code:** https://github.com/404-name-not-found-cos750/cos212-app
 - SE and ID documents: on ClickUP and in the repository (`docs/`)
 - Thank you. Questions?

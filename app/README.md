@@ -8,7 +8,7 @@ No install or build step. It's plain HTML, CSS and JavaScript.
 
 - **Quickest:** open `app/index.html` in a browser (double-click it).
 - **Local server (optional):** from the repo root, run `npx serve app` or `python -m http.server -d app 8000`, then open the printed address.
-- **Online:** enable GitHub Pages for the repo and point it at the `app/` folder, or copy the folder to any static host.
+- **Online:** https://cos212-tree-hop.vercel.app (Vercel serves this `app/` folder as a static site; any other static host works too).
 
 It works offline, so the demo doesn't depend on the venue's Wi-Fi.
 

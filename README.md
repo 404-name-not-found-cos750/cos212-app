@@ -2,6 +2,8 @@
 
 > **Tree Hop**, a pre-lecture tutor for **binary trees** and **tree traversal** (pre-order, in-order and post-order): built by **404: Name Not Found** for the COS750 (Educational Software Development) final examination, University of Pretoria, 2026.
 
+**Live app:** https://cos212-tree-hop.vercel.app
+
 The COS212 app gives Data Structures and Algorithms students a tutor-style introduction to a topic *before* the lecture. It assumes no prior knowledge and uses a built-in assessment to give students who are struggling extra scaffolding.
 
 ## Team
@@ -37,7 +39,10 @@ slides/    Presentation for the 16/17 November demo
 
 ## Running the app
 
-Open [`app/index.html`](app/index.html) in a browser. No install or build step is needed. See [`app/README.md`](app/README.md) for hosting options and how the app works.
+- **Online:** https://cos212-tree-hop.vercel.app (deployed on Vercel; every merge to `main` deploys automatically, and every PR gets its own preview link).
+- **Offline:** open [`app/index.html`](app/index.html) in a browser. No install or build step is needed.
+
+See [`app/README.md`](app/README.md) for how the app works. Run the unit tests with `npm test` (Node 20 or later).
 
 ## How we work
 

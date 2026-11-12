@@ -31,7 +31,7 @@ Find out whether a student who has never done COS212 can use Tree Hop on their o
 
 ## 4. Setup (before each participant)
 
-- [ ] Laptop with the live app open: [TODO Galen: Vercel URL]. Fallback: `app/index.html` opened from the local copy.
+- [ ] Laptop with the live app open: https://cos212-tree-hop.vercel.app. Fallback: `app/index.html` opened from the local copy.
 - [ ] **Fresh state:** use a fresh browser profile or a private window, or clear the app's saved progress: open the browser console on the app page and run `localStorage.removeItem('cos212-tree-hop-v1')`, then reload. Check that the home page shows 0 stars and the levels are locked.
 - [ ] A phone with the same URL open in a private tab (for task 6).
 - [ ] Printed copy of this sheet (or a copy per participant) for notes, the pre/post check (section 7) and the SUS form (section 8).
