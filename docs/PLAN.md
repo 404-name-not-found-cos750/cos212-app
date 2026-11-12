@@ -7,7 +7,7 @@ _Re-planned Thursday 5 November 2026. The Sprint 0 (26 Oct) and Sprint 1 (1 Nov)
 | Deliverable | Weight | Due | Time left (from 5 Nov) |
 |---|---|---|---|
 | SE + ID documents on ClickUP | **50%** | **Mon 16 Nov, before 08:00** | 10.5 days |
-| Slides on ClickUP + GitHub link; presentation + live demo | 20% | 16 or 17 Nov (slot **still to be confirmed**) | 11–12 days |
+| Slides on ClickUP + GitHub link; presentation + live demo | 20% | **Mon 16 Nov** (same day as the documents) | 11 days |
 | Individual self-reflection | **30%** | Wed 18 Nov, 20:00 | 13 days |
 
 **Internal deadline: submit the documents on Sun 15 Nov by 22:00.** Never leave it for the 08:00 Monday cut-off.
@@ -25,61 +25,87 @@ _This section replaces the role tables and the schedule further down. Those are 
 | ID document | Not started in the repo. Objectives and learner analysis are the blocker for everything else in it. |
 | Process evidence | 32 issues, all still open. No PRs merged yet and no meeting notes. |
 | Slides / demo script | Not started |
-| Days left | Thu 12 → **Sun 15 Nov 22:00** (internal doc deadline): 3½ days |
+| Days left | Thu 12 → **Sun 15 Nov 22:00**: 3½ days. The presentation is on **Mon 16 Nov**, the same morning the documents are due, so **everything** (docs, slides, demo, backups) must be finished on Sunday. |
 
 **Scope rule:** the feature freeze (Wed 11 Nov) has passed. No new features. The only code changes allowed are tests, CI, deployment, bug and UI fixes, and lowering the Random Order unlock. The question bank is **documented from what the app already asks** (tutorial quiz + game levels) and mapped to the objectives. It is not extended in code.
 
+**How the work is split:** Galen takes all the infrastructure (deployment, tests, CI, backups) and the editing of **both** documents, so the others can each focus on a few sections and get them right. Mthobisi and Shekinah each own a short, focused list. Quality matters more than quantity: send a draft early and ask for a review rather than finishing late.
+
 ### Francois (light load: he built the app)
 - [ ] **Tonight:** 20-minute code walkthrough for the team (screen share). Everyone needs it to write about and present their part.
-- [ ] Answer questions about the code while the others write. Review Mthobisi's tests PR.
+- [ ] Answer questions about the code while the others write. Review Galen's tests PR.
 - [ ] Present the quiz/game part of the demo (2 min) and take code questions in the Q&A.
 - [ ] Own self-reflection (#32)
 
-### Galen (R1: project lead, SE editor)
+### Galen (project lead, infrastructure, editor of both documents)
+**Infrastructure**
 - [ ] Merge `DevFS` → `main` by PR. Commit decisions 001 and 004 and this plan. **Thu 12**
+- [ ] Deploy the app (#26). **Thu 12.** The repo stays **private until the presentation**, and GitHub Pages doesn't work for private repos on a free org, so deploy on **Galen's Vercel (Pro) account**: import the repo, set the root directory to `app`, framework preset "Other", and no build command. Every push to `main` then deploys automatically. Put the live URL in `README.md`.
+- [ ] Unit tests for `tree.js` (orders, random trees, mistake explanations) + GitHub Actions CI that runs them and deploys (#18, #25). **Fri 13**
+- [ ] Backup video of the full demo + offline copy of `app/` on a USB stick and on the laptop. **Sat 14**
+
+**Documents**
 - [ ] Decision 002: SE methodology (Scrum, short sprints + prototyping) (#2). **Thu 12**
 - [ ] Requirements + user stories, written to match the app as built (#15). **Fri 13**
 - [ ] Usability test with 3–5 students who haven't done COS212, plus the bug list (#25, taken over from Francois). **Fri 13**
-- [ ] SE doc: methodology, requirements, process evidence (issues, PRs, sprints, meetings) and usability results. Then **merge the full SE draft** (#27). **Sat 14**
-- [ ] Close or update the issues the app already covers (#18–#24), linking the code. Write stand-up notes in `docs/meetings/` from today. **Ongoing**
-- [ ] Assemble the slides (#29). Submit the docs, slides and GitHub link on ClickUP (#31). **Sun 15 22:00**
+- [ ] SE doc: methodology, requirements, testing, deployment, process evidence (issues, PRs, sprints, meetings) and usability results. **Sat 14**
+- [ ] **Edit both documents:** collect everyone's sections into the SE doc (#27) and the ID doc (#28), apply consistent formatting, write the intro, references and GenAI appendix (from `PROMPTS.md`), and export to PDF. **Sat 14 draft, Sun 15 final**
+- [ ] Close or update the issues the app already covers (#18–#24), linking the code. Write short stand-up notes in `docs/meetings/` each day. **Ongoing**
 
-### Mthobisi (R2: tech lead)
-- [ ] Deploy the app (#26). **Thu 12.** Note: the repo is private on a free org, so GitHub Pages won't work. Either make the repo public or deploy to Vercel/Netlify (static, no build step).
-- [ ] Unit tests for `tree.js` (orders, random trees, mistake explanations) + GitHub Actions CI (#18, #25). **Fri 13**
-- [ ] Architecture and data-model diagrams of the actual code (#16). **Fri 13**
-- [ ] SE doc: architecture, tech choices, testing, deployment. **Sat 14**
-- [ ] ID doc: **assessment design and scaffolding** (hearts → explanation → hint after 2 mistakes → walkthrough; stars) (#13, taken over from Francois). **Sat 14**
-- [ ] Backup video of the demo + an offline copy on a USB stick. **Sat 14**
+**Presentation**
+- [ ] Assemble the slides (#29). Submit the docs on ClickUP **Sun 15 22:00**. Upload the slides + GitHub link **Sun 15** (see the Monday checklist).
 
-### Hendré (R3: UI and demo)
-- [ ] Lower the Random Order unlock (`RANDOM_UNLOCK` in `app/js/random.js`, currently 40/45) and fix UI bugs: phone layout, contrast, accessibility (taken over from Francois). **Fri 13**
-- [ ] Wireframes / screen flow drawn from the finished UI (#17). **Fri 13**
-- [ ] SE doc: UI design. **Sat 14**
-- [ ] ID doc: learning styles + multimedia (Mayer's principles) (#11) and **motivation (ARCS)** mapped to stars, hearts, unlocks and the monkey (#12, taken over from Francois). **Sat 14**
-- [ ] Demo script; drives the live demo (#30). **Sat 14** (rehearsal 1)
+### Mthobisi (architecture and assessment: 3 items)
+- [ ] Architecture + data-model diagrams of the actual code (#16): which file does what (`tree.js`, `view.js`, `game.js` …) and the tree/progress data. **Fri 13**
+- [ ] SE doc: architecture and tech choices (build on decision 004). **Sat 14 12:00**
+- [ ] ID doc: **assessment design and scaffolding**, including a question-bank table: each tutorial-quiz question and game level → objective → the feedback/hint it gives. Covers the hearts → explanation → hint after 2 mistakes → walkthrough flow, and the stars (#13, #20, taken over from Francois). **Sat 14 12:00**
 
-### Shekinah (R4: ID lead, ID editor)
+### Hendré (UI and demo)
+- [ ] Lower the Random Order unlock (`RANDOM_UNLOCK` in `app/js/random.js`, currently 40/45) and fix UI bugs: phone layout, contrast, accessibility (taken over from Francois). By PR. **Fri 13**
+- [ ] Wireframes / screen flow drawn from the finished UI. This also serves as the tutorial storyboard (#17, #14). **Fri 13**
+- [ ] SE doc: UI design. **Sat 14 12:00**
+- [ ] ID doc: learning styles + multimedia (Mayer's principles) (#11) and **motivation (ARCS)** mapped to stars, hearts, unlocks and the monkey (#12, taken over from Francois). **Sat 14 12:00**
+- [ ] Demo script (10 min, timed); drives the live demo (#30). **Sat 14** (rehearsal 1)
+
+### Shekinah (ID lead: 4 items)
 - [ ] Learning objectives (Bloom's) + learner analysis (#8, #9). **Thu 12, first thing.** Everyone else's ID sections depend on them.
-- [ ] Decision 003: ID model (ADDIE) (#3). **Thu 12**
-- [ ] Learning theories (#10), storyboard of the tutorial as built (#14), review of the tutorial text against the objectives (#19). **Fri 13**
-- [ ] **Question bank table:** each tutorial-quiz question and game level → objective → hint/feedback it gives (#20, taken over from Francois). **Fri 13**
-- [ ] ID doc: model, learner analysis, objectives, theories, content, GenAI acknowledgement (from `PROMPTS.md`). Then **merge the full ID draft** (#28). **Sat 14**
+- [ ] Decision 003 / ID doc: ID model (ADDIE) and how its phases map to what we did (#3). **Fri 13**
+- [ ] ID doc: learning theories applied, with examples from the app (#10). **Fri 13**
+- [ ] ID doc: content: review the tutorial text against the objectives and list any corrections (#19). **Sat 14 12:00**
 
 ### Everyone (including Francois)
 - [ ] Log every GenAI prompt in `PROMPTS.md` as it happens
+- [ ] Send your sections to Galen (Google Doc or Markdown in `docs/se`/`docs/id`). **Sat 14 12:00**
 - [ ] Send your 2–3 slides to Galen. **Sat 14 12:00**
 - [ ] Cross-review one section you didn't write. **Sat 14 evening**
-- [ ] Rehearsal 1 **Sat 14**, rehearsal 2 with practice Q&A **Sun 15**
+- [ ] Rehearsal 1 **Sat 14**, rehearsal 2 (final, with practice Q&A) **Sun 15**
 - [ ] Keep a daily journal for the self-reflection. Submit it by **Wed 18 Nov 17:00** (#32).
 
 ### Timeline
 | Day | Must be true by the end of the day |
 |---|---|
-| Thu 12 | App on `main` and deployed; code walkthrough done; objectives + learner analysis written; decisions 002 and 003 written |
-| Fri 13 | Tests + CI green; usability test done; wireframes, diagrams, question-bank table and all section drafts done |
-| Sat 14 | Full SE and ID drafts merged; cross-reviews done; slides assembled; backup video; rehearsal 1 |
-| Sun 15 | Final proofread and PDF export by 18:00; **submit by 22:00**; rehearsal 2 |
+| Thu 12 | App on `main` and deployed (repo stays private); code walkthrough done; objectives + learner analysis written; decision 002 written |
+| Fri 13 | Tests + CI green; usability test done; diagrams, wireframes, ADDIE and theories drafted; UI fixes merged (**code freeze**) |
+| Sat 14 | All sections in by 12:00; full SE and ID drafts assembled; cross-reviews; slides assembled; backup video; rehearsal 1 |
+| Sun 15 | Final proofread + PDF export by 18:00; rehearsal 2; **submit the docs and upload the slides by 22:00**; pack for Monday |
+
+### Monday 16 Nov: deliverables checklist
+From the exam spec. Slot time: **_____** (confirm and fill in).
+
+| # | Deliverable | Where / how | Owner | Done |
+|---|---|---|---|---|
+| 1 | **SE document** (PDF) | ClickUP, before **08:00 Mon**. We submit Sun 22:00. Save the receipt. | Galen | [ ] |
+| 2 | **ID document** (PDF), with the GenAI tools + prompts | ClickUP, before **08:00 Mon**. We submit Sun 22:00. Save the receipt. | Galen | [ ] |
+| 3 | **Slides** | ClickUP, before the slot. Uploaded Sun 22:00. | Galen | [ ] |
+| 4 | **GitHub link** to the code (README has the live URL and how to run it). The repo is private until the presentation: **make it public on Monday before the slot** (`gh repo edit --visibility public --accept-visibility-change-consequences`), then open the link in a private browser window to check it works. | ClickUP with the slides + on the last slide | Galen | [ ] |
+| 5 | **Both documents available at the session** (the spec requires it) | PDFs on the laptop + USB; printed copies if possible | Galen | [ ] |
+| 6 | **Live demo** (10 min) | Live URL; fallback 1: offline `app/index.html` from USB; fallback 2: backup video | Hendré drives, Francois narrates the quiz | [ ] |
+| 7 | **Presentation** (10 min) + Q&A (5 min) | Everyone presents their part; practice answers to "why this theory / design?" | All | [ ] |
+| 8 | **All five members present** (the spec requires it) | Arrive 30 min before the slot | All | [ ] |
+
+**Pack for Monday:** laptop (charged) + charger, HDMI/USB-C adapter, USB stick (slides PDF, both docs, offline app, backup video), phone hotspot in case the venue Wi-Fi fails. Clear the browser's localStorage before the demo (or use a fresh profile) so the levels start locked, and keep a second profile with everything unlocked to show Random Order quickly.
+
+Not on Monday: the **self-reflection** is due on **Wed 18 Nov, 20:00** (aim for 17:00).
 
 ## Priorities
 
