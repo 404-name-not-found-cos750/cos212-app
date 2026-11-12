@@ -31,7 +31,7 @@ EDITOR NOTES (Galen). Delete this comment before the PDF export.
 | Francois Scholtz | [TODO Galen] | App build; input to 9 |
 
 **Repository:** https://github.com/404-name-not-found-cos750/cos212-app
-**Live app:** [TODO Galen: Vercel URL]
+**Live app:** https://cos212-tree-hop.vercel.app
 
 ---
 
