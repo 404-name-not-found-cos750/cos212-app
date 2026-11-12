@@ -1,6 +1,6 @@
 # COS212 App
 
-> Pre-lecture tutor for **[data structure]** and **[algorithm]**: built by **404: Name Not Found** for the COS750 (Educational Software Development) final examination, University of Pretoria, 2026.
+> **Tree Hop**, a pre-lecture tutor for **binary trees** and **tree traversal** (pre-order, in-order and post-order): built by **404: Name Not Found** for the COS750 (Educational Software Development) final examination, University of Pretoria, 2026.
 
 The COS212 app gives Data Structures and Algorithms students a tutor-style introduction to a topic *before* the lecture. It assumes no prior knowledge and uses a built-in assessment to give students who are struggling extra scaffolding.
 

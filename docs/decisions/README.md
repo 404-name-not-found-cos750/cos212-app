@@ -7,3 +7,5 @@ Copy [`000-template.md`](000-template.md) to start a new one.
 
 | # | Decision | Status | Date |
 |---|---|---|---|
+| [001](001-data-structure-and-algorithm.md) | Binary trees + pre-, in- and post-order traversal | Proposed | 2026-11-09 |
+| [004](004-tech-stack-and-hosting.md) | Plain HTML/CSS/JS, no build step, GitHub Pages | Proposed | 2026-11-09 |
