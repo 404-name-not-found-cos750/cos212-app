@@ -175,7 +175,7 @@ function mountGame(root, kind) {
       renderEndlessBar();
       say(`Tree 1: ${endlessSize(0)} nodes. Go!`);
     } else {
-      instruction.innerHTML = `Tap the nodes in <b>${mode.name.toLowerCase()}</b> order. The monkey jumps to each node you visit.`;
+      instruction.innerHTML = `Tap the nodes in <b>${mode.name.toLowerCase()}</b> order. The monkey swings on a vine to each node you visit.`;
       const cfg = LEVELS[level];
       newBoard(cfg);
       say(`Level ${level + 1}: ${cfg.n} nodes. Where does ${mode.name.toLowerCase()} start?`);

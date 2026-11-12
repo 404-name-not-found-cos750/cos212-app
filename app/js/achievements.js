@@ -3,15 +3,15 @@ const RANDOM_GOAL = 15;
 
 const AVATARS = [
   { id: 'monkey', icon: '🐒', name: 'Monkey', goal: 'Your first climber', target: () => [1, 1, ''] },
-  { id: 'parrot', icon: '🦜', name: 'Parrot', goal: 'Earn 10 stars', target: (s) => [s.stars, 10, '★'] },
-  { id: 'frog', icon: '🐸', name: 'Tree frog', goal: 'Earn 20 stars', target: (s) => [s.stars, 20, '★'] },
-  { id: 'sloth', icon: '🦥', name: 'Sloth', goal: 'Earn 30 stars', target: (s) => [s.stars, 30, '★'] },
-  { id: 'orangutan', icon: '🦧', name: 'Orangutan', goal: 'Earn 40 stars', target: (s) => [s.stars, 40, '★'] },
-  { id: 'gorilla', icon: '🦍', name: 'Gorilla', goal: 'Earn all 45 stars', target: (s) => [s.stars, 45, '★'] },
-  { id: 'tiger', icon: '🐯', name: 'Tiger', goal: `Clear ${ENDLESS_GOAL} trees in one Endless run`, target: (s) => [s.endless, ENDLESS_GOAL, 'trees'] },
-  { id: 'lion', icon: '🦁', name: 'Lion', goal: `Clear ${ENDLESS_GOAL} trees in Endless in all 3 orders`, target: (s) => [s.endlessOrders, 3, 'orders'] },
-  { id: 'phoenix', icon: '🐦‍🔥', name: 'Phoenix', goal: `Clear ${RANDOM_GOAL} trees in one Random Order run`, target: (s) => [s.randomTrees, RANDOM_GOAL, 'trees'] },
-  { id: 'dragon', icon: '🐉', name: 'Dragon', legendary: true, goal: 'Legendary: unlock every other avatar', target: (s) => [s.achievements, s.achievementsTotal, 'avatars'] },
+  { id: 'parrot', vine: '#e23d6d', icon: '🦜', name: 'Parrot', goal: 'Earn 10 stars', target: (s) => [s.stars, 10, '★'] },
+  { id: 'frog', vine: '#6cc24a', icon: '🐸', name: 'Tree frog', goal: 'Earn 20 stars', target: (s) => [s.stars, 20, '★'] },
+  { id: 'sloth', vine: '#8a9a2b', icon: '🦥', name: 'Sloth', goal: 'Earn 30 stars', target: (s) => [s.stars, 30, '★'] },
+  { id: 'orangutan', vine: '#b5532a', icon: '🦧', name: 'Orangutan', goal: 'Earn 40 stars', target: (s) => [s.stars, 40, '★'] },
+  { id: 'gorilla', vine: '#8a8f98', icon: '🦍', name: 'Gorilla', goal: 'Earn all 45 stars', target: (s) => [s.stars, 45, '★'] },
+  { id: 'tiger', vine: '#f28c18', icon: '🐯', name: 'Tiger', goal: `Clear ${ENDLESS_GOAL} trees in one Endless run`, target: (s) => [s.endless, ENDLESS_GOAL, 'trees'] },
+  { id: 'lion', vine: '#d9b21c', icon: '🦁', name: 'Lion', goal: `Clear ${ENDLESS_GOAL} trees in Endless in all 3 orders`, target: (s) => [s.endlessOrders, 3, 'orders'] },
+  { id: 'phoenix', vine: '#e8341c', icon: '🐦‍🔥', name: 'Phoenix', goal: `Clear ${RANDOM_GOAL} trees in one Random Order run`, target: (s) => [s.randomTrees, RANDOM_GOAL, 'trees'] },
+  { id: 'dragon', vine: '#22a88a', icon: '🐉', name: 'Dragon', legendary: true, goal: 'Legendary: unlock every other avatar', target: (s) => [s.achievements, s.achievementsTotal, 'avatars'] },
 ];
 
 function achievementStats() {

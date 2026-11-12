@@ -17,6 +17,7 @@
   --node: #ffffff;
   --node-stroke: #6b8f5e;
   --hint: #e6a21a;
+  --vine: #3d8b2f;
   --pre: #2f6fd1;
   --in: #23824a;
   --post: #c0571c;
@@ -45,6 +46,7 @@
     --edge: #a8977c;
     --node: #243028;
     --node-stroke: #7fae70;
+    --vine: #86cf6c;
     --pre: #6fa0f0;
     --in: #6fd296;
     --post: #f0955d;
@@ -317,6 +319,8 @@ h1, h2, h3 { line-height: 1.2; }
 .badge text { font-size: 13px; font-weight: 800; fill: #1c2a20; }
 
 .monkey { font-size: 34px; pointer-events: none; }
+.vine { fill: none; stroke: var(--vine); stroke-width: 4; stroke-linecap: round; pointer-events: none; }
+.vine-tip { fill: var(--vine); pointer-events: none; }
 
 @keyframes pulse { 50% { stroke-width: 10; } }
 @keyframes shake {

@@ -76,13 +76,17 @@ class TreeView {
       this.groups.set(n.id, g);
     }
 
+    this.vine = svgEl('path', { class: 'vine', visibility: 'hidden' }, svg);
+    this.vineTip = svgEl('circle', { class: 'vine-tip', r: 5, visibility: 'hidden' }, svg);
     this.monkey = svgEl('text', {
       class: 'monkey',
       'text-anchor': 'middle',
       'dominant-baseline': 'central',
       'aria-hidden': 'true',
     }, svg);
-    this.monkey.textContent = typeof currentAvatar === 'function' ? currentAvatar().icon : '🐒';
+    const avatar = typeof currentAvatar === 'function' ? currentAvatar() : null;
+    this.monkey.textContent = avatar ? avatar.icon : '🐒';
+    if (avatar && avatar.vine) svg.style.setProperty('--vine', avatar.vine);
     this.placeMonkey(this.start());
     if (W > 640) svg.style.minWidth = `${Math.round(W * 0.62)}px`;
     this.svg = svg;
@@ -119,6 +123,8 @@ class TreeView {
       this.setBadge(n, null);
       ['visited', 'hint', 'wrong', 'current', 'subtree', 'picked'].forEach((c) => this.setClass(n, c, false));
     }
+    this.anim++;
+    this.hideVine();
     this.placeMonkey(this.start());
   }
 
@@ -138,31 +144,71 @@ class TreeView {
     this.monkey.setAttribute('y', p.y);
   }
 
+  hideVine() {
+    this.vine.setAttribute('visibility', 'hidden');
+    this.vineTip.setAttribute('visibility', 'hidden');
+  }
+
+  drawVine(a, b, slack) {
+    const cx = (a.x + b.x) / 2;
+    const cy = (a.y + b.y) / 2 + slack;
+    this.vine.setAttribute('d', `M ${a.x} ${a.y} Q ${cx} ${cy} ${b.x} ${b.y}`);
+    this.vineTip.setAttribute('cx', b.x);
+    this.vineTip.setAttribute('cy', b.y);
+    this.vine.setAttribute('visibility', 'visible');
+    this.vineTip.setAttribute('visibility', 'visible');
+  }
+
   moveMonkey(to, { arc = 70, ms = 420 } = {}) {
     const id = ++this.anim;
     const from = { ...this.mpos };
-    if (REDUCED_MOTION) ms = 0;
+    const dist = Math.hypot(to.x - from.x, to.y - from.y);
+    if (REDUCED_MOTION || dist < 2) ms = 0;
     return new Promise((resolve) => {
       if (!ms) {
+        this.hideVine();
         this.placeMonkey(to);
         resolve();
         return;
       }
+      const shootMs = Math.round(ms * 0.45);
+      const anchor = { x: to.x, y: to.y + 20 };
+      const lift = Math.min(arc * 0.6, dist * 0.25);
+      const hand = (p) => ({ x: p.x, y: p.y - 6 });
       setTimeout(() => {
-        if (this.alive && id === this.anim) this.placeMonkey(to);
+        if (this.alive && id === this.anim) {
+          this.placeMonkey(to);
+          this.hideVine();
+        }
         resolve();
-      }, ms + 150);
+      }, shootMs + ms + 150);
       const t0 = performance.now();
       const step = (t) => {
         if (!this.alive || id !== this.anim) return resolve();
-        const k = Math.min(1, (t - t0) / ms);
+        const elapsed = t - t0;
+        if (elapsed < shootMs) {
+          const k = elapsed / shootMs;
+          const e = 1 - Math.pow(1 - k, 3);
+          const h = hand(from);
+          const tip = { x: h.x + (anchor.x - h.x) * e, y: h.y + (anchor.y - h.y) * e };
+          this.drawVine(h, tip, 30 * Math.sin(Math.PI * k));
+          requestAnimationFrame(step);
+          return;
+        }
+        const k = Math.min(1, (elapsed - shootMs) / ms);
         const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
-        this.placeMonkey({
+        const p = {
           x: from.x + (to.x - from.x) * e,
-          y: from.y + (to.y - from.y) * e - arc * Math.sin(Math.PI * k),
-        });
-        if (k < 1) requestAnimationFrame(step);
-        else resolve();
+          y: from.y + (to.y - from.y) * e - lift * Math.sin(Math.PI * k),
+        };
+        this.placeMonkey(p);
+        if (k < 1) {
+          this.drawVine(hand(p), anchor, 16 * (1 - k));
+          requestAnimationFrame(step);
+        } else {
+          this.hideVine();
+          resolve();
+        }
       };
       requestAnimationFrame(step);
     });
