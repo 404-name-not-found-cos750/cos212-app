@@ -1,35 +1,35 @@
-// Saved progress (this browser only), the home page and the page router.
 const Store = (() => {
   const KEY = 'cos212-tree-hop-v1';
 
   function load() {
     let data = null;
-    try { data = JSON.parse(localStorage.getItem(KEY)); } catch (e) { /* storage blocked */ }
+    try { data = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
     data = data || {};
     data.stars = data.stars || {};
     data.best = data.best || {};
     if (typeof data.best.random !== 'number') data.best.random = 0;
+    if (typeof data.best.randomTrees !== 'number') data.best.randomTrees = 0;
     for (const k of ['pre', 'in', 'post']) {
       if (!Array.isArray(data.stars[k]) || data.stars[k].length !== LEVELS.length) {
         data.stars[k] = LEVELS.map(() => 0);
       }
       if (typeof data.best[k] !== 'number') data.best[k] = 0;
     }
+    if (typeof data.avatar !== 'string') data.avatar = 'monkey';
+    if (!Array.isArray(data.seenAvatars)) data.seenAvatars = [];
     return data;
   }
 
   function save(data) {
-    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) { /* storage blocked */ }
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) { }
   }
 
-  // In-memory copy so progress still works for this visit if storage is blocked.
   let cache = load();
 
   return {
     progress: () => cache.stars,
     tutorialDone: () => !!cache.tutorialDone,
     best: (kind) => cache.best[kind],
-    // Returns true if this is a new best Endless score.
     saveBest(kind, score) {
       if (score <= cache.best[kind]) return false;
       cache.best[kind] = score;
@@ -42,6 +42,16 @@ const Store = (() => {
     },
     markTutorialDone() {
       cache.tutorialDone = true;
+      save(cache);
+    },
+    avatar: () => cache.avatar,
+    setAvatar(id) {
+      cache.avatar = id;
+      save(cache);
+    },
+    seenAvatars: () => cache.seenAvatars,
+    markAvatarsSeen(ids) {
+      cache.seenAvatars = [...new Set([...cache.seenAvatars, ...ids])];
       save(cache);
     },
   };
@@ -70,6 +80,7 @@ function randomCard() {
 function mountHome(root) {
   const stars = Store.progress();
   const done = Store.tutorialDone();
+  const fresh = claimNewAvatars();
   const cards = ['pre', 'in', 'post'].map((k) => {
     const m = Tree.MODES[k];
     const total = stars[k].reduce((a, b) => a + b, 0);
@@ -89,7 +100,7 @@ function mountHome(root) {
   root.innerHTML = `
     <div class="page home">
       <header class="hero">
-        <div class="logo" aria-hidden="true">🐒🌳</div>
+        <div class="logo" aria-hidden="true">${currentAvatar().icon}🌳</div>
         <h1>Tree Hop</h1>
         <p>Help the monkey visit every node of a binary tree in the right order, and learn the three classic ways to <b>traverse a tree</b> before your COS 212 lecture.</p>
       </header>
@@ -106,8 +117,11 @@ function mountHome(root) {
       <div class="modes">${cards}</div>
       ${randomCard()}
 
+      ${avatarSection(fresh)}
+
       <footer class="foot">COS212 app prototype · 404: Name Not Found · COS750 2026</footer>
     </div>`;
+  wireAvatarPicker(root);
   return () => {};
 }
 

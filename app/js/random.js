@@ -1,5 +1,3 @@
-// Random Order mode: unlocked at 40 stars. Endless trees, each with a random
-// traversal order, growing bigger and deeper. One life. High score is saved.
 const RANDOM_UNLOCK = 40;
 const KINDS = ['pre', 'in', 'post'];
 
@@ -12,7 +10,6 @@ function randomUnlocked() {
   return totalStars() >= RANDOM_UNLOCK;
 }
 
-// Tree i (0-based): 4, 6, 8, ... nodes up to 25, and deeper as it grows.
 function randomTreeCfg(i) {
   const n = Math.min(25, 4 + 2 * i);
   const maxDepth = n <= 6 ? 2 : n <= 13 ? 3 : 4;
@@ -90,7 +87,6 @@ function mountRandom(root) {
     modal.innerHTML = '';
   }
 
-  // Pick the order for the next tree. Never the same order 3 times running.
   function pickKind() {
     const h = state.history;
     let options = KINDS;
@@ -111,7 +107,7 @@ function mountRandom(root) {
     page.dataset.kind = kind;
     banner.innerHTML = `This tree: <b>${m.name}</b> <span>${m.rule}</span>`;
     banner.classList.remove('pop');
-    void banner.offsetWidth; // restart the pop animation
+    void banner.offsetWidth;
     banner.classList.add('pop');
     board = new Board(host, {
       tree: Tree.random(cfg.n, cfg.maxDepth),
@@ -144,13 +140,16 @@ function mountRandom(root) {
     say(why, 'bad');
     const prev = Store.best('random');
     const isBest = Store.saveBest('random', state.score);
+    Store.saveBest('randomTrees', state.trees);
+    const avatarNote = newAvatarNote(claimNewAvatars());
     const m = Tree.MODES[state.kind];
     openModal(
       `<h2>Game over</h2>
        <p class="big-score">${state.score}</p>
        ${isBest && state.score > 0 ? '<p class="stars">🏆 New high score!</p>' : `<p>High score: <b>${Math.max(prev, state.score)}</b></p>`}
        <p>${state.trees} tree${state.trees === 1 ? '' : 's'} cleared. This tree was <b>${m.name.toLowerCase()}</b> (${m.rule}).</p>
-       <p>${why}</p>`,
+       <p>${why}</p>
+       ${avatarNote}`,
       [
         { label: 'Play again', run: start },
         { label: 'Show me this tree step by step', cls: 'ghost', run: walkthrough },

@@ -1,5 +1,3 @@
-// Drawing: the SVG tree with the monkey, the visit-sequence bar, and the
-// Board that both the tutorial and the game use for "tap the next node".
 const SVGNS = 'http://www.w3.org/2000/svg';
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -25,7 +23,6 @@ class TreeView {
     this.anim = 0;
 
     const depth = Math.max(...this.nodes.map((n) => n.depth));
-    // Wider canvas for deep trees so the bottom row never overlaps.
     const W = Math.max(640, 2 ** depth * 60);
     const top = 70;
     const gap = 92;
@@ -61,7 +58,6 @@ class TreeView {
       const badge = svgEl('g', { class: 'badge', transform: `translate(${this.R * 0.8} ${-this.R * 0.8})` }, g);
       svgEl('circle', { r: 11 }, badge);
       svgEl('text', { 'text-anchor': 'middle', 'dominant-baseline': 'central' }, badge);
-      // Three dots under the node that count visits (only shown in the tutorial walk).
       const pips = svgEl('g', { class: 'pips', transform: `translate(0 ${this.R + 11})` }, g);
       [-12, 0, 12].forEach((dx) => svgEl('circle', { cx: dx, r: 4.5 }, pips));
       if (onTap) {
@@ -86,10 +82,8 @@ class TreeView {
       'dominant-baseline': 'central',
       'aria-hidden': 'true',
     }, svg);
-    this.monkey.textContent = '🐒';
+    this.monkey.textContent = typeof currentAvatar === 'function' ? currentAvatar().icon : '🐒';
     this.placeMonkey(this.start());
-
-    // Keep nodes big enough to tap on phones; the board scrolls sideways instead.
     if (W > 640) svg.style.minWidth = `${Math.round(W * 0.62)}px`;
     this.svg = svg;
     container.appendChild(svg);
@@ -110,12 +104,11 @@ class TreeView {
   flash(n, cls, ms = 600) {
     const g = this.g(n);
     g.classList.remove(cls);
-    void g.getBBox(); // restart the CSS animation
+    void g.getBBox();
     g.classList.add(cls);
     setTimeout(() => g.classList.remove(cls), ms);
   }
 
-  // Mark visit number `pass` (1-3) of node n: 'seen' or 'write'.
   setPip(n, pass, cls) {
     this.g(n).querySelectorAll('.pips circle')[pass - 1].setAttribute('class', cls);
   }
@@ -129,7 +122,6 @@ class TreeView {
     this.placeMonkey(this.start());
   }
 
-  // Monkey positions
   start() {
     const p = this.pos.get(this.root.id);
     return { x: p.x - 90, y: p.y - 30 };
@@ -146,7 +138,6 @@ class TreeView {
     this.monkey.setAttribute('y', p.y);
   }
 
-  // Jump (arc > 0) or walk (arc = 0) to a point. A newer move cancels an older one.
   moveMonkey(to, { arc = 70, ms = 420 } = {}) {
     const id = ++this.anim;
     const from = { ...this.mpos };
@@ -157,7 +148,6 @@ class TreeView {
         resolve();
         return;
       }
-      // Animation frames pause in background tabs; make sure the move still finishes.
       setTimeout(() => {
         if (this.alive && id === this.anim) this.placeMonkey(to);
         resolve();
@@ -210,7 +200,6 @@ class SeqBar {
   }
 }
 
-// One traversal puzzle: tap the nodes in the right order.
 class Board {
   constructor(host, { tree, kind, interactive = true, onCorrect, onWrong, onComplete, onInfo, seqLabel }) {
     this.kind = kind;
@@ -265,7 +254,6 @@ class Board {
     }
   }
 
-  // Highlight the next node and say why it's next.
   hint() {
     const n = this.next;
     if (!n) return null;
@@ -273,7 +261,6 @@ class Board {
     return Tree.visitReason(this.kind, n);
   }
 
-  // Walkthrough: visit the next node for the learner and explain it.
   demoStep() {
     const n = this.next;
     if (!n) return null;

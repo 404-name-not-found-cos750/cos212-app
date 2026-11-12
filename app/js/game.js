@@ -1,6 +1,3 @@
-// The game: 5 levels per traversal order (3 hearts each), then Endless mode.
-// Scaffolding: specific feedback on every mistake, a hint offer after 2
-// mistakes, and a step-by-step walkthrough when the hearts run out.
 const LEVELS = [
   { n: 3, maxDepth: 1 },
   { n: 5, maxDepth: 2 },
@@ -8,9 +5,9 @@ const LEVELS = [
   { n: 9, maxDepth: 3 },
   { n: 12, maxDepth: 3 },
 ];
-const ENDLESS = LEVELS.length; // level index of Endless mode
+const ENDLESS = LEVELS.length;
 const MAX_HEARTS = 3;
-const ENDLESS_HEART_EVERY = 5; // win a heart back every 5 trees
+const ENDLESS_HEART_EVERY = 5;
 
 function starsFor(mistakes, hints) {
   if (mistakes === 0 && hints === 0) return 3;
@@ -18,7 +15,6 @@ function starsFor(mistakes, hints) {
   return 1;
 }
 
-// Endless trees start at 5 nodes and grow by one per tree, up to 15.
 function endlessSize(score) {
   return Math.min(15, 5 + score);
 }
@@ -145,7 +141,6 @@ function mountGame(root, kind) {
     row.querySelector('button').focus();
   }
 
-  // Swap in a fresh tree, keeping the run state (hearts, score).
   function newBoard(cfg) {
     clearTimeout(nextTimer);
     if (board) board.destroy();
@@ -241,6 +236,7 @@ function mountGame(root, kind) {
   function endlessOver(why) {
     const prevBest = Store.best(kind);
     const isBest = Store.saveBest(kind, state.score);
+    const avatarNote = newAvatarNote(claimNewAvatars());
     renderLevels();
     const record = isBest && state.score > 0
       ? `<p class="stars">🏆 New best!</p>`
@@ -249,7 +245,8 @@ function mountGame(root, kind) {
       `<h2>Run over: ${state.score} tree${state.score === 1 ? '' : 's'} cleared</h2>
        ${record}
        <p>Last mistake: ${why}</p>
-       <p>Want to see how the tree you were on should have gone?</p>`,
+       <p>Want to see how the tree you were on should have gone?</p>
+       ${avatarNote}`,
       [
         { label: 'Show me step by step', run: startWalkthrough },
         { label: 'Play again', cls: 'ghost', run: startLevel },
@@ -263,6 +260,7 @@ function mountGame(root, kind) {
     const wasLocked = !endlessUnlocked(kind);
     const randomWasLocked = !randomUnlocked();
     Store.saveStars(kind, level, stars);
+    const avatarNote = newAvatarNote(claimNewAvatars());
     const randomNote = randomWasLocked && randomUnlocked()
       ? `<p><b>🎲 Random Order mode unlocked!</b> You've earned ${RANDOM_UNLOCK} stars. Find it on the home page.</p>`
       : '';
@@ -281,7 +279,7 @@ function mountGame(root, kind) {
        <p class="stars" aria-label="${stars} of 3 stars">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</p>
        <p>${praise} ${state.mistakes} mistake${state.mistakes === 1 ? '' : 's'}, ${state.hints} hint${state.hints === 1 ? '' : 's'}.</p>
        <p class="seq-summary">${mode.name}: ${seq}</p>
-       ${unlockNote}${randomNote}`,
+       ${unlockNote}${randomNote}${avatarNote}`,
       buttons,
     );
   }
