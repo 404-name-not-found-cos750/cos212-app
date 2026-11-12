@@ -1,0 +1,12 @@
+{
+  "name": "cos212-app",
+  "version": "1.0.0",
+  "description": "Tree Hop: a pre-lecture app for binary tree traversal (COS750, University of Pretoria)",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
