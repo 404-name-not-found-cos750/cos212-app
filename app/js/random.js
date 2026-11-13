@@ -1,5 +1,6 @@
 const RANDOM_UNLOCK = 40;
 const KINDS = ['pre', 'in', 'post'];
+const RANDOM_HEART_EVERY = 5;
 
 function totalStars() {
   const p = Store.progress();
@@ -38,7 +39,7 @@ function mountRandom(root) {
       <header class="topbar">
         <a class="back" href="#/">← Home</a>
         <h1>Random Order</h1>
-        <div class="hearts" aria-label="1 life">❤️</div>
+        <div class="hearts" aria-label="1 heart left">❤️</div>
       </header>
       <div class="endless-bar" aria-live="polite"></div>
       <div class="order-banner" aria-live="assertive"></div>
@@ -60,6 +61,11 @@ function mountRandom(root) {
   function say(text, tone = '') {
     feedback.textContent = text;
     feedback.className = `feedback ${tone}`;
+  }
+
+  function renderHearts() {
+    hearts.textContent = state.lives > 0 ? '❤️'.repeat(state.lives) : '🤍';
+    hearts.setAttribute('aria-label', `${state.lives} heart${state.lives === 1 ? '' : 's'} left`);
   }
 
   function renderBar() {
@@ -117,26 +123,41 @@ function mountRandom(root) {
         renderBar();
         say('');
       },
-      onWrong: gameOver,
+      onWrong,
       onInfo: (t) => say(t, 'info'),
       onComplete: treeCleared,
     });
     say(`Tree ${state.trees + 1}: ${cfg.n} nodes in ${m.name.toLowerCase()}.`);
   }
 
+  function onWrong(n, why) {
+    state.lives--;
+    renderHearts();
+    if (state.lives <= 0) {
+      gameOver(n, why);
+      return;
+    }
+    say(`${why} You lost a heart: ${state.lives} left.`, 'bad');
+  }
+
   function treeCleared() {
     state.trees++;
     const bonus = randomTreeCfg(state.trees - 1).n;
     state.score += bonus;
+    let heart = '';
+    if (state.trees % RANDOM_HEART_EVERY === 0) {
+      state.lives++;
+      renderHearts();
+      heart = ' +1 ❤️';
+    }
     renderBar();
     board.locked = true;
-    say(`🌳 Tree cleared! +${bonus} bonus. Watch the order for the next one…`, 'good');
+    say(`🌳 Tree cleared! +${bonus} bonus.${heart} Watch the order for the next one…`, 'good');
     nextTimer = setTimeout(nextTree, 1300);
   }
 
   function gameOver(n, why) {
     board.locked = true;
-    hearts.textContent = '🤍';
     say(why, 'bad');
     const prev = Store.best('random');
     const isBest = Store.saveBest('random', state.score);
@@ -185,8 +206,8 @@ function mountRandom(root) {
     closeModal();
     clearTimeout(nextTimer);
     root.querySelectorAll('.walkthrough').forEach((w) => w.remove());
-    state = { score: 0, trees: 0, history: [], kind: 'pre' };
-    hearts.textContent = '❤️';
+    state = { score: 0, trees: 0, lives: 1, history: [], kind: 'pre' };
+    renderHearts();
     renderBar();
     nextTree();
   }

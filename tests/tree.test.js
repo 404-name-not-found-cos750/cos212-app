@@ -225,29 +225,29 @@ describe('Explanations for a wrong tap', () => {
   };
 
   test('pre-order: tapping a node before its parent names the highest unvisited ancestor', () => {
-    assert.equal(tap('pre', 4, []), "In pre-order a parent comes before its children. 1 is above 4 and hasn't been visited yet.");
-    assert.equal(tap('pre', 7, [1, 2, 4, 5, 3]), "In pre-order a parent comes before its children. 6 is above 7 and hasn't been visited yet.");
+    assert.equal(tap('pre', 4, []), "In pre-order, a parent comes before its children. 1 is above 4 and hasn't been visited yet.");
+    assert.equal(tap('pre', 7, [1, 2, 4, 5, 3]), "In pre-order, a parent comes before its children. 6 is above 7 and hasn't been visited yet.");
   });
 
   test('pre-order: jumping to the right subtree too early says "left before right"', () => {
-    assert.equal(tap('pre', 3, [1, 2, 4]), "Left before right: 1's left subtree still has unvisited nodes.");
+    assert.equal(tap('pre', 3, [1, 2, 4]), "Left before right: 3 is in 1's right subtree, but 1's left subtree isn't finished yet.");
   });
 
   test('in-order: tapping a node whose left side is not done says so', () => {
-    assert.equal(tap('in', 2, []), 'In in-order a node waits until its whole left subtree is done. 2 still has unvisited nodes on its left.');
+    assert.equal(tap('in', 2, []), 'In in-order, a node waits until its whole left subtree is done. 2 still has nodes in its left subtree to visit first.');
   });
 
   test('in-order: going right before visiting the parent names the parent', () => {
-    assert.equal(tap('in', 3, [4, 2, 5]), '1 has to be visited before anything in its right subtree, and 3 is on its right.');
+    assert.equal(tap('in', 3, [4, 2, 5]), 'In in-order, 1 comes before its right subtree, and 3 is in that right subtree. Visit 1 before going right.');
   });
 
   test('post-order: tapping a parent before its children says children come first', () => {
-    assert.equal(tap('post', 2, [4]), 'In post-order children come before parents. 2 still has unvisited nodes below it.');
-    assert.equal(tap('post', 1, [4, 5, 2, 7, 6]), 'In post-order children come before parents. 1 still has unvisited nodes below it.');
+    assert.equal(tap('post', 2, [4]), 'In post-order, children come before their parent. 2 still has nodes below it to visit first.');
+    assert.equal(tap('post', 1, [4, 5, 2, 7, 6]), 'In post-order, children come before their parent. 1 still has nodes below it to visit first.');
   });
 
   test('post-order: a leaf on the right while the left is unfinished says "left before right"', () => {
-    assert.equal(tap('post', 7, [4]), "Left before right: finish 1's left subtree first.");
+    assert.equal(tap('post', 7, [4]), "Left before right: 7 is in 1's right subtree, but 1's left subtree isn't finished yet.");
   });
 
   test('the same wrong tap gets a different, order-specific explanation in each order', () => {
@@ -264,7 +264,7 @@ describe('Explanations for a wrong tap', () => {
     for (const kind of KINDS) {
       const first = Tree.order(root, kind)[0];
       const msg = Tree.explain(kind, first, first, new Set());
-      assert.equal(msg, `Not ${first.value} yet. Something earlier still needs a visit. Remember: ${Tree.MODES[kind].rule}.`);
+      assert.equal(msg, `Not ${first.value} yet. Another node needs to be visited first. Remember the rule: ${Tree.MODES[kind].rule}.`);
     }
   });
 
@@ -288,22 +288,23 @@ describe('Explanations for a wrong tap', () => {
             const msg = Tree.explain(kind, wrong, expected, visited);
             assert.doesNotMatch(msg, /^Not \d+ yet/, `fell back to the general reminder: ${msg}`);
             let m;
-            if ((m = msg.match(/^In pre-order a parent comes before its children\. (\d+) is above (\d+)/))) {
+            if ((m = msg.match(/^In pre-order, a parent comes before its children\. (\d+) is above (\d+)/))) {
               const a = find(m[1]);
               assert.equal(Number(m[2]), wrong.value);
               assert.ok(!visited.has(a.id), msg);
               assert.ok(a !== wrong && Tree.nodes(a).includes(wrong), `${a.value} is above ${wrong.value}`);
-            } else if ((m = msg.match(/^Left before right: (?:finish )?(\d+)'s left subtree/))) {
-              const a = find(m[1]);
+            } else if ((m = msg.match(/^Left before right: (\d+) is in (\d+)'s right subtree, but \2's left subtree isn't finished yet\.$/))) {
+              const a = find(m[2]);
+              assert.equal(Number(m[1]), wrong.value);
               assert.ok(isInRightOf(wrong, a) && unvisitedBelow(a.left, visited), msg);
-            } else if ((m = msg.match(/^In in-order .* (\d+) still has unvisited nodes on its left\.$/))) {
+            } else if ((m = msg.match(/^In in-order, a node waits until its whole left subtree is done\. (\d+) still has nodes in its left subtree to visit first\.$/))) {
               assert.equal(Number(m[1]), wrong.value);
               assert.ok(unvisitedBelow(wrong.left, visited), msg);
-            } else if ((m = msg.match(/^(\d+) has to be visited before anything in its right subtree, and (\d+) is on its right\.$/))) {
+            } else if ((m = msg.match(/^In in-order, (\d+) comes before its right subtree, and (\d+) is in that right subtree\. Visit \1 before going right\.$/))) {
               const a = find(m[1]);
               assert.equal(Number(m[2]), wrong.value);
               assert.ok(!visited.has(a.id) && isInRightOf(wrong, a), msg);
-            } else if ((m = msg.match(/^In post-order children come before parents\. (\d+) still has unvisited nodes below it\.$/))) {
+            } else if ((m = msg.match(/^In post-order, children come before their parent\. (\d+) still has nodes below it to visit first\.$/))) {
               assert.equal(Number(m[1]), wrong.value);
               assert.ok(unvisitedBelow(wrong.left, visited) || unvisitedBelow(wrong.right, visited), msg);
             } else {
@@ -325,20 +326,61 @@ describe('Hint text for the next node', () => {
   const root = Tree.fromSpec(TUTORIAL);
   const reason = (kind, v) => Tree.visitReason(kind, byValue(root, v));
 
-  test('pre-order: the root gets a "start at the root" hint, other nodes a "visit on arrival" hint', () => {
-    assert.equal(reason('pre', 8), 'Start at the root, 8. Pre-order visits a node as soon as it arrives.');
-    assert.equal(reason('pre', 3), 'Visit 3 as soon as we arrive at it, before looking at its children.');
+  test('pre-order: the root, a left child and a right child each get their own hint', () => {
+    assert.equal(reason('pre', 8), 'Pre-order starts at the root, the node at the top. Tap 8.');
+    assert.equal(reason('pre', 3), 'Pre-order goes from a node straight to its left child. 8 is done, so tap its left child, 3.');
+    assert.equal(reason('pre', 10), "8's left subtree is finished, so now go to its right child. Tap 10.");
+    assert.equal(reason('pre', 14), '10 has no left child, so go straight to its right child. Tap 14.');
   });
 
-  test('in-order: a node with no left child is visited straight away; otherwise after its left subtree', () => {
-    assert.equal(reason('in', 1), '1 has nothing left to finish on its left side, so visit it now, then go right.');
-    assert.equal(reason('in', 10), '10 has nothing left to finish on its left side, so visit it now, then go right.');
-    assert.equal(reason('in', 8), "8's whole left subtree is done, so now it's 8's turn, then its right side.");
+  test('in-order: the first node, a node with no left subtree, and a node after its left subtree', () => {
+    assert.equal(reason('in', 1), "In-order starts at the far left: from the root, keep going to the left child until there isn't one. That's 1.");
+    assert.equal(reason('in', 10), '10 has no left subtree, so there is nothing to finish first. Tap 10.');
+    assert.equal(reason('in', 8), "8's left subtree is finished, so it's 8's turn. After 8, go to its right subtree.");
   });
 
-  test('post-order: leaves and parents get different hints', () => {
-    assert.equal(reason('post', 6), '6 is a leaf: nothing below it to finish first, so visit it.');
-    assert.equal(reason('post', 3), 'Everything below 3 is done, so the parent 3 goes last.');
+  test('post-order: the first node, a leaf and a parent', () => {
+    assert.equal(reason('post', 1), "Post-order starts at the bottom: from the root, keep going down (left if you can, otherwise right) until you reach a leaf. That's 1.");
+    assert.equal(reason('post', 6), '6 is a leaf: it has no children, so there is nothing below it to finish first. Tap 6.');
+    assert.equal(reason('post', 3), 'Everything below 3 is finished. In post-order the parent comes last, so tap 3 now.');
+  });
+
+  test('every hint on 300 random trees makes a true claim about the tree', () => {
+    for (let t = 0; t < 300; t++) {
+      const { n, maxDepth } = APP_CONFIGS[t % APP_CONFIGS.length];
+      const tree = Tree.random(n, maxDepth);
+      for (const kind of KINDS) {
+        const seq = Tree.order(tree, kind);
+        const before = (x, k) => seq.indexOf(x) < k;
+        const allBefore = (sub, k) => !sub || Tree.nodes(sub).every((x) => before(x, k));
+        seq.forEach((node, k) => {
+          const hint = Tree.visitReason(kind, node);
+          assert.equal(/ starts at /.test(hint), k === 0, `"starts at" is only for the first node: ${hint}`);
+          let m;
+          if ((m = hint.match(/^Pre-order goes from a node straight to its left child\. (\d+) is done/))) {
+            assert.equal(seq[k - 1].value, Number(m[1]), hint);
+            assert.equal(node.parent.left, node, hint);
+          } else if ((m = hint.match(/^(\d+)'s left subtree is finished, so now go to its right child/))) {
+            assert.equal(node.parent.value, Number(m[1]), hint);
+            assert.ok(allBefore(node.parent.left, k) && before(node.parent, k), hint);
+          } else if ((m = hint.match(/^(\d+) has no left child, so go straight to its right child/))) {
+            assert.equal(seq[k - 1].value, Number(m[1]), hint);
+            assert.ok(!node.parent.left, hint);
+          } else if (/left subtree is finished, so it's \d+'s turn/.test(hint)) {
+            assert.ok(node.left && allBefore(node.left, k), hint);
+          } else if (/has no left subtree, so there is nothing to finish first/.test(hint)) {
+            assert.ok(!node.left, hint);
+          } else if (/is a leaf: it has no children/.test(hint)) {
+            assert.ok(!node.left && !node.right, hint);
+          } else if (/^Everything below \d+ is finished/.test(hint)) {
+            assert.ok((node.left || node.right) && allBefore(node.left, k) && allBefore(node.right, k), hint);
+          } else {
+            assert.equal(k, 0, `unexpected hint: ${hint}`);
+          }
+          assert.ok(hint.includes(String(node.value)), hint);
+        });
+      }
+    }
   });
 
   test('a hint is available at every step of every order and names the node to tap', () => {

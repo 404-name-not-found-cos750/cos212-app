@@ -63,7 +63,7 @@ function randomCard() {
     return `
       <a class="card random-card" href="#/play/random">
         <h3>🎲 Random Order</h3>
-        <p>All three orders mixed. Trees keep getting bigger. One life. How far can you go?</p>
+        <p>All three orders mixed. Trees keep getting bigger. One heart, plus one more every 5 trees. How far can you go?</p>
         <p class="meta"><span>🏆 High score: ${Store.best('random')}</span><span>Play →</span></p>
       </a>`;
   }
@@ -71,7 +71,7 @@ function randomCard() {
   return `
     <div class="card random-card locked" aria-disabled="true">
       <h3>🔒 Random Order</h3>
-      <p>All three orders mixed, bigger and bigger trees, one life. Earn <b>${RANDOM_UNLOCK} stars</b> to unlock it.</p>
+      <p>All three orders mixed, bigger and bigger trees, and a heart for every 5 trees. Earn <b>${RANDOM_UNLOCK} stars</b> to unlock it.</p>
       <div class="unlock-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${RANDOM_UNLOCK}" aria-valuenow="${have}" aria-label="Stars towards unlock"><span style="width:${pct}%"></span></div>
       <p class="meta"><span>★ ${have}/${RANDOM_UNLOCK}</span></p>
     </div>`;
