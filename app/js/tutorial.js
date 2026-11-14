@@ -12,6 +12,7 @@ function stepMeet(body, ctx) {
   body.append(el(`<div>
     <p>A <b>tree</b> is a set of <b>nodes</b> (circles) joined by <b>edges</b> (lines). In a <b>binary tree</b>, every node has at most two children: a <b>left child</b> and a <b>right child</b>.</p>
     <ul class="terms">
+      <li><b>Parent</b> and <b>child</b>: when an edge joins two nodes, the upper one is the parent and the lower one is its child.</li>
       <li><b>Root</b>: the single node at the top. It has no parent.</li>
       <li><b>Leaf</b>: a node with no children.</li>
       <li><b>Subtree</b>: a node together with everything below it.</li>
@@ -39,7 +40,11 @@ function stepMeet(body, ctx) {
       prompt: 'Tap the <b>right child</b> of 3.',
       check: (n) => n.parent && n.parent.value === 3 && n.parent.right === n,
       ok: () => 'Exactly. 6 hangs off the right side of 3.',
-      no: (n) => (n.value === 1 ? '1 is the left child of 3. Look at the other side.' : `${n.value} isn't directly below 3.`),
+      no: (n) => {
+        if (n.value === 3) return "That's 3 itself. Its children are the nodes joined to it just below.";
+        if (n.value === 1) return '1 is the left child of 3. Look at the other side.';
+        return `${n.value} isn't directly below 3.`;
+      },
     },
   ];
   let t = 0;
@@ -76,18 +81,18 @@ function stepMeet(body, ctx) {
 function stepWalk(body, ctx) {
   body.append(el(`<div>
     <p>To <b>traverse</b> a tree means to visit every node <b>exactly once</b>, following a rule. Here's a trick that makes all three rules easy to remember.</p>
-    <p>The monkey explores the tree from the root. It always tries the <b>left</b> child before the <b>right</b> child, and climbs back up when a branch is finished. That way it lands on every node <b>three times</b>:</p>
+    <p>The monkey explores the tree from the root. It always tries the <b>left</b> child before the <b>right</b> child, and climbs back up when a branch is finished. That way it passes every node <b>three times</b>:</p>
     <ol class="passes">
-      <li><b>1st visit</b>: when it first arrives at the node</li>
-      <li><b>2nd visit</b>: when it comes back up from the node's left side</li>
-      <li><b>3rd visit</b>: when it comes back up from the node's right side</li>
+      <li><b>1st pass</b>: when it first arrives at the node</li>
+      <li><b>2nd pass</b>: when it comes back up from the node's left side</li>
+      <li><b>3rd pass</b>: when it comes back up from the node's right side</li>
     </ol>
-    <p>The three dots under each node count its visits. The three traversals differ only in <b>which visit</b> you write the node down on. Pick one and watch.</p>
+    <p>Passing a node isn't the same as visiting it: a traversal <b>visits</b> (writes down) each node once, on one of its three passes. The three dots under each node count its passes. The three traversals differ only in <b>which pass</b> you write the node down on. Pick one and watch.</p>
   </div>`));
   const picker = body.appendChild(el(`<div class="picker" role="radiogroup" aria-label="Traversal to run">
-    <button type="button" data-kind="pre" class="on"><span class="pk-name">Pre-order</span><small>writes on the 1st visit</small></button>
-    <button type="button" data-kind="in"><span class="pk-name">In-order</span><small>writes on the 2nd visit</small></button>
-    <button type="button" data-kind="post"><span class="pk-name">Post-order</span><small>writes on the 3rd visit</small></button>
+    <button type="button" data-kind="pre" class="on"><span class="pk-name">Pre-order</span><small>writes on the 1st pass</small></button>
+    <button type="button" data-kind="in"><span class="pk-name">In-order</span><small>writes on the 2nd pass</small></button>
+    <button type="button" data-kind="post"><span class="pk-name">Post-order</span><small>writes on the 3rd pass</small></button>
   </div>`));
   const banner = body.appendChild(el('<p class="now-running" aria-live="polite"></p>'));
   const host = body.appendChild(el('<div class="board"></div>'));
@@ -96,9 +101,9 @@ function stepWalk(body, ctx) {
   const reveal = body.appendChild(el(`<div class="callout" hidden>
     <p><b>That's the whole secret:</b></p>
     <ul>
-      <li>Write a node down on its <b>1st</b> visit → <b>pre-order</b></li>
-      <li>Write a node down on its <b>2nd</b> visit → <b>in-order</b></li>
-      <li>Write a node down on its <b>3rd</b> visit → <b>post-order</b></li>
+      <li>Write a node down on its <b>1st</b> pass → <b>pre-order</b></li>
+      <li>Write a node down on its <b>2nd</b> pass → <b>in-order</b></li>
+      <li>Write a node down on its <b>3rd</b> pass → <b>post-order</b></li>
     </ul>
     <p>Try the other two orders as well, then go to the next step.</p>
   </div>`));
@@ -112,11 +117,16 @@ function stepWalk(body, ctx) {
   let kind = 'pre';
   let running = false;
 
+  function showBanner(label) {
+    const m = Tree.MODES[kind];
+    banner.innerHTML = `${label}: <b>${m.name}</b> <span>(${m.rule}) · writes a node down on its <b>${ORD[PASS[kind]]}</b> pass</span>`;
+  }
+
   function selectKind(k) {
     kind = k;
     const m = Tree.MODES[k];
     body.dataset.kind = k;
-    banner.innerHTML = `Now running: <b>${m.name}</b> <span>(${m.rule}) · writes a node down on its <b>${ORD[PASS[k]]}</b> visit</span>`;
+    showBanner('Selected');
     go.textContent = `▶ Watch ${m.name.toLowerCase()}`;
     picker.querySelectorAll('button').forEach((x) => {
       x.classList.toggle('on', x.dataset.kind === k);
@@ -139,6 +149,7 @@ function stepWalk(body, ctx) {
     running = true;
     go.disabled = true;
     picker.classList.add('locked');
+    showBanner('Now running');
     view.resetMarks();
     seq.reset();
     status.className = 'feedback info';
@@ -148,7 +159,7 @@ function stepWalk(body, ctx) {
     let at = null;
     for (const e of Tree.euler(tree)) {
       if (!view.alive) return;
-      // Jump only when moving to a different node; repeat visits happen in place.
+      // Jump only when moving to a different node; repeat passes happen in place.
       if (e.node !== at) {
         await view.moveMonkey(view.perch(e.node), { arc: 45, ms: 450 });
         at = e.node;
@@ -161,18 +172,19 @@ function stepWalk(body, ctx) {
         view.setClass(e.node, 'visited', true);
         view.setBadge(e.node, ++k);
         seq.set(k - 1, v);
-        status.innerHTML = `${ORD[e.pass]} visit to <b>${v}</b>: ${name} writes it down ✍`;
+        status.innerHTML = `${ORD[e.pass]} pass at <b>${v}</b>: ${name} writes it down ✍`;
       } else {
         view.setPip(e.node, e.pass, 'seen');
-        status.textContent = `${ORD[e.pass]} visit to ${v}. ${name} waits for the ${ORD[pass]} visit.`;
+        status.textContent = `${ORD[e.pass]} pass at ${v}. ${name} waits for the ${ORD[pass]} pass.`;
       }
       await wait(e.pass === pass ? 900 : 550);
     }
     if (!view.alive) return;
-    status.textContent = `Done! Writing each node down on its ${ORD[pass]} visit gives the ${name.toLowerCase()} sequence: ${seq.slots.map((s) => s.textContent).join(' → ')}.`;
+    status.textContent = `Done! Writing each node down on its ${ORD[pass]} pass gives the ${name.toLowerCase()} sequence: ${seq.slots.map((s) => s.textContent).join(' → ')}.`;
     status.className = 'feedback good';
     reveal.hidden = false;
     running = false;
+    showBanner('Selected');
     go.disabled = false;
     picker.classList.remove('locked');
     ctx.complete();
@@ -188,7 +200,7 @@ function makeOrderStep(kind, demoSpec, practiceSpec, extra) {
     body.append(el(`<div>
       <p class="now-running">Now learning: <b>${m.name}</b></p>
       <div class="rule-card"><strong>${m.rule}</strong><span>${m.desc}</span></div>
-      <p>On the monkey's trip around the tree, this means writing each node down on its <b>${m.pass} visit</b>.</p>
+      <p>On the monkey's trip around the tree, this means writing each node down on its <b>${m.pass} pass</b>.</p>
       ${extra}
       <h3>Watch it</h3>
       <p>Tap <b>Next step</b> to watch ${m.name.toLowerCase()} on a small tree.</p>
@@ -267,7 +279,8 @@ function makeOrderStep(kind, demoSpec, practiceSpec, extra) {
 }
 
 function stepQuiz(body, ctx) {
-  const spec = [5, [2, [1], [4]], [8, null, [9]]];
+  // Deliberately not a binary search tree, so in-order isn't just the values sorted.
+  const spec = [5, [8, [1], [4]], [2, null, [9]]];
   const tree = Tree.fromSpec(spec);
   const seqs = {
     pre: Tree.order(tree, 'pre'),
@@ -277,9 +290,9 @@ function stepQuiz(body, ctx) {
   };
   const fmt = (list) => list.map((n) => n.value).join(' → ');
   const why = {
-    pre: 'Pre-order starts at the root (5), then does all of the left subtree (2, 1, 4) before the right subtree (8, 9).',
-    in: 'In-order finishes the left subtree (1, 2, 4) before the root 5, then does the right subtree (8, 9).',
-    post: 'Post-order finishes both subtrees before the root, so the root 5 comes last.',
+    pre: 'Pre-order starts at the root (5), then does all of the left subtree (8, 1, 4) before the right subtree (2, 9).',
+    in: 'In-order finishes the left subtree (1, 8, 4) before the root 5, then does the right subtree (2, 9).',
+    post: 'Post-order does the left subtree (1, 4, 8), then the right subtree (9, 2), and the root 5 last.',
   };
   const revisitStep = { pre: 2, in: 3, post: 4 };
 
@@ -312,7 +325,7 @@ function stepQuiz(body, ctx) {
           fb.className = 'feedback good';
         } else {
           const picked = o === 'level'
-            ? 'That reads the tree level by level, top to bottom. It is a different traversal (breadth-first).'
+            ? 'That reads the tree level by level, top to bottom and left to right. It is a different traversal (breadth-first).'
             : `That's the ${Tree.MODES[o].name.toLowerCase()} sequence.`;
           fb.textContent = `Not quite. ${picked} ${why[kind]}`;
           fb.className = 'feedback bad';
@@ -368,7 +381,8 @@ const TUTORIAL_STEPS = [
 function mountTutorial(root) {
   let index = 0;
   let cleanup = () => {};
-  const reached = new Set();
+  // Once the tutorial has been finished, every step is open on later visits.
+  const reached = new Set(Store.tutorialDone() ? TUTORIAL_STEPS.map((_, i) => i) : []);
 
   root.innerHTML = `
     <div class="page tutorial">

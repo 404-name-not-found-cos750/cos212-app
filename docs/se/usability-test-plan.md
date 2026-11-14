@@ -69,7 +69,7 @@ Give the tasks one at a time. Targets are what we expect a new student to manage
 | T1 | "Starting from the home page, work through the tutorial until you reach the end." | Tutorial flow, step navigation, steps 1–6 | Reaches the step 6 quick-check summary | ≤ 7 min |
 | T2 | "Now play the first level of the **in-order** game." | Finding a game from home, level 1 (3 nodes) | "Level 1 complete!" with any stars | ≤ 2 min |
 | T3 | "Open the **post-order** game and play level 1, then level 2." *(If they make fewer than 2 mistakes, ask them to press "Play again", deliberately tap a wrong node twice, then get back on track.)* | Mistake explanations, the hint after 2 mistakes, recovery | After 2 mistakes, uses the Hint (or the explanation) and completes the level | ≤ 3 min |
-| T4 | "Without using the app, explain to me in your own words how post-order decides which node comes next." | Understanding (objective on the post-order rule) | Mentions that both subtrees (children) are finished before the node itself, or the 3rd visit of the monkey's walk | ≤ 1 min |
+| T4 | "Without using the app, explain to me in your own words how post-order decides which node comes next." | Understanding (objective on the post-order rule) | Mentions that both subtrees (children) are finished before the node itself, or the 3rd pass of the monkey's walk | ≤ 1 min |
 | T5 | "Go back to the home page. How many stars have you earned so far, and what would you have to do to unlock Endless mode?" | Finding progress, understanding unlocks | Reads the star count correctly; says "clear level 5" | ≤ 1 min |
 | T6 | *(On the phone.)* "Open the pre-order game and play level 1 on this phone." | Phone layout, tap targets | Completes level 1 on the phone | ≤ 2 min |
 

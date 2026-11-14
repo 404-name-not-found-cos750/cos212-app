@@ -176,17 +176,42 @@ const Tree = (() => {
   // Why is `n` the next node to visit? Used by hints and walkthroughs.
   function visitReason(kind, n) {
     const v = n.value;
-    const isLeaf = !n.left && !n.right;
+    const p = n.parent;
     if (kind === 'pre') {
-      if (!n.parent) return `Start at the root, ${v}. Pre-order visits a node as soon as it arrives.`;
-      return `Visit ${v} as soon as we arrive at it, before looking at its children.`;
+      if (!p) return `Start at the root, ${v}. Pre-order visits a node as soon as it arrives.`;
+      // A left child comes straight after its parent; a right child once the
+      // parent's left subtree (if any) is finished.
+      if (p.left === n) return `Go down to ${p.value}'s left child, ${v}, and visit it straight away.`;
+      if (!p.left) return `${p.value} has nothing on its left, so go to its right child ${v} and visit it straight away.`;
+      return `${p.value}'s left subtree is finished, so go to its right child ${v} and visit it straight away.`;
     }
     if (kind === 'in') {
-      if (!n.left) return `${v} has nothing left to finish on its left side, so visit it now, then go right.`;
-      return `${v}'s whole left subtree is done, so now it's ${v}'s turn, then its right side.`;
+      if (n.left) return `${v}'s whole left subtree is done, so now it's ${v}'s turn${n.right ? ', then its right side' : ''}.`;
+      // No left child: n is where "go left as far as you can" stops, either
+      // from the root or from the right child of the node visited just before.
+      let x = n;
+      while (x.parent && x.parent.left === x) x = x.parent;
+      if (!x.parent) {
+        if (x === n) return `Start at the root, ${v}. It has no left child, so there's nothing to finish on its left: visit it now.`;
+        return `Go left from the root as far as you can: ${v} has no left child, so it comes first.`;
+      }
+      const a = x.parent.value;
+      if (x === n) return `${a} is done, so go to its right child ${v}. ${v} has no left child, so visit it now.`;
+      return `${a} is done, so go to its right subtree and then left as far as you can: ${v} has no left child, so visit it now.`;
     }
-    if (isLeaf) return `${v} is a leaf: nothing below it to finish first, so visit it.`;
-    return `Everything below ${v} is done, so the parent ${v} goes last.`;
+    if (n.left || n.right) return `Everything below ${v} is done, so the parent ${v} goes last.`;
+    // A leaf: n is where "go down as far as you can, left whenever possible"
+    // stops, either from the root or from the right child of a node whose
+    // left subtree has just been finished.
+    let x = n;
+    while (x.parent && (x.parent.left === x || !x.parent.left)) x = x.parent;
+    if (!x.parent) {
+      if (x === n) return `${v} is a leaf: nothing below it to finish first, so visit it.`;
+      return `Go down from the root as far as you can, left whenever possible: ${v} is a leaf, so it comes first.`;
+    }
+    const a = x.parent.value;
+    if (x === n) return `${a}'s left subtree is done, so go to its right child ${v}. It's a leaf, so visit it.`;
+    return `${a}'s left subtree is done, so go down its right side as far as you can, left whenever possible: ${v} is a leaf, so visit it.`;
   }
 
   return { MODES, fromSpec, random, nodes, order, euler, explain, visitReason };

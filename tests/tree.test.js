@@ -325,32 +325,119 @@ describe('Hint text for the next node', () => {
   const root = Tree.fromSpec(TUTORIAL);
   const reason = (kind, v) => Tree.visitReason(kind, byValue(root, v));
 
-  test('pre-order: the root gets a "start at the root" hint, other nodes a "visit on arrival" hint', () => {
+  test('pre-order: the root, a left child and a right child each say why they come next', () => {
     assert.equal(reason('pre', 8), 'Start at the root, 8. Pre-order visits a node as soon as it arrives.');
-    assert.equal(reason('pre', 3), 'Visit 3 as soon as we arrive at it, before looking at its children.');
+    assert.equal(reason('pre', 3), "Go down to 8's left child, 3, and visit it straight away.");
+    assert.equal(reason('pre', 6), "3's left subtree is finished, so go to its right child 6 and visit it straight away.");
+    assert.equal(reason('pre', 14), '10 has nothing on its left, so go to its right child 14 and visit it straight away.');
   });
 
-  test('in-order: a node with no left child is visited straight away; otherwise after its left subtree', () => {
-    assert.equal(reason('in', 1), '1 has nothing left to finish on its left side, so visit it now, then go right.');
-    assert.equal(reason('in', 10), '10 has nothing left to finish on its left side, so visit it now, then go right.');
+  test('in-order: a node with no left child says where the walk came from; otherwise its left subtree is done', () => {
+    assert.equal(reason('in', 1), 'Go left from the root as far as you can: 1 has no left child, so it comes first.');
+    assert.equal(reason('in', 10), '8 is done, so go to its right child 10. 10 has no left child, so visit it now.');
     assert.equal(reason('in', 8), "8's whole left subtree is done, so now it's 8's turn, then its right side.");
+    assert.equal(reason('in', 3), "3's whole left subtree is done, so now it's 3's turn, then its right side.");
   });
 
-  test('post-order: leaves and parents get different hints', () => {
-    assert.equal(reason('post', 6), '6 is a leaf: nothing below it to finish first, so visit it.');
+  test('post-order: leaves say how the walk got there, parents come after everything below them', () => {
+    assert.equal(reason('post', 1), 'Go down from the root as far as you can, left whenever possible: 1 is a leaf, so it comes first.');
+    assert.equal(reason('post', 6), "3's left subtree is done, so go to its right child 6. It's a leaf, so visit it.");
+    assert.equal(reason('post', 14), "8's left subtree is done, so go down its right side as far as you can, left whenever possible: 14 is a leaf, so visit it.");
     assert.equal(reason('post', 3), 'Everything below 3 is done, so the parent 3 goes last.');
   });
 
-  test('a hint is available at every step of every order and names the node to tap', () => {
-    for (let t = 0; t < 100; t++) {
-      const tree = Tree.random(12, 3);
+  test('a one-node tree gets a hint in every order', () => {
+    const single = Tree.fromSpec([42]);
+    assert.equal(Tree.visitReason('pre', single), 'Start at the root, 42. Pre-order visits a node as soon as it arrives.');
+    assert.equal(Tree.visitReason('in', single), "Start at the root, 42. It has no left child, so there's nothing to finish on its left: visit it now.");
+    assert.equal(Tree.visitReason('post', single), '42 is a leaf: nothing below it to finish first, so visit it.');
+  });
+
+  test('every hint on 300 random trees names the next node and only says true things', () => {
+    // Plays every game to the end. At every step the hint for the correct next
+    // node must name it, match one of the known sentences, and each claim in
+    // that sentence must hold for the tree and the nodes visited so far.
+    const allVisited = (sub, visited) => !sub || Tree.nodes(sub).every((x) => visited.has(x.id));
+    const isLeaf = (x) => !x.left && !x.right;
+    // Following left links only from `top` reaches `n`.
+    const leftmostFrom = (top, n) => { let x = top; while (x.left) x = x.left; return x === n; };
+    // Going down from `top`, left whenever possible, otherwise right, reaches `n`.
+    const firstLeafFrom = (top, n) => { let x = top; while (!isLeaf(x)) x = x.left || x.right; return x === n; };
+    const isInside = (x, sub) => { for (let y = x; y; y = y.parent) if (y === sub) return true; return false; };
+    let checked = 0;
+    for (let t = 0; t < 300; t++) {
+      const { n, maxDepth } = APP_CONFIGS[t % APP_CONFIGS.length];
+      const tree = Tree.random(n, maxDepth);
+      const find = (v) => byValue(tree, Number(v));
       for (const kind of KINDS) {
+        const visited = new Set();
         for (const next of Tree.order(tree, kind)) {
           const hint = Tree.visitReason(kind, next);
           assert.ok(typeof hint === 'string' && hint.length > 0);
-          assert.ok(hint.includes(String(next.value)), hint);
+          assert.ok(new RegExp(`\\b${next.value}\\b`).test(hint), `does not name ${next.value}: ${hint}`);
+          const first = visited.size === 0;
+          let m;
+          if (kind === 'pre' && (m = hint.match(/^Start at the root, (\d+)\. Pre-order visits a node as soon as it arrives\.$/))) {
+            assert.equal(find(m[1]), next);
+            assert.ok(!next.parent && first, hint);
+          } else if (kind === 'pre' && (m = hint.match(/^Go down to (\d+)'s left child, (\d+), and visit it straight away\.$/))) {
+            const p = find(m[1]);
+            assert.equal(find(m[2]), next);
+            assert.ok(p.left === next && visited.has(p.id), hint);
+          } else if (kind === 'pre' && (m = hint.match(/^(\d+) has nothing on its left, so go to its right child (\d+) and visit it straight away\.$/))) {
+            const p = find(m[1]);
+            assert.equal(find(m[2]), next);
+            assert.ok(p.right === next && !p.left && visited.has(p.id), hint);
+          } else if (kind === 'pre' && (m = hint.match(/^(\d+)'s left subtree is finished, so go to its right child (\d+) and visit it straight away\.$/))) {
+            const p = find(m[1]);
+            assert.equal(find(m[2]), next);
+            assert.ok(p.right === next && p.left && allVisited(p.left, visited) && visited.has(p.id), hint);
+          } else if (kind === 'in' && (m = hint.match(/^(\d+)'s whole left subtree is done, so now it's \1's turn(, then its right side)?\.$/))) {
+            assert.equal(find(m[1]), next);
+            assert.ok(next.left && allVisited(next.left, visited), hint);
+            assert.equal(!!m[2], !!next.right, hint);
+          } else if (kind === 'in' && (m = hint.match(/^Start at the root, (\d+)\. It has no left child, so there's nothing to finish on its left: visit it now\.$/))) {
+            assert.equal(find(m[1]), next);
+            assert.ok(!next.parent && !next.left && first, hint);
+          } else if (kind === 'in' && (m = hint.match(/^Go left from the root as far as you can: (\d+) has no left child, so it comes first\.$/))) {
+            assert.equal(find(m[1]), next);
+            assert.ok(next.parent && !next.left && leftmostFrom(tree, next) && first, hint);
+          } else if (kind === 'in' && (m = hint.match(/^(\d+) is done, so go to its right child (\d+)\. \2 has no left child, so visit it now\.$/))) {
+            const a = find(m[1]);
+            assert.equal(find(m[2]), next);
+            assert.ok(a.right === next && !next.left && visited.has(a.id), hint);
+          } else if (kind === 'in' && (m = hint.match(/^(\d+) is done, so go to its right subtree and then left as far as you can: (\d+) has no left child, so visit it now\.$/))) {
+            const a = find(m[1]);
+            assert.equal(find(m[2]), next);
+            assert.ok(a.right && a.right !== next && leftmostFrom(a.right, next) && !next.left && visited.has(a.id), hint);
+          } else if (kind === 'post' && (m = hint.match(/^Everything below (\d+) is done, so the parent \1 goes last\.$/))) {
+            assert.equal(find(m[1]), next);
+            assert.ok(!isLeaf(next) && allVisited(next.left, visited) && allVisited(next.right, visited), hint);
+          } else if (kind === 'post' && (m = hint.match(/^(\d+) is a leaf: nothing below it to finish first, so visit it\.$/))) {
+            assert.equal(find(m[1]), next);
+            assert.ok(isLeaf(next), hint);
+          } else if (kind === 'post' && (m = hint.match(/^Go down from the root as far as you can, left whenever possible: (\d+) is a leaf, so it comes first\.$/))) {
+            assert.equal(find(m[1]), next);
+            assert.ok(isLeaf(next) && firstLeafFrom(tree, next) && first, hint);
+          } else if (kind === 'post' && (m = hint.match(/^(\d+)'s left subtree is done, so go to its right child (\d+)\. It's a leaf, so visit it\.$/))) {
+            const a = find(m[1]);
+            assert.equal(find(m[2]), next);
+            assert.ok(a.right === next && isLeaf(next) && a.left && allVisited(a.left, visited), hint);
+          } else if (kind === 'post' && (m = hint.match(/^(\d+)'s left subtree is done, so go down its right side as far as you can, left whenever possible: (\d+) is a leaf, so visit it\.$/))) {
+            const a = find(m[1]);
+            assert.equal(find(m[2]), next);
+            assert.ok(a.right && a.right !== next && isInside(next, a.right) && firstLeafFrom(a.right, next), hint);
+            assert.ok(isLeaf(next) && a.left && allVisited(a.left, visited), hint);
+          } else {
+            assert.fail(`unexpected hint for ${kind}-order: ${hint}`);
+          }
+          // Nothing the hint points at may already be visited.
+          assert.ok(!visited.has(next.id));
+          visited.add(next.id);
+          checked++;
         }
       }
     }
+    assert.ok(checked > 5000, `only ${checked} hints checked`);
   });
 });
