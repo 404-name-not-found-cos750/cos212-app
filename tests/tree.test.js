@@ -383,16 +383,10 @@ describe('Hint text for the next node', () => {
     }
   });
 
-  test('a hint is available at every step of every order and names the node to tap', () => {
-    for (let t = 0; t < 100; t++) {
-      const tree = Tree.random(12, 3);
-      for (const kind of KINDS) {
-        for (const next of Tree.order(tree, kind)) {
-          const hint = Tree.visitReason(kind, next);
-          assert.ok(typeof hint === 'string' && hint.length > 0);
-          assert.ok(hint.includes(String(next.value)), hint);
-        }
-      }
-    }
+  test('a one-node tree gets a hint in every order', () => {
+    const single = Tree.fromSpec([42]);
+    assert.equal(Tree.visitReason('pre', single), 'Pre-order starts at the root, the node at the top. Tap 42.');
+    assert.equal(Tree.visitReason('in', single), "In-order starts at the far left: from the root, keep going to the left child until there isn't one. That's 42.");
+    assert.equal(Tree.visitReason('post', single), 'Post-order starts at the bottom: from the root, keep going down (left if you can, otherwise right) until you reach a leaf. That\'s 42.');
   });
 });

@@ -31,6 +31,7 @@ function mountGame(root, kind) {
   let board = null;
   let state = null;
   let nextTimer = null;
+  let hintedAt = -1; // step the last hint was for, so asking again doesn't count twice
 
   root.innerHTML = `
     <div class="page play" data-kind="${kind}">
@@ -52,7 +53,7 @@ function mountGame(root, kind) {
         <button class="btn hint-btn" type="button">💡 Hint</button>
         <button class="btn ghost new-btn" type="button">↻ New tree</button>
       </div>
-      <div class="overlay" hidden><div class="modal" role="dialog" aria-modal="true"></div></div>
+      <div class="overlay" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"></div></div>
     </div>`;
 
   const $ = (s) => root.querySelector(s);
@@ -103,12 +104,13 @@ function mountGame(root, kind) {
     };
     LEVELS.forEach((_, i) => {
       const unlocked = i === 0 || stars[i - 1] > 0;
-      const starHtml = `<b class="on">${'★'.repeat(stars[i])}</b><b class="off">${'★'.repeat(3 - stars[i])}</b>`;
+      const got = Math.min(3, Math.max(0, stars[i] | 0));
+      const starHtml = `<b class="on">${'★'.repeat(got)}</b><b class="off">${'★'.repeat(3 - got)}</b>`;
       addButton(
         i,
         `<span>Level ${i + 1}</span><small>${unlocked ? starHtml : '🔒'}</small>`,
         unlocked,
-        unlocked ? `Level ${i + 1}, ${stars[i]} stars` : `Level ${i + 1}, locked`,
+        unlocked ? `Level ${i + 1}, ${got} stars` : `Level ${i + 1}, locked`,
       );
     });
     const open = endlessUnlocked(kind);
@@ -122,12 +124,14 @@ function mountGame(root, kind) {
   }
 
   function closeModal() {
+    root.querySelectorAll('[inert]').forEach((e) => { e.inert = false; });
     overlay.hidden = true;
     modal.innerHTML = '';
   }
 
   function openModal(html, buttons) {
     modal.innerHTML = html + '<div class="modal-actions"></div>';
+    modal.querySelector('h2').id = 'modal-title';
     const row = modal.querySelector('.modal-actions');
     buttons.forEach(({ label, cls = '', run }) => {
       const b = document.createElement('button');
@@ -137,12 +141,15 @@ function mountGame(root, kind) {
       b.addEventListener('click', run);
       row.appendChild(b);
     });
+    // Keep keyboard and screen-reader focus inside the dialog while it's open.
+    root.querySelectorAll('.page > :not(.overlay)').forEach((e) => { e.inert = true; });
     overlay.hidden = false;
     row.querySelector('button').focus();
   }
 
   function newBoard(cfg) {
     clearTimeout(nextTimer);
+    const refocus = host.contains(document.activeElement);
     if (board) board.destroy();
     host.innerHTML = '';
     board = new Board(host, {
@@ -156,14 +163,19 @@ function mountGame(root, kind) {
       onInfo: (t) => say(t, 'info'),
       onComplete: state.endless ? onEndlessTree : onComplete,
     });
+    hintedAt = -1;
+    if (refocus) host.querySelector('.node.tappable').focus();
   }
 
   function startLevel() {
+    // Started from a button on this page (modal, level bar, walkthrough)? Then
+    // move focus to the new tree, because that button may be gone.
+    const refocus = root.contains(document.activeElement);
     closeModal();
     clearTimeout(nextTimer);
     root.querySelectorAll('.walkthrough').forEach((w) => w.remove());
     const endless = level === ENDLESS;
-    state = { hearts: MAX_HEARTS, mistakes: 0, hints: 0, endless, score: 0 };
+    state = { hearts: MAX_HEARTS, mistakes: 0, hints: 0, endless, score: 0, startBest: Store.best(kind) };
     actions.hidden = false;
     hintBtn.hidden = endless;
     newBtn.hidden = endless;
@@ -182,6 +194,8 @@ function mountGame(root, kind) {
     }
     renderHearts();
     renderLevels();
+    const first = refocus && host.querySelector('.node.tappable');
+    if (first) first.focus();
   }
 
   function onWrong(n, why) {
@@ -217,6 +231,7 @@ function mountGame(root, kind) {
 
   function onEndlessTree() {
     state.score++;
+    Store.saveBest(kind, state.score); // saved now in case the student leaves mid-run
     let bonus = '';
     if (state.score % ENDLESS_HEART_EVERY === 0 && state.hearts < MAX_HEARTS) {
       state.hearts++;
@@ -234,8 +249,9 @@ function mountGame(root, kind) {
   }
 
   function endlessOver(why) {
-    const prevBest = Store.best(kind);
-    const isBest = Store.saveBest(kind, state.score);
+    const prevBest = state.startBest;
+    Store.saveBest(kind, state.score);
+    const isBest = state.score > prevBest;
     const avatarNote = newAvatarNote(claimNewAvatars());
     renderLevels();
     const record = isBest && state.score > 0
@@ -311,7 +327,10 @@ function mountGame(root, kind) {
     if (!board || board.done || board.locked || state.endless) return;
     const text = board.hint();
     if (!text) return;
-    state.hints++;
+    if (hintedAt !== board.i) {
+      state.hints++;
+      hintedAt = board.i;
+    }
     hintBtn.classList.remove('nudge');
     say(`💡 ${text}`, 'info');
   });

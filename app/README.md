@@ -17,19 +17,19 @@ It works offline, so the demo doesn't depend on the venue's Wi-Fi.
 | Page | What the student does |
 |---|---|
 | **Home** | Picks the tutorial or one of the three games. Shows stars earned per game. |
-| **Tutorial** (6 steps) | 1. Meet the tree: tap the root, a leaf, a child. 2. Watch the monkey walk around the tree; each node is passed 3 times (1st = pre, 2nd = in, 3rd = post). 3–5. One step per order: watch a step-by-step demo, then practise with hints. 6. Quick check: 3 questions, with links back to the steps the student got wrong. |
+| **Tutorial** (6 steps) | 1. Meet the tree: tap the root, a leaf, a child. 2. Watch the monkey walk around the tree; each node is passed 3 times (1st = pre, 2nd = in, 3rd = post). 3–5. One step per order: watch a step-by-step demo, then practise with hints. 6. Quick check: 3 questions, with links back to the steps the student got wrong. Each step's **Next** opens once its task is done; after the quiz has been finished once, every step is open on later visits. |
 | **Games** (pre / in / post) | Tap the nodes in the right order and the monkey swings on a vine to each one. 5 levels from 3 to 12 nodes, with random trees each time. |
-| **Endless ∞** (level 6) | Unlocks after clearing level 5. Back-to-back random trees that grow from 5 to 15 nodes. No hints, and 3 hearts for the whole run, with a heart won back every 5 trees. Best score is saved per game. When the run ends, the student can step through the tree they failed on. |
-| **🎲 Random Order** | Unlocks at 40 of the 45 stars. Every tree gets a random order (never the same order 3 times in a row), shown in a big colour-coded banner. Trees grow from 4 to 25 nodes and from 2 to 4 levels deep. You start with 1 heart and win another for every 5 trees cleared; a wrong tap costs a heart, and the run ends when the last one is gone. Score: +1 per correct node, plus a bonus equal to the tree's size when you clear it. The high score is saved. |
+| **Endless ∞** (level 6) | Unlocks after clearing level 5. Back-to-back random trees that grow from 5 to 15 nodes. No hints, and 3 hearts for the whole run, with a heart won back every 5 trees. Best score is saved per game after every cleared tree. When the run ends, the student can step through the tree they failed on. |
+| **🎲 Random Order** | Unlocks at 30 of the 45 stars (all 15 levels cleared with an average of 2 stars). Every tree gets a random order (never the same order 3 times in a row), shown in a big colour-coded banner. Trees grow from 4 to 25 nodes and from 2 to 4 levels deep. You start with 1 heart and win another for every 5 trees cleared; a wrong tap costs a heart, and the run ends when the last one is gone. Score: +1 per correct node, plus a bonus equal to the tree's size when you clear it. The high score is saved after every cleared tree, so it isn't lost if the student leaves mid-run. |
 | **Avatars** (home page) | Achievements unlock new climbers that replace the monkey on every tree: 🦜 10 stars, 🐸 20, 🦥 30, 🦧 40, 🦍 all 45, 🐯 10 trees in one Endless run, 🦁 10 trees in Endless in all three orders, 🐦‍🔥 Phoenix for 15 trees in one Random Order run, and the legendary 🐉 Dragon for unlocking all of the others. New unlocks are announced in the result popup and tagged "New!" on the home page. The chosen avatar is saved. |
 
 ### Assessment and scaffolding in the game
 
 - Every wrong tap costs a heart (3 per level) and explains *why* it was wrong, e.g. "In post-order, children come before their parent. 30 still has nodes below it to visit first."
-- After 2 mistakes the **Hint** button lights up. A hint highlights the next node and says why it's next.
+- After 2 mistakes the **Hint** button lights up. A hint highlights the next node and says why it's next. Asking again for the same node doesn't count as another hint.
 - With no hearts left, the student is offered a **step-by-step walkthrough** of that tree, then a fresh tree.
 - Stars: 3 = no mistakes or hints, 2 = up to 2 mistakes and hints combined, 1 = finished. A level unlocks the next one.
-- Progress is saved in the browser's local storage on that device only.
+- Progress is saved in the browser's local storage on that device only. Saved data that is missing or damaged is ignored or corrected when the app loads, so the app always starts.
 
 ## Code layout
 

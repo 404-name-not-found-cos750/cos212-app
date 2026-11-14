@@ -61,7 +61,7 @@ _This section replaces the role tables and the schedule further down. Those are 
 - [ ] ID doc: **assessment design and scaffolding**, including a question-bank table: each tutorial-quiz question and game level → objective → the feedback/hint it gives. Covers the hearts → explanation → hint after 2 mistakes → walkthrough flow, and the stars (#13, #20, taken over from Francois). **Sat 14 12:00**
 
 ### Hendré (UI and demo)
-- [ ] Lower the Random Order unlock (`RANDOM_UNLOCK` in `app/js/random.js`, currently 40/45) and fix UI bugs: phone layout, contrast, accessibility (taken over from Francois). By PR. **Fri 13**
+- [ ] Lower the Random Order unlock (`RANDOM_UNLOCK` in `app/js/random.js`, now 30/45) and fix UI bugs: phone layout, contrast, accessibility (taken over from Francois). By PR. **Fri 13**
 - [ ] Wireframes / screen flow drawn from the finished UI. This also serves as the tutorial storyboard (#17, #14). **Fri 13**
 - [ ] SE doc: UI design. **Sat 14 12:00**
 - [ ] ID doc: learning styles + multimedia (Mayer's principles) (#11) and **motivation (ARCS)** mapped to stars, hearts, unlocks and the monkey (#12, taken over from Francois). **Sat 14 12:00**
@@ -90,7 +90,7 @@ _This section replaces the role tables and the schedule further down. Those are 
 | Sun 15 | Final proofread + PDF export by 18:00; rehearsal 2; **submit the docs and upload the slides by 22:00**; pack for Monday |
 
 ### Monday 16 Nov: deliverables checklist
-From the exam spec. Slot time: **_____** (confirm and fill in).
+From the exam spec. Slot: **Mon 16 Nov, 14:30–15:00** (venue: _____). Arrive by 14:00.
 
 | # | Deliverable | Where / how | Owner | Done |
 |---|---|---|---|---|
@@ -141,7 +141,7 @@ The working app (Tree Hop, on `DevFS`) already covers most of the planned build:
 | **R2 Mthobisi** | Unit tests for `tree.js` (orders, random trees, mistake explanations); GitHub Actions CI that runs them (finishes #18); deploy to GitHub Pages + backup video + offline copy (#26); architecture and data-model diagrams of the actual code (#16) | SE: architecture, tech choices, testing, deployment | Thu 12 Nov |
 | **R3 Hendré** | Wireframes / screen flow drawn from the finished UI (#17); UI polish and bug fixes (accessibility, phone layout, colour contrast); demo script + demo driver (#30) | SE: UI design. ID: learning styles, multimedia (Mayer's principles), mapped to the screens | Thu 12 Nov |
 | **R4 Shekinah** | Learning objectives (Bloom's) and learner analysis **first**, then review and correct the tutorial text against them (#19); storyboard of the tutorial as built (#14) | ID: ID model, learner analysis, objectives, theories, content, GenAI acknowledgement | Objectives **Tue 10 Nov**, rest Wed 11 Nov |
-| **R5 Francois** | Question bank linked to the objectives, with a hint per question (#20), extending the 3-question tutorial quiz; lower the Random Order unlock (40/45 stars is very high for a pre-lecture app); usability test with 3–5 students (#25) | ID: assessment design, scaffolding, motivation (ARCS). SE: usability results | Question bank Wed 11 Nov, test Thu 12 Nov |
+| **R5 Francois** | Question bank linked to the objectives, with a hint per question (#20), extending the 3-question tutorial quiz; lower the Random Order unlock (40/45 stars is very high for a pre-lecture app; now 30); usability test with 3–5 students (#25) | ID: assessment design, scaffolding, motivation (ARCS). SE: usability results | Question bank Wed 11 Nov, test Thu 12 Nov |
 
 **New rules from now on:**
 - No more large features. New work goes in a branch per issue and is merged to `main` by PR with one review (this includes changes to the app).

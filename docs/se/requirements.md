@@ -22,9 +22,9 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 ### Learn: tutorial
 | ID | Requirement |
 |---|---|
-| **FR-3** | The tutorial has six steps with a step counter ("Step n of 6") and a progress bar. **Next** is only enabled once the step's task is done; **Back** is always available, and steps already finished stay open. |
+| **FR-3** | The tutorial has six steps with a step counter ("Step n of 6") and a progress bar. **Next** is only enabled once the step's task is done; **Back** is always available, and steps already finished stay open. Once the tutorial has been finished, every step is open on later visits. |
 | **FR-4** | Step 1, *Meet the tree*: the student taps the root, any leaf and the right child of a given node in a sample tree. Each tap gets feedback. The step ends by highlighting a left subtree and explaining what a subtree is. |
-| **FR-5** | Step 2, *Walking around a tree*: an animation of the monkey walking around the tree, showing that it passes each node three times. The student picks an order and sees which visit (first, second or third) writes the node down for pre-, in- and post-order. |
+| **FR-5** | Step 2, *Walking around a tree*: an animation of the monkey walking around the tree, showing that it passes each node three times. The student picks an order and sees which pass (first, second or third) writes the node down for pre-, in- and post-order. |
 | **FR-6** | Steps 3–5, one per order: the rule (e.g. Root → Left → Right), a step-by-step demonstration on a small tree, and then a practice tree where the student taps the nodes in order, with feedback on every tap and a **Hint** button. After two wrong taps the feedback suggests the hint. |
 | **FR-7** | Step 6, *Quick check*: three multiple-choice questions on one fixed tree (the pre-, in- and post-order sequence). The options are the three orders plus the level-order sequence, shuffled. Each answer gets feedback that explains the correct sequence. At the end the student sees a score out of 3 and a **Review** button for each order they got wrong, which goes back to that tutorial step. Finishing the quiz marks the tutorial as done. |
 
@@ -40,7 +40,7 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 | ID | Requirement |
 |---|---|
 | **FR-12** | Each level starts with 3 hearts. Every wrong tap costs a heart and shows a specific explanation of why that node is wrong, e.g. "In post-order children come before parents. 30 still has unvisited nodes below it." |
-| **FR-13** | The **Hint** button highlights the next node and explains why it is next. Hints are available at any time in a level and count against the stars. After 2 mistakes in a level the button is highlighted and the feedback suggests using it. |
+| **FR-13** | The **Hint** button highlights the next node and explains why it is next. Hints are available at any time in a level and count against the stars (asking again for the same node counts once). After 2 mistakes in a level the button is highlighted and the feedback suggests using it. |
 | **FR-14** | When the hearts run out, the student is offered a **step-by-step walkthrough** of the same tree (each step visits the next node and explains why) or a fresh tree. |
 | **FR-15** | When an Endless run or a Random Order game ends, the student is offered the same step-by-step walkthrough of the tree they failed on. |
 
@@ -50,14 +50,14 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 | **FR-16** | Clearing a level awards stars: 3 for no mistakes and no hints, 2 for at most 2 mistakes and hints combined, 1 otherwise. Only the best result per level is kept. |
 | **FR-17** | Level 1 of each game is open. Each further level unlocks once the previous level has at least one star. The level bar shows the stars per level and a lock on locked levels. A game opens at the first level without stars. |
 | **FR-18** | When a level is cleared, a summary shows the stars, the number of mistakes and hints, and the full sequence, with buttons for the next level, playing again or going home. It also announces anything newly unlocked (Endless, Random Order). |
-| **FR-19** | Progress (stars per level, Endless best per order, Random Order high score, tutorial done) is saved in the browser's `localStorage` on that device and restored on the next visit. If storage is blocked, the app still works for the current visit. |
+| **FR-19** | Progress (stars per level, Endless best per order, Random Order high score, tutorial done) is saved in the browser's `localStorage` on that device and restored on the next visit. If storage is blocked, the app still works for the current visit; saved data that is missing or damaged is reset or corrected when the app loads. |
 
 ### Challenge: Endless and Random Order
 | ID | Requirement |
 |---|---|
 | **FR-20** | **Endless mode** (one per order) unlocks after level 5 of that order is cleared. Trees start at 5 nodes and grow by one node per tree up to 15. There are no hints and no new-tree button; the student has 3 hearts for the whole run and wins one back every 5 trees (up to 3). The number of trees cleared is the score, and the best score per order is saved and shown on the home page. |
-| **FR-21** | **Random Order mode** unlocks when the student has earned a set number of stars across the three games (`RANDOM_UNLOCK`, currently 40 of the 45). Until then the home page shows a locked card with a progress bar towards the unlock. [TODO Galen: update the number once Hendré's PR lowering the unlock is merged.] |
-| **FR-22** | In Random Order, each tree gets a random order, shown in a colour-coded banner; the same order never comes up three times in a row. Trees grow from 4 to 25 nodes and from 2 to 4 levels deep. The student has one life: the first wrong tap ends the game. The score is +1 per correct node plus a bonus equal to the tree's size when it is cleared. The high score is saved. |
+| **FR-21** | **Random Order mode** unlocks when the student has earned a set number of stars across the three games (`RANDOM_UNLOCK`, 30 of the 45: all 15 levels cleared with an average of 2 stars). Until then the home page shows a locked card with a progress bar towards the unlock. |
+| **FR-22** | In Random Order, each tree gets a random order, shown in a colour-coded banner; the same order never comes up three times in a row. Trees grow from 4 to 25 nodes and from 2 to 4 levels deep. The student starts with one heart and wins another for every 5 trees cleared; a wrong tap costs a heart, and the game ends when the last heart is gone. The score is +1 per correct node plus a bonus equal to the tree's size when it is cleared. The high score is saved. |
 
 ## 3. Non-functional requirements
 
@@ -191,7 +191,7 @@ As a COS212 student who has finished the levels, I want an endless run of growin
 **US-14: Mix all three orders** (FR-21, FR-22)
 As a COS212 student who knows all three orders, I want a mode that switches order on every tree, so that I can check I can tell the orders apart and not just repeat one.
 - *Given* I have fewer stars than the unlock threshold, *then* Random Order shows a lock and my progress towards it.
-- *Given* I play Random Order, *then* each tree shows its order in a banner, the same order never appears three times in a row, and the first wrong tap ends the game with my score and high score.
+- *Given* I play Random Order, *then* each tree shows its order in a banner, the same order never appears three times in a row, I start with one heart and win another every 5 trees, and losing my last heart ends the game with my score and high score.
 
 ### Lecturer stories
 

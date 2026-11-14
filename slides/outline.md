@@ -163,7 +163,7 @@
 **Speaker:** Francois · 0:50
 
 - Diagram: wrong tap → heart lost + explanation → **hint after 2 mistakes** → out of hearts → **step-by-step walkthrough** → fresh tree
-- Faded support: tutorial (no hearts, hints) → levels (hearts, hints) → Endless (no hints) → Random Order (one life)
+- Faded support: tutorial (no hearts, hints) → levels (hearts, hints) → Endless (no hints) → Random Order (one heart, plus one every 5 trees)
 - The struggling student gets more help; the confident student never sees it
 - Question bank documented against the objectives (ID document, section 9)
 
@@ -212,17 +212,27 @@
 
 ## Demo running order (10 min)
 
-**Hendré drives the laptop throughout.** Narration as below. Start from a **fresh profile** (no progress, levels locked). Keep a **second browser profile** with all stars earned, already open in another window, for Endless and Random Order.
+**Hendré drives the laptop throughout.** Narration as below. Steps 1–3 of the tutorial run in a **fresh profile** (no progress, levels locked). Everything after that runs in a **second, seeded profile**, already open in another window: with the tutorial marked as done every step is open, so you can go straight to the quick check, and all games, Endless and Random Order are unlocked.
+
+**Demo prep (before the session):**
+- **Fresh profile:** a private window is simplest. Or, in the DevTools console on the app page: `localStorage.removeItem('cos212-tree-hop-v1'); location.reload();`
+- **Seeded profile:** in the DevTools console on the app page, paste this exact line (don't type the JSON by hand):
+  ```js
+  localStorage.setItem('cos212-tree-hop-v1', JSON.stringify({stars:{pre:[3,3,3,3,3],in:[3,3,3,3,3],post:[3,3,3,3,2]},best:{random:0,pre:0,in:0,post:0},tutorialDone:true})); location.reload();
+  ```
+  That is 44 stars (Random Order needs 30), the tutorial is marked done, and post-order level 5 has 2 stars so the level bar shows an unearned star. Saved progress belongs to one address, so seed the live URL and the offline copy (`app/index.html`) separately.
+- In the seeded profile, opening a game whose five levels all have stars goes **straight to Endless**. For the game segment, tap **Level 1** in the level bar.
+- **Projector:** full screen (Cmd+Ctrl+F on macOS, F11 on Windows), browser zoom 90%.
 
 | Clock | What is shown | Driver | Narrator | Points to make |
 |---|---|---|---|---|
 | 0:00–0:30 | Home page: tutorial, three games, levels locked, Random Order locked | Hendré | Hendré | Nothing to install; no login; progress saved on the device |
 | 0:30–1:30 | Tutorial step 1, Meet the tree: tap the root, a leaf (deliberately tap a wrong node once), the right child of 3 | Hendré | Hendré | Vocabulary taught by doing; feedback on the wrong tap |
-| 1:30–3:00 | Step 2, the monkey's walk: run in-order and watch the three dots fill | Hendré | Hendré (Shekinah may add one line on cognitive load) | The core idea: each node is passed three times; the orders differ only in which visit writes it down |
-| 3:00–4:00 | Step 5, Post-order: two demo steps, then the practice tree with one wrong tap and the hint | Hendré | Hendré | Watch → try with help; no hearts in the tutorial |
-| 4:00–5:00 | Step 6, quick check: answer one question wrong on purpose, show the explanation and the "Review" button | Hendré | **Francois** | Diagnostic check; the level-order distractor; link back to the missed step |
-| 5:00–7:30 | Post-order game, level 1 cleared (show the stars), level 2: two wrong taps → the Hint lights up → use it; then run out of hearts → walkthrough | Hendré | **Francois** | Explanation on every mistake; hint after 2; walkthrough instead of game over; stars rule |
-| 7:30–8:45 | Switch to the second profile: Endless mode (trees grow, no hints), then Random Order (order banner changes each tree, one life) | Hendré | Hendré | Faded support; challenge for confident students; ARCS satisfaction |
+| 1:30–3:00 | Step 2, the monkey's walk: run in-order and watch the three dots fill (the walk takes about 17 s, so talk over it) | Hendré | Hendré (Shekinah may add one line on cognitive load) | The core idea: each node is passed three times; the orders differ only in which pass writes it down |
+| 3:00–4:00 | Step 3, Pre-order: two demo steps, then the practice tree with one wrong tap and the hint | Hendré | Hendré | Watch → try with help; no hearts in the tutorial |
+| 4:00–5:00 | Switch to the seeded profile. Tutorial → **Next** to step 6, quick check: answer one question wrong on purpose, show the explanation and the "Review" button | Hendré | **Francois** | Diagnostic check; the level-order distractor; link back to the missed step |
+| 5:00–7:30 | Post-order game (seeded profile, tap **Level 1**): level 1 cleared (show the stars), level 2: two wrong taps → the Hint lights up → use it; then run out of hearts → walkthrough | Hendré | **Francois** | Explanation on every mistake; hint after 2; walkthrough instead of game over; stars rule |
+| 7:30–8:45 | Same profile: Endless mode (trees grow, no hints), then Random Order (order banner changes each tree, one heart to start) | Hendré | Hendré | Faded support; challenge for confident students; ARCS satisfaction |
 | 8:45–9:30 | Phone (or narrow window) and dark mode | Hendré | Hendré | Works on a phone; accessibility |
 | 9:30–10:00 | Back to the home page with stars showing; hand over to Q&A | Hendré | Galen | One-sentence wrap-up; slide 14 back on screen |
 
@@ -248,4 +258,4 @@ Answerer in bold. Each person prepares two or three sentences for their own ques
 | 12 | Don't hearts punish weak students? | **Francois**, **Hendré** | No hearts in the tutorial; hint after 2 mistakes; walkthrough instead of game over; a fresh tree after. |
 | 13 | Learning styles are contested: why cater for them? | **Hendré** | Multiple representations for everyone (Mayer), not matching a single style. |
 | 14 | Is it accessible? | **Hendré** | Text for every result, screen-reader labels, contrast, light/dark, phone layout. |
-| 15 | How did you decide the star thresholds and the Random Order unlock? | **Francois**, **Hendré** | Stars: 3/2/1 by mistakes + hints. Unlock lowered from 40 to [TODO Hendré: final value] because 40/45 was too high for a pre-lecture app. |
+| 15 | How did you decide the star thresholds and the Random Order unlock? | **Francois**, **Hendré** | Stars: 3/2/1 by mistakes + hints. Unlock lowered from 40 to 30 (all 15 levels cleared with an average of 2 stars) because 40/45 was too high for a pre-lecture app. |
