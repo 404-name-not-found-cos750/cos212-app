@@ -1,5 +1,3 @@
-// Binary tree model: building trees, traversal orders and the feedback text
-// used by the tutorial and the game.
 const Tree = (() => {
   const MODES = {
     pre: {
@@ -30,7 +28,6 @@ const Tree = (() => {
       right: null,
       parent,
       depth: parent ? parent.depth + 1 : 0,
-      // Position in a full tree row (0 = leftmost). Used for layout.
       slot: parent ? parent.slot * 2 + (side === 'right' ? 1 : 0) : 0,
     };
   }
@@ -40,7 +37,6 @@ const Tree = (() => {
     return root;
   }
 
-  // Build from a nested spec: [value, leftSpec, rightSpec]; null means no child.
   function fromSpec(spec) {
     function build(s, parent, side) {
       if (!s) return null;
@@ -62,7 +58,6 @@ const Tree = (() => {
     return pool.slice(0, count);
   }
 
-  // Random binary tree with n nodes, no deeper than maxDepth (root = depth 0).
   function random(n, maxDepth) {
     const values = uniqueValues(n);
     const root = makeNode(values[0], null, null);
@@ -82,7 +77,6 @@ const Tree = (() => {
     return numberNodes(root);
   }
 
-  // Breadth-first list of nodes (also the "level order").
   function nodes(root) {
     const out = [];
     const queue = root ? [root] : [];
@@ -108,8 +102,6 @@ const Tree = (() => {
     return out;
   }
 
-  // Walk around the outside of the tree. Each node is passed three times:
-  // on its left side (1), underneath it (2) and on its right side (3).
   function euler(root) {
     const ev = [];
     (function go(n) {
@@ -126,7 +118,7 @@ const Tree = (() => {
   function ancestors(n) {
     const out = [];
     for (let p = n.parent; p; p = p.parent) out.push(p);
-    return out; // nearest first
+    return out;
   }
 
   function isInside(n, sub) {
@@ -138,80 +130,78 @@ const Tree = (() => {
     return !!sub && nodes(sub).some((x) => !visited.has(x.id));
   }
 
-  // Why was tapping `tapped` wrong? Returns a short, specific explanation.
+  function leftBeforeRight(tapped, visited) {
+    for (const a of ancestors(tapped)) {
+      if (isInside(tapped, a.right) && hasUnvisited(a.left, visited)) {
+        return `Left before right: ${tapped.value} is in ${a.value}'s right subtree, but ${a.value}'s left subtree isn't finished yet.`;
+      }
+    }
+    return null;
+  }
+
   function explain(kind, tapped, expected, visited) {
     const v = tapped.value;
     if (kind === 'pre') {
       const up = ancestors(tapped).reverse().find((a) => !visited.has(a.id));
-      if (up) return `In pre-order a parent comes before its children. ${up.value} is above ${v} and hasn't been visited yet.`;
-      for (const a of ancestors(tapped)) {
-        if (isInside(tapped, a.right) && hasUnvisited(a.left, visited)) {
-          return `Left before right: ${a.value}'s left subtree still has unvisited nodes.`;
-        }
-      }
+      if (up) return `In pre-order, a parent comes before its children. ${up.value} is above ${v} and hasn't been visited yet.`;
+      const lr = leftBeforeRight(tapped, visited);
+      if (lr) return lr;
     }
     if (kind === 'in') {
       if (hasUnvisited(tapped.left, visited)) {
-        return `In in-order a node waits until its whole left subtree is done. ${v} still has unvisited nodes on its left.`;
+        return `In in-order, a node waits until its whole left subtree is done. ${v} still has nodes in its left subtree to visit first.`;
       }
       for (const a of ancestors(tapped)) {
         if (isInside(tapped, a.right) && !visited.has(a.id)) {
-          return `${a.value} has to be visited before anything in its right subtree, and ${v} is on its right.`;
+          return `In in-order, ${a.value} comes before its right subtree, and ${v} is in that right subtree. Visit ${a.value} before going right.`;
         }
       }
     }
     if (kind === 'post') {
       if (hasUnvisited(tapped.left, visited) || hasUnvisited(tapped.right, visited)) {
-        return `In post-order children come before parents. ${v} still has unvisited nodes below it.`;
+        return `In post-order, children come before their parent. ${v} still has nodes below it to visit first.`;
       }
-      for (const a of ancestors(tapped)) {
-        if (isInside(tapped, a.right) && hasUnvisited(a.left, visited)) {
-          return `Left before right: finish ${a.value}'s left subtree first.`;
-        }
-      }
+      const lr = leftBeforeRight(tapped, visited);
+      if (lr) return lr;
     }
-    return `Not ${v} yet. Something earlier still needs a visit. Remember: ${MODES[kind].rule}.`;
+    return `Not ${v} yet. Another node needs to be visited first. Remember the rule: ${MODES[kind].rule}.`;
   }
 
-  // Why is `n` the next node to visit? Used by hints and walkthroughs.
+  function rootOf(n) {
+    let r = n;
+    while (r.parent) r = r.parent;
+    return r;
+  }
+
+  function firstIn(root) {
+    let n = root;
+    while (n.left) n = n.left;
+    return n;
+  }
+
+  function firstPost(root) {
+    let n = root;
+    while (n.left || n.right) n = n.left || n.right;
+    return n;
+  }
+
   function visitReason(kind, n) {
     const v = n.value;
     const p = n.parent;
     if (kind === 'pre') {
-      if (!p) return `Start at the root, ${v}. Pre-order visits a node as soon as it arrives.`;
-      // A left child comes straight after its parent; a right child once the
-      // parent's left subtree (if any) is finished.
-      if (p.left === n) return `Go down to ${p.value}'s left child, ${v}, and visit it straight away.`;
-      if (!p.left) return `${p.value} has nothing on its left, so go to its right child ${v} and visit it straight away.`;
-      return `${p.value}'s left subtree is finished, so go to its right child ${v} and visit it straight away.`;
+      if (!p) return `Pre-order starts at the root, the node at the top. Tap ${v}.`;
+      if (p.left === n) return `Pre-order goes from a node straight to its left child. ${p.value} is done, so tap its left child, ${v}.`;
+      if (p.left) return `${p.value}'s left subtree is finished, so now go to its right child. Tap ${v}.`;
+      return `${p.value} has no left child, so go straight to its right child. Tap ${v}.`;
     }
     if (kind === 'in') {
-      if (n.left) return `${v}'s whole left subtree is done, so now it's ${v}'s turn${n.right ? ', then its right side' : ''}.`;
-      // No left child: n is where "go left as far as you can" stops, either
-      // from the root or from the right child of the node visited just before.
-      let x = n;
-      while (x.parent && x.parent.left === x) x = x.parent;
-      if (!x.parent) {
-        if (x === n) return `Start at the root, ${v}. It has no left child, so there's nothing to finish on its left: visit it now.`;
-        return `Go left from the root as far as you can: ${v} has no left child, so it comes first.`;
-      }
-      const a = x.parent.value;
-      if (x === n) return `${a} is done, so go to its right child ${v}. ${v} has no left child, so visit it now.`;
-      return `${a} is done, so go to its right subtree and then left as far as you can: ${v} has no left child, so visit it now.`;
+      if (n === firstIn(rootOf(n))) return `In-order starts at the far left: from the root, keep going to the left child until there isn't one. That's ${v}.`;
+      if (!n.left) return `${v} has no left subtree, so there is nothing to finish first. Tap ${v}.`;
+      return `${v}'s left subtree is finished, so it's ${v}'s turn. After ${v}, go to its right subtree.`;
     }
-    if (n.left || n.right) return `Everything below ${v} is done, so the parent ${v} goes last.`;
-    // A leaf: n is where "go down as far as you can, left whenever possible"
-    // stops, either from the root or from the right child of a node whose
-    // left subtree has just been finished.
-    let x = n;
-    while (x.parent && (x.parent.left === x || !x.parent.left)) x = x.parent;
-    if (!x.parent) {
-      if (x === n) return `${v} is a leaf: nothing below it to finish first, so visit it.`;
-      return `Go down from the root as far as you can, left whenever possible: ${v} is a leaf, so it comes first.`;
-    }
-    const a = x.parent.value;
-    if (x === n) return `${a}'s left subtree is done, so go to its right child ${v}. It's a leaf, so visit it.`;
-    return `${a}'s left subtree is done, so go down its right side as far as you can, left whenever possible: ${v} is a leaf, so visit it.`;
+    if (n === firstPost(rootOf(n))) return `Post-order starts at the bottom: from the root, keep going down (left if you can, otherwise right) until you reach a leaf. That's ${v}.`;
+    if (!n.left && !n.right) return `${v} is a leaf: it has no children, so there is nothing below it to finish first. Tap ${v}.`;
+    return `Everything below ${v} is finished. In post-order the parent comes last, so tap ${v} now.`;
   }
 
   return { MODES, fromSpec, random, nodes, order, euler, explain, visitReason };

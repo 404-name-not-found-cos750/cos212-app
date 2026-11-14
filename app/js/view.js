@@ -1,5 +1,3 @@
-// Drawing: the SVG tree with the monkey, the visit-sequence bar, and the
-// Board that both the tutorial and the game use for "tap the next node".
 const SVGNS = 'http://www.w3.org/2000/svg';
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -25,7 +23,6 @@ class TreeView {
     this.anim = 0;
 
     const depth = Math.max(...this.nodes.map((n) => n.depth));
-    // Wider canvas for deep trees so the bottom row never overlaps.
     const W = Math.max(640, 2 ** depth * 60);
     const top = 70;
     const gap = 92;
@@ -85,16 +82,18 @@ class TreeView {
       this.groups.set(n.id, g);
     }
 
+    this.vine = svgEl('path', { class: 'vine', visibility: 'hidden' }, svg);
+    this.vineTip = svgEl('circle', { class: 'vine-tip', r: 5, visibility: 'hidden' }, svg);
     this.monkey = svgEl('text', {
       class: 'monkey',
       'text-anchor': 'middle',
       'dominant-baseline': 'central',
       'aria-hidden': 'true',
     }, svg);
-    this.monkey.textContent = '🐒';
+    const avatar = typeof currentAvatar === 'function' ? currentAvatar() : null;
+    this.monkey.textContent = avatar ? avatar.icon : '🐒';
+    if (avatar && avatar.vine) svg.style.setProperty('--vine', avatar.vine);
     this.placeMonkey(this.start());
-
-    // Keep nodes big enough to tap on phones; the board scrolls sideways instead.
     if (W > 640) svg.style.minWidth = `${Math.round(W * 0.62)}px`;
     this.svg = svg;
     container.appendChild(svg);
@@ -118,7 +117,7 @@ class TreeView {
   flash(n, cls, ms = 600) {
     const g = this.g(n);
     g.classList.remove(cls);
-    void g.getBBox(); // restart the CSS animation
+    void g.getBBox();
     g.classList.add(cls);
     setTimeout(() => g.classList.remove(cls), ms);
   }
@@ -134,10 +133,11 @@ class TreeView {
       this.setBadge(n, null);
       ['visited', 'hint', 'wrong', 'current', 'subtree', 'picked'].forEach((c) => this.setClass(n, c, false));
     }
+    this.anim++;
+    this.hideVine();
     this.placeMonkey(this.start());
   }
 
-  // Monkey positions
   start() {
     const p = this.pos.get(this.root.id);
     return { x: p.x - 90, y: p.y - 30 };
@@ -154,33 +154,71 @@ class TreeView {
     this.monkey.setAttribute('y', p.y);
   }
 
-  // Jump (arc > 0) or walk (arc = 0) to a point. A newer move cancels an older one.
+  hideVine() {
+    this.vine.setAttribute('visibility', 'hidden');
+    this.vineTip.setAttribute('visibility', 'hidden');
+  }
+
+  drawVine(a, b, slack) {
+    const cx = (a.x + b.x) / 2;
+    const cy = (a.y + b.y) / 2 + slack;
+    this.vine.setAttribute('d', `M ${a.x} ${a.y} Q ${cx} ${cy} ${b.x} ${b.y}`);
+    this.vineTip.setAttribute('cx', b.x);
+    this.vineTip.setAttribute('cy', b.y);
+    this.vine.setAttribute('visibility', 'visible');
+    this.vineTip.setAttribute('visibility', 'visible');
+  }
+
   moveMonkey(to, { arc = 70, ms = 420 } = {}) {
     const id = ++this.anim;
     const from = { ...this.mpos };
-    if (REDUCED_MOTION) ms = 0;
+    const dist = Math.hypot(to.x - from.x, to.y - from.y);
+    if (REDUCED_MOTION || dist < 2) ms = 0;
     return new Promise((resolve) => {
       if (!ms) {
+        this.hideVine();
         this.placeMonkey(to);
         resolve();
         return;
       }
-      // Animation frames pause in background tabs; make sure the move still finishes.
+      const shootMs = Math.round(ms * 0.45);
+      const anchor = { x: to.x, y: to.y + 20 };
+      const lift = Math.min(arc * 0.6, dist * 0.25);
+      const hand = (p) => ({ x: p.x, y: p.y - 6 });
       setTimeout(() => {
-        if (this.alive && id === this.anim) this.placeMonkey(to);
+        if (this.alive && id === this.anim) {
+          this.placeMonkey(to);
+          this.hideVine();
+        }
         resolve();
-      }, ms + 150);
+      }, shootMs + ms + 150);
       const t0 = performance.now();
       const step = (t) => {
         if (!this.alive || id !== this.anim) return resolve();
-        const k = Math.min(1, (t - t0) / ms);
+        const elapsed = t - t0;
+        if (elapsed < shootMs) {
+          const k = elapsed / shootMs;
+          const e = 1 - Math.pow(1 - k, 3);
+          const h = hand(from);
+          const tip = { x: h.x + (anchor.x - h.x) * e, y: h.y + (anchor.y - h.y) * e };
+          this.drawVine(h, tip, 30 * Math.sin(Math.PI * k));
+          requestAnimationFrame(step);
+          return;
+        }
+        const k = Math.min(1, (elapsed - shootMs) / ms);
         const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
-        this.placeMonkey({
+        const p = {
           x: from.x + (to.x - from.x) * e,
-          y: from.y + (to.y - from.y) * e - arc * Math.sin(Math.PI * k),
-        });
-        if (k < 1) requestAnimationFrame(step);
-        else resolve();
+          y: from.y + (to.y - from.y) * e - lift * Math.sin(Math.PI * k),
+        };
+        this.placeMonkey(p);
+        if (k < 1) {
+          this.drawVine(hand(p), anchor, 16 * (1 - k));
+          requestAnimationFrame(step);
+        } else {
+          this.hideVine();
+          resolve();
+        }
       };
       requestAnimationFrame(step);
     });
@@ -218,7 +256,6 @@ class SeqBar {
   }
 }
 
-// One traversal puzzle: tap the nodes in the right order.
 class Board {
   constructor(host, { tree, kind, interactive = true, onCorrect, onWrong, onComplete, onInfo, seqLabel }) {
     this.kind = kind;
@@ -273,7 +310,6 @@ class Board {
     }
   }
 
-  // Highlight the next node and say why it's next.
   hint() {
     const n = this.next;
     if (!n) return null;
@@ -281,7 +317,6 @@ class Board {
     return Tree.visitReason(this.kind, n);
   }
 
-  // Walkthrough: visit the next node for the learner and explain it.
   demoStep() {
     const n = this.next;
     if (!n) return null;

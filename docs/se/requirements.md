@@ -57,7 +57,7 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 |---|---|
 | **FR-20** | **Endless mode** (one per order) unlocks after level 5 of that order is cleared. Trees start at 5 nodes and grow by one node per tree up to 15. There are no hints and no new-tree button; the student has 3 hearts for the whole run and wins one back every 5 trees (up to 3). The number of trees cleared is the score, and the best score per order is saved and shown on the home page. |
 | **FR-21** | **Random Order mode** unlocks when the student has earned a set number of stars across the three games (`RANDOM_UNLOCK`, 30 of the 45: all 15 levels cleared with an average of 2 stars). Until then the home page shows a locked card with a progress bar towards the unlock. |
-| **FR-22** | In Random Order, each tree gets a random order, shown in a colour-coded banner; the same order never comes up three times in a row. Trees grow from 4 to 25 nodes and from 2 to 4 levels deep. The student has one life: the first wrong tap ends the game. The score is +1 per correct node plus a bonus equal to the tree's size when it is cleared. The high score is saved. |
+| **FR-22** | In Random Order, each tree gets a random order, shown in a colour-coded banner; the same order never comes up three times in a row. Trees grow from 4 to 25 nodes and from 2 to 4 levels deep. The student starts with one heart and wins another for every 5 trees cleared; a wrong tap costs a heart, and the game ends when the last heart is gone. The score is +1 per correct node plus a bonus equal to the tree's size when it is cleared. The high score is saved. |
 
 ## 3. Non-functional requirements
 
@@ -191,7 +191,7 @@ As a COS212 student who has finished the levels, I want an endless run of growin
 **US-14: Mix all three orders** (FR-21, FR-22)
 As a COS212 student who knows all three orders, I want a mode that switches order on every tree, so that I can check I can tell the orders apart and not just repeat one.
 - *Given* I have fewer stars than the unlock threshold, *then* Random Order shows a lock and my progress towards it.
-- *Given* I play Random Order, *then* each tree shows its order in a banner, the same order never appears three times in a row, and the first wrong tap ends the game with my score and high score.
+- *Given* I play Random Order, *then* each tree shows its order in a banner, the same order never appears three times in a row, I start with one heart and win another every 5 trees, and losing my last heart ends the game with my score and high score.
 
 ### Lecturer stories
 

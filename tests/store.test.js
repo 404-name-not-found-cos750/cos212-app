@@ -15,7 +15,7 @@ const vm = require('node:vm');
 
 const KEY = 'cos212-tree-hop-v1';
 const read = (f) => fs.readFileSync(path.join(__dirname, '..', 'app', 'js', f), 'utf8');
-const SCRIPTS = ['tree.js', 'game.js', 'random.js', 'main.js'].map((f) => ({ f, src: read(f) }));
+const SCRIPTS = ['tree.js', 'game.js', 'random.js', 'achievements.js', 'main.js'].map((f) => ({ f, src: read(f) }));
 
 // Loads the app with `saved` as the raw localStorage value (a string, or null
 // for "nothing saved"). Returns the Store, the fake storage and the page.
@@ -32,7 +32,7 @@ function boot(saved, { blocked = false } = {}) {
       items.set(k, String(v));
     },
   };
-  const app = { innerHTML: '' };
+  const app = { innerHTML: '', querySelector: () => null, querySelectorAll: () => [] };
   const context = vm.createContext({
     localStorage,
     document: { getElementById: () => app, title: '' },
@@ -129,8 +129,10 @@ describe('Loading saved progress', () => {
   test('valid saved data loads and saves back unchanged', () => {
     const data = {
       stars: { pre: [3, 3, 3, 3, 3], in: [3, 2, 1, 0, 0], post: [3, 3, 3, 3, 2] },
-      best: { random: 120, pre: 6, in: 0, post: 11 },
+      best: { random: 120, randomTrees: 9, pre: 6, in: 0, post: 11 },
       tutorialDone: true,
+      avatar: 'parrot',
+      seenAvatars: ['parrot', 'frog', 'sloth', 'tiger'], // everything these stars and scores unlock
     };
     const { Store, items } = boot(JSON.stringify(data));
     assert.deepEqual(plain(Store.progress()), data.stars);

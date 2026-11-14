@@ -1,8 +1,10 @@
 // Random Order mode: unlocked at 30 of the 45 stars, i.e. all 15 levels cleared
 // with an average of 2 stars. Endless trees, each with a random traversal
-// order, growing bigger and deeper. One life. High score is saved.
+// order, growing bigger and deeper. One heart to start, plus one more for every
+// 5 trees cleared. High score is saved.
 const RANDOM_UNLOCK = 30;
 const KINDS = ['pre', 'in', 'post'];
+const RANDOM_HEART_EVERY = 5;
 
 function totalStars() {
   const p = Store.progress();
@@ -13,7 +15,6 @@ function randomUnlocked() {
   return totalStars() >= RANDOM_UNLOCK;
 }
 
-// Tree i (0-based): 4, 6, 8, ... nodes up to 25, and deeper as it grows.
 function randomTreeCfg(i) {
   const n = Math.min(25, 4 + 2 * i);
   const maxDepth = n <= 6 ? 2 : n <= 13 ? 3 : 4;
@@ -42,7 +43,7 @@ function mountRandom(root) {
       <header class="topbar">
         <a class="back" href="#/">← Home</a>
         <h1>Random Order</h1>
-        <div class="hearts" aria-label="1 life left">❤️</div>
+        <div class="hearts" aria-label="1 heart left">❤️</div>
       </header>
       <div class="endless-bar" aria-live="polite"></div>
       <div class="order-banner" aria-live="assertive"></div>
@@ -64,6 +65,11 @@ function mountRandom(root) {
   function say(text, tone = '') {
     feedback.textContent = text;
     feedback.className = `feedback ${tone}`;
+  }
+
+  function renderHearts() {
+    hearts.textContent = state.lives > 0 ? '❤️'.repeat(state.lives) : '🤍';
+    hearts.setAttribute('aria-label', `${state.lives} heart${state.lives === 1 ? '' : 's'} left`);
   }
 
   function renderBar() {
@@ -95,7 +101,6 @@ function mountRandom(root) {
     modal.innerHTML = '';
   }
 
-  // Pick the order for the next tree. Never the same order 3 times running.
   function pickKind() {
     const h = state.history;
     let options = KINDS;
@@ -117,7 +122,7 @@ function mountRandom(root) {
     page.dataset.kind = kind;
     banner.innerHTML = `This tree: <b>${m.name}</b> <span>${m.rule}</span>`;
     banner.classList.remove('pop');
-    void banner.offsetWidth; // restart the pop animation
+    void banner.offsetWidth;
     banner.classList.add('pop');
     board = new Board(host, {
       tree: Tree.random(cfg.n, cfg.maxDepth),
@@ -127,7 +132,7 @@ function mountRandom(root) {
         renderBar();
         say('');
       },
-      onWrong: gameOver,
+      onWrong,
       onInfo: (t) => say(t, 'info'),
       onComplete: treeCleared,
     });
@@ -135,32 +140,49 @@ function mountRandom(root) {
     say(`Tree ${state.trees + 1}: ${cfg.n} nodes in ${m.name.toLowerCase()}.`);
   }
 
+  function onWrong(n, why) {
+    state.lives--;
+    renderHearts();
+    if (state.lives <= 0) {
+      gameOver(n, why);
+      return;
+    }
+    say(`${why} You lost a heart: ${state.lives} left.`, 'bad');
+  }
+
   function treeCleared() {
     state.trees++;
     const bonus = randomTreeCfg(state.trees - 1).n;
     state.score += bonus;
     Store.saveBest('random', state.score); // saved now in case the student leaves mid-run
+    let heart = '';
+    if (state.trees % RANDOM_HEART_EVERY === 0) {
+      state.lives++;
+      renderHearts();
+      heart = ' +1 ❤️';
+    }
     renderBar();
     board.locked = true;
-    say(`🌳 Tree cleared! +${bonus} bonus. Watch the order for the next one…`, 'good');
+    say(`🌳 Tree cleared! +${bonus} bonus.${heart} Watch the order for the next one…`, 'good');
     nextTimer = setTimeout(nextTree, 1300);
   }
 
   function gameOver(n, why) {
     board.locked = true;
-    hearts.textContent = '🤍';
-    hearts.setAttribute('aria-label', '0 lives left');
     say(why, 'bad');
     const prev = state.startBest;
     Store.saveBest('random', state.score);
     const isBest = state.score > prev;
+    Store.saveBest('randomTrees', state.trees);
+    const avatarNote = newAvatarNote(claimNewAvatars());
     const m = Tree.MODES[state.kind];
     openModal(
       `<h2>Game over</h2>
        <p class="big-score">${state.score}</p>
        ${isBest && state.score > 0 ? '<p class="stars">🏆 New high score!</p>' : `<p>High score: <b>${Math.max(prev, state.score)}</b></p>`}
        <p>${state.trees} tree${state.trees === 1 ? '' : 's'} cleared. This tree was <b>${m.name.toLowerCase()}</b> (${m.rule}).</p>
-       <p>${why}</p>`,
+       <p>${why}</p>
+       ${avatarNote}`,
       [
         { label: 'Show me this tree step by step', run: walkthrough },
         { label: 'Play again', cls: 'ghost', run: start },
@@ -199,9 +221,8 @@ function mountRandom(root) {
     closeModal();
     clearTimeout(nextTimer);
     root.querySelectorAll('.walkthrough').forEach((w) => w.remove());
-    state = { score: 0, trees: 0, history: [], kind: 'pre', startBest: Store.best('random') };
-    hearts.textContent = '❤️';
-    hearts.setAttribute('aria-label', '1 life left');
+    state = { score: 0, trees: 0, lives: 1, history: [], kind: 'pre', startBest: Store.best('random') };
+    renderHearts();
     renderBar();
     nextTree();
     const first = refocus && host.querySelector('.node.tappable');

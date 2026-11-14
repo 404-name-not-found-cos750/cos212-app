@@ -163,7 +163,7 @@
 **Speaker:** Francois · 0:50
 
 - Diagram: wrong tap → heart lost + explanation → **hint after 2 mistakes** → out of hearts → **step-by-step walkthrough** → fresh tree
-- Faded support: tutorial (no hearts, hints) → levels (hearts, hints) → Endless (no hints) → Random Order (one life)
+- Faded support: tutorial (no hearts, hints) → levels (hearts, hints) → Endless (no hints) → Random Order (one heart, plus one every 5 trees)
 - The struggling student gets more help; the confident student never sees it
 - Question bank documented against the objectives (ID document, section 9)
 
@@ -232,7 +232,7 @@
 | 3:00–4:00 | Step 3, Pre-order: two demo steps, then the practice tree with one wrong tap and the hint | Hendré | Hendré | Watch → try with help; no hearts in the tutorial |
 | 4:00–5:00 | Switch to the seeded profile. Tutorial → **Next** to step 6, quick check: answer one question wrong on purpose, show the explanation and the "Review" button | Hendré | **Francois** | Diagnostic check; the level-order distractor; link back to the missed step |
 | 5:00–7:30 | Post-order game (seeded profile, tap **Level 1**): level 1 cleared (show the stars), level 2: two wrong taps → the Hint lights up → use it; then run out of hearts → walkthrough | Hendré | **Francois** | Explanation on every mistake; hint after 2; walkthrough instead of game over; stars rule |
-| 7:30–8:45 | Same profile: Endless mode (trees grow, no hints), then Random Order (order banner changes each tree, one life) | Hendré | Hendré | Faded support; challenge for confident students; ARCS satisfaction |
+| 7:30–8:45 | Same profile: Endless mode (trees grow, no hints), then Random Order (order banner changes each tree, one heart to start) | Hendré | Hendré | Faded support; challenge for confident students; ARCS satisfaction |
 | 8:45–9:30 | Phone (or narrow window) and dark mode | Hendré | Hendré | Works on a phone; accessibility |
 | 9:30–10:00 | Back to the home page with stars showing; hand over to Q&A | Hendré | Galen | One-sentence wrap-up; slide 14 back on screen |
 

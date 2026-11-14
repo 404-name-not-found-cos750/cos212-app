@@ -1,5 +1,3 @@
-// Tutorial: six short hands-on steps.
-// 1 Meet the tree  2 The walk around the tree  3-5 One step per order  6 Quick check
 const T_MEET = [8, [3, [1], [6]], [10, null, [14]]];
 
 function el(html) {
@@ -418,7 +416,6 @@ function mountTutorial(root) {
     prev.disabled = i === 0;
     const last = i === TUTORIAL_STEPS.length - 1;
     next.textContent = last ? 'Finish 🎉' : 'Next →';
-    // Steps you've finished before stay unlocked.
     next.disabled = !reached.has(i);
     cleanup = step.render(body, {
       complete: () => {
