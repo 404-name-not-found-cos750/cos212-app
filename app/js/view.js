@@ -35,11 +35,16 @@ class TreeView {
       this.pos.set(n.id, { x: ((n.slot + 0.5) * W) / slots, y: top + n.depth * gap });
     }
 
+    // Spell out the shape so the tree can be followed without seeing it.
+    const kid = (c, side) => (c ? `${side} child ${c.value}` : `no ${side} child`);
+    const shape = this.nodes
+      .map((n) => (n.left || n.right ? `${n.value}: ${kid(n.left, 'left')}, ${kid(n.right, 'right')}` : `${n.value}: leaf`))
+      .join('; ');
     const svg = svgEl('svg', {
       viewBox: `0 0 ${W} ${H}`,
       class: 'tree-svg',
       role: 'group',
-      'aria-label': 'Binary tree',
+      'aria-label': `Binary tree with root ${root.value}. ${shape}.`,
     });
     const edges = svgEl('g', { class: 'edges' }, svg);
     const nodeLayer = svgEl('g', {}, svg);
@@ -61,7 +66,7 @@ class TreeView {
       const badge = svgEl('g', { class: 'badge', transform: `translate(${this.R * 0.8} ${-this.R * 0.8})` }, g);
       svgEl('circle', { r: 11 }, badge);
       svgEl('text', { 'text-anchor': 'middle', 'dominant-baseline': 'central' }, badge);
-      // Three dots under the node that count visits (only shown in the tutorial walk).
+      // Three dots under the node that count passes (only shown in the tutorial walk).
       const pips = svgEl('g', { class: 'pips', transform: `translate(0 ${this.R + 11})` }, g);
       [-12, 0, 12].forEach((dx) => svgEl('circle', { cx: dx, r: 4.5 }, pips));
       if (onTap) {
@@ -105,6 +110,9 @@ class TreeView {
     const g = this.g(n);
     g.querySelector('.badge text').textContent = text == null ? '' : text;
     g.classList.toggle('has-badge', text != null);
+    if (g.classList.contains('tappable')) {
+      g.setAttribute('aria-label', text == null ? `Node ${n.value}` : `Node ${n.value}, visited, number ${text}`);
+    }
   }
 
   flash(n, cls, ms = 600) {
@@ -115,7 +123,7 @@ class TreeView {
     setTimeout(() => g.classList.remove(cls), ms);
   }
 
-  // Mark visit number `pass` (1-3) of node n: 'seen' or 'write'.
+  // Mark pass number `pass` (1-3) of node n: 'seen' or 'write'.
   setPip(n, pass, cls) {
     this.g(n).querySelectorAll('.pips circle')[pass - 1].setAttribute('class', cls);
   }

@@ -7,7 +7,7 @@
   --border: #d9e2d4;
   --primary: #2f7d4f;
   --primary-ink: #ffffff;
-  --good: #23824a;
+  --good: #1d7542;
   --good-bg: #e3f4e8;
   --bad: #c03b3b;
   --bad-bg: #fbe7e7;
@@ -17,6 +17,10 @@
   --node: #ffffff;
   --node-stroke: #6b8f5e;
   --hint: #e6a21a;
+  /* Gold for small text and stars; --hint itself is too light on white. */
+  --hint-text: #8a5d00;
+  --star: #b07400;
+  --star-off: #859080;
   --pre: #2f6fd1;
   --in: #23824a;
   --post: #c0571c;
@@ -45,6 +49,9 @@
     --edge: #a8977c;
     --node: #243028;
     --node-stroke: #7fae70;
+    --hint-text: #e6a21a;
+    --star: #e6a21a;
+    --star-off: #66786a;
     --pre: #6fa0f0;
     --in: #6fd296;
     --post: #f0955d;
@@ -70,6 +77,7 @@ h1, h2, h3 { line-height: 1.2; }
   margin: 0 auto;
   padding: 16px 16px 48px;
 }
+.page.random-mode { max-width: 1040px; }
 
 [data-kind="pre"] { --mode: var(--pre); }
 [data-kind="in"] { --mode: var(--in); }
@@ -92,7 +100,7 @@ h1, h2, h3 { line-height: 1.2; }
 .btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
 .btn.ghost { background: transparent; color: var(--mode); }
 .btn:focus-visible, .card:focus-visible, .level:focus-visible, .opt:focus-visible, .picker button:focus-visible {
-  outline: 3px solid var(--hint);
+  outline: 3px solid var(--text);
   outline-offset: 2px;
 }
 @media (prefers-color-scheme: dark) {
@@ -126,7 +134,7 @@ h1, h2, h3 { line-height: 1.2; }
   display: inline-block;
   font-size: .8rem;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--good);
   background: var(--good-bg);
   padding: 2px 10px;
   border-radius: 999px;
@@ -206,12 +214,17 @@ h1, h2, h3 { line-height: 1.2; }
   align-items: center;
 }
 .level small { letter-spacing: 1px; }
-.level small .on { color: var(--hint); }
-.level small .off { color: var(--border); }
+.level small .on { color: var(--star); }
+.level small .off { color: var(--star-off); }
 .level.current { border-color: var(--mode); font-weight: 700; }
 .level:disabled { opacity: .5; cursor: not-allowed; }
-.level.endless small { color: var(--hint); }
-.endless-meta { margin-top: 6px !important; color: var(--hint) !important; font-weight: 600; }
+.level.endless small { color: var(--hint-text); }
+.endless-meta { margin-top: 6px !important; color: var(--hint-text) !important; font-weight: 600; }
+@media (max-width: 620px) {
+  /* Wrap the level bar so Endless isn't hidden off the side. */
+  .levels { flex-wrap: wrap; }
+  .level { flex: 1 0 calc(33.333% - 6px); min-width: 0; }
+}
 
 .endless-bar {
   display: flex;
@@ -254,13 +267,22 @@ h1, h2, h3 { line-height: 1.2; }
   overflow-x: auto;
 }
 .tree-svg { display: block; width: 100%; height: auto; touch-action: manipulation; user-select: none; }
+/* Keep the feedback and Hint button on screen on a laptop or projector
+   (checked at 1280x720). The page around the tree is about 440px tall in the
+   games and 320px in Random Order. */
+@media (min-width: 621px) {
+  .tree-svg { max-height: max(240px, calc(100vh - 440px)); }
+  .random-mode .tree-svg { max-height: max(240px, calc(100vh - 320px)); }
+}
 .edge { stroke: var(--edge); stroke-width: 4; stroke-linecap: round; }
 .node .hit { fill: transparent; }
 .node .body { fill: var(--node); stroke: var(--node-stroke); stroke-width: 3; transition: fill .2s, stroke .2s; }
 .node .label { font-size: 20px; font-weight: 700; fill: var(--text); pointer-events: none; }
+@media (max-width: 620px) { .node .label { font-size: 24px; } }
 .node.tappable { cursor: pointer; outline: none; }
 .node.tappable:hover .body { stroke: var(--mode); stroke-width: 4; }
-.node.tappable:focus-visible .body { stroke: var(--hint); stroke-width: 5; }
+/* Dashed ring on the outer circle, so focus never looks like a hint. */
+.node.tappable:focus-visible .hit { stroke: var(--text); stroke-width: 3; stroke-dasharray: 6 4; }
 
 .node.visited .body { fill: var(--mode); stroke: var(--mode); }
 .node.visited .label { fill: #fff; }
@@ -288,6 +310,7 @@ h1, h2, h3 { line-height: 1.2; }
 @media (prefers-reduced-motion: reduce) {
   .node.hint .body, .node.wrong { animation: none; }
   .card { transition: none; }
+  .card:hover { transform: none; }
 }
 
 /* Visit sequence */
@@ -317,6 +340,9 @@ h1, h2, h3 { line-height: 1.2; }
 .actions[hidden] { display: none; }
 .hint-btn.nudge { animation: nudge 1s ease-in-out infinite; }
 @keyframes nudge { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--hint) 45%, transparent); } }
+@media (prefers-reduced-motion: reduce) {
+  .hint-btn.nudge { animation: none; box-shadow: 0 0 0 4px color-mix(in srgb, var(--hint) 45%, transparent); }
+}
 
 /* Modal */
 .overlay {
@@ -338,13 +364,14 @@ h1, h2, h3 { line-height: 1.2; }
   box-shadow: 0 10px 40px rgba(0, 0, 0, .3);
 }
 .modal h2 { margin-top: 0; }
-.modal .stars { font-size: 2.2rem; color: var(--hint); margin: 0; letter-spacing: 4px; }
+.modal .stars { font-size: 2.2rem; color: var(--star); margin: 0; letter-spacing: 4px; }
 .modal .seq-summary { font-weight: 600; color: var(--mode); word-break: break-word; }
 .modal-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
 
 /* Tutorial */
 .progress { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
 .progress span { display: block; height: 100%; background: var(--primary); transition: width .3s; }
+@media (prefers-reduced-motion: reduce) { .progress span { transition: none; } }
 .step h2 { margin: 20px 0 8px; }
 .step h3 { margin: 24px 0 4px; }
 .step-body > .btn { margin: 4px 0; }
