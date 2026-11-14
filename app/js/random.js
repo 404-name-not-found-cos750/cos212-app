@@ -1,6 +1,7 @@
-// Random Order mode: unlocked at 40 stars. Endless trees, each with a random
-// traversal order, growing bigger and deeper. One life. High score is saved.
-const RANDOM_UNLOCK = 40;
+// Random Order mode: unlocked at 30 of the 45 stars, i.e. all 15 levels cleared
+// with an average of 2 stars. Endless trees, each with a random traversal
+// order, growing bigger and deeper. One life. High score is saved.
+const RANDOM_UNLOCK = 30;
 const KINDS = ['pre', 'in', 'post'];
 
 function totalStars() {
@@ -41,13 +42,13 @@ function mountRandom(root) {
       <header class="topbar">
         <a class="back" href="#/">← Home</a>
         <h1>Random Order</h1>
-        <div class="hearts" aria-label="1 life">❤️</div>
+        <div class="hearts" aria-label="1 life left">❤️</div>
       </header>
       <div class="endless-bar" aria-live="polite"></div>
       <div class="order-banner" aria-live="assertive"></div>
       <div class="board-host"></div>
       <p class="feedback" aria-live="polite"></p>
-      <div class="overlay" hidden><div class="modal" role="dialog" aria-modal="true"></div></div>
+      <div class="overlay" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"></div></div>
     </div>`;
 
   const $ = (s) => root.querySelector(s);
@@ -72,6 +73,7 @@ function mountRandom(root) {
 
   function openModal(html, buttons) {
     modal.innerHTML = html + '<div class="modal-actions"></div>';
+    modal.querySelector('h2').id = 'modal-title';
     const row = modal.querySelector('.modal-actions');
     buttons.forEach(({ label, cls = '', run }) => {
       const b = document.createElement('button');
@@ -81,11 +83,14 @@ function mountRandom(root) {
       b.addEventListener('click', run);
       row.appendChild(b);
     });
+    // Keep keyboard and screen-reader focus inside the dialog while it's open.
+    root.querySelectorAll('.page > :not(.overlay)').forEach((e) => { e.inert = true; });
     overlay.hidden = false;
     row.querySelector('button').focus();
   }
 
   function closeModal() {
+    root.querySelectorAll('[inert]').forEach((e) => { e.inert = false; });
     overlay.hidden = true;
     modal.innerHTML = '';
   }
@@ -102,6 +107,7 @@ function mountRandom(root) {
 
   function nextTree() {
     clearTimeout(nextTimer);
+    const refocus = host.contains(document.activeElement);
     if (board) board.destroy();
     host.innerHTML = '';
     const kind = pickKind();
@@ -125,6 +131,7 @@ function mountRandom(root) {
       onInfo: (t) => say(t, 'info'),
       onComplete: treeCleared,
     });
+    if (refocus) host.querySelector('.node.tappable').focus();
     say(`Tree ${state.trees + 1}: ${cfg.n} nodes in ${m.name.toLowerCase()}.`);
   }
 
@@ -132,6 +139,7 @@ function mountRandom(root) {
     state.trees++;
     const bonus = randomTreeCfg(state.trees - 1).n;
     state.score += bonus;
+    Store.saveBest('random', state.score); // saved now in case the student leaves mid-run
     renderBar();
     board.locked = true;
     say(`🌳 Tree cleared! +${bonus} bonus. Watch the order for the next one…`, 'good');
@@ -141,9 +149,11 @@ function mountRandom(root) {
   function gameOver(n, why) {
     board.locked = true;
     hearts.textContent = '🤍';
+    hearts.setAttribute('aria-label', '0 lives left');
     say(why, 'bad');
-    const prev = Store.best('random');
-    const isBest = Store.saveBest('random', state.score);
+    const prev = state.startBest;
+    Store.saveBest('random', state.score);
+    const isBest = state.score > prev;
     const m = Tree.MODES[state.kind];
     openModal(
       `<h2>Game over</h2>
@@ -152,8 +162,8 @@ function mountRandom(root) {
        <p>${state.trees} tree${state.trees === 1 ? '' : 's'} cleared. This tree was <b>${m.name.toLowerCase()}</b> (${m.rule}).</p>
        <p>${why}</p>`,
       [
-        { label: 'Play again', run: start },
-        { label: 'Show me this tree step by step', cls: 'ghost', run: walkthrough },
+        { label: 'Show me this tree step by step', run: walkthrough },
+        { label: 'Play again', cls: 'ghost', run: start },
         { label: 'Home', cls: 'ghost', run: () => { location.hash = '#/'; } },
       ],
     );
@@ -183,13 +193,19 @@ function mountRandom(root) {
   }
 
   function start() {
+    // Started from the modal or the walkthrough? Then move focus to the new
+    // tree, because that button is about to go.
+    const refocus = root.contains(document.activeElement);
     closeModal();
     clearTimeout(nextTimer);
     root.querySelectorAll('.walkthrough').forEach((w) => w.remove());
-    state = { score: 0, trees: 0, history: [], kind: 'pre' };
+    state = { score: 0, trees: 0, history: [], kind: 'pre', startBest: Store.best('random') };
     hearts.textContent = '❤️';
+    hearts.setAttribute('aria-label', '1 life left');
     renderBar();
     nextTree();
+    const first = refocus && host.querySelector('.node.tappable');
+    if (first) first.focus();
   }
 
   start();

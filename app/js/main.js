@@ -2,19 +2,28 @@
 const Store = (() => {
   const KEY = 'cos212-tree-hop-v1';
 
+  const isObject = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
+
+  // Whole number between 0 and max; anything else becomes 0.
+  function count(x, max) {
+    const v = Math.floor(Number(x));
+    return Number.isFinite(v) ? Math.min(max, Math.max(0, v)) : 0;
+  }
+
+  // Saved data may be old, hand-edited or broken, so check every field.
   function load() {
     let data = null;
-    try { data = JSON.parse(localStorage.getItem(KEY)); } catch (e) { /* storage blocked */ }
-    data = data || {};
-    data.stars = data.stars || {};
-    data.best = data.best || {};
-    if (typeof data.best.random !== 'number') data.best.random = 0;
+    try { data = JSON.parse(localStorage.getItem(KEY)); } catch (e) { /* storage blocked or bad JSON */ }
+    if (!isObject(data)) data = {};
+    if (!isObject(data.stars)) data.stars = {};
+    if (!isObject(data.best)) data.best = {};
+    data.best.random = count(data.best.random, Number.MAX_SAFE_INTEGER);
     for (const k of ['pre', 'in', 'post']) {
-      if (!Array.isArray(data.stars[k]) || data.stars[k].length !== LEVELS.length) {
-        data.stars[k] = LEVELS.map(() => 0);
-      }
-      if (typeof data.best[k] !== 'number') data.best[k] = 0;
+      const s = Array.isArray(data.stars[k]) && data.stars[k].length === LEVELS.length ? data.stars[k] : [];
+      data.stars[k] = LEVELS.map((_, i) => count(s[i], 3));
+      data.best[k] = count(data.best[k], Number.MAX_SAFE_INTEGER);
     }
+    data.tutorialDone = data.tutorialDone === true;
     return data;
   }
 
@@ -27,7 +36,7 @@ const Store = (() => {
 
   return {
     progress: () => cache.stars,
-    tutorialDone: () => !!cache.tutorialDone,
+    tutorialDone: () => cache.tutorialDone,
     best: (kind) => cache.best[kind],
     // Returns true if this is a new best Endless score.
     saveBest(kind, score) {
