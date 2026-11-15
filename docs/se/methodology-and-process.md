@@ -2,7 +2,7 @@
 
 ## 1. Approach
 
-We used **Scrum** (Schwaber and Sutherland, 2020) **with short sprints, combined with evolutionary prototyping**. The reasons, and the alternatives we considered (waterfall, pure Scrum, Kanban and prototyping on its own), are in [decision 002](../decisions/002-se-methodology.md). In short:
+We used a **Scrum-based iterative approach with short sprints, combined with evolutionary prototyping**. We took the backlog, sprints, milestones and re-planning checkpoints from Scrum (Schwaber and Sutherland, 2020), but did not run the full framework; for example, sprint lengths changed at each re-plan. The reasons, and the alternatives we considered (waterfall, pure Scrum, Kanban and prototyping on its own), are in [decision 002](../decisions/002-se-methodology.md). In short:
 
 - The requirements were uncertain at the start, and the spec asks for a prototype, so we built a working version early and improved it rather than specifying everything first.
 - The deadline was fixed and close, so we worked in short sprints and re-planned at the end of each one.
@@ -38,7 +38,7 @@ The project ran from the spec's release on 22 Oct to the presentation on 16 Nov.
 
 | Milestone | Due | Goal | Issues |
 |---|---|---|---|
-| Sprint 0 – Decisions | 26 Oct | Topic, SE method, ID model, stack, roles, meetings, onboarding | #1–#7 |
+| Sprint 0 – Decisions | 26 Oct | Topic, SE method, ID model, stack, roles, onboarding | #1–#7 |
 | Sprint 1 – Design | 1 Nov | Learner analysis, objectives, theories, styles, motivation, assessment design, storyboard, requirements, architecture, wireframes, skeleton + CI | #8–#18 |
 | Sprint 2 – Build & content | 8 Nov | Learning content, question bank, visualisation, animation, quiz engine, progress tracking | #19–#24 |
 | Sprint 3 – Polish & documents | 13 Nov | Testing, deployment, SE and ID documents, slides | #25–#29 |
@@ -71,7 +71,6 @@ In Scrum terms, the sprint length was not fixed: we shortened the sprints and mo
 | **Decision records** | `docs/decisions/`: one short file per significant choice (context, options, decision, rationale, consequences). These are our answers to the panel's "why?" questions. |
 | **Plan document** | `docs/PLAN.md`: deadlines, roles, schedule and per-person checklists. Each re-plan adds a section and keeps the old plan as a record. |
 | **GenAI log** | `docs/PROMPTS.md`: every GenAI use with the tool and prompt, as the spec requires. |
-| **Meeting notes** | `docs/meetings/`, one file per meeting from a template (present, agenda, decisions, action items). |
 | **Hosting** | Vercel, deploying `app/` from `main` on every push (see [testing-and-deployment.md](testing-and-deployment.md)). |
 | **Communication** | A WhatsApp group, used throughout the project for day-to-day coordination, questions and hand-overs. |
 
@@ -100,17 +99,13 @@ The backlog has **32 issues**, each with a "What needs to be done" and a "Done w
 
 On the evening of 15 Nov, before the final documents were merged, there are 31 commits across all branches, including 10 merge commits (22 by Galen, 6 by Francois and 3 by Hendré). The history is short and uneven: the whole app arrived as one commit on 7 Nov, and most other commits are planning, documentation and the demo-readiness fixes.
 
-### 5.4 Meetings and stand-ups
-
-The plan called for a daily 15-minute stand-up (yesterday / today / blockers) with notes in `docs/meetings/`. In practice we held no stand-ups: the team coordinated in a WhatsApp group instead, and the only meeting was held on 15 Nov at 19:00, to agree the final documents, who presents what in the presentation, and the demo.
 
 ## 6. What we would do differently
 
-- **Make the first decisions in the first week.** Sprint 0 slipped by about two weeks (due 26 Oct; decisions 001 and 004 drafted 9 Nov), and everything after it was compressed. A one-hour decision meeting in the first week, with the topic, method and stack decided together, would have given us a design sprint before the build.
+- **Make the first decisions in the first week.** Sprint 0 slipped by about two weeks (due 26 Oct; decisions 001 and 004 drafted 9 Nov), and everything after it was compressed. Deciding the topic, method and stack together in the first week would have given us a design sprint before the build.
 - **Build a small prototype on purpose, early.** The prototype was the turning point of the project: it settled the topic and made the requirements concrete. We should have planned a deliberate throw-away "spike" in the first sprint instead of a long design phase on paper.
 - **Merge in small pieces.** The app arrived as one commit and one large PR, which is hard to review and gives little evidence of how it grew. Smaller PRs per feature, each reviewed, would have spread the knowledge of the code across the team earlier.
 - **Assign issues and close them as we go.** The backlog was well structured but nobody was assigned, and nothing was closed until 12 Nov, so the board did not show the real state of the project. Closing keywords must be written once per issue.
-- **Write meeting notes when the meeting happens.** They are easy to write in five minutes and impossible to reconstruct honestly afterwards.
 - **Start the ID analysis before the build.** The learning objectives and learner analysis should drive the content and the assessment. Because the app was built first, we had to check the content against the objectives afterwards.
 
-What worked: short sprints and a single plan document let us re-plan quickly three times without losing track; the feature freeze held; and decision records gave us written answers to "why?" for each major choice.
+What worked: short sprints and a single plan document let us re-plan quickly three times without losing track; the feature freeze was mostly respected after the documented exceptions (section 2.3.2); and decision records gave us written answers to "why?" for each major choice.

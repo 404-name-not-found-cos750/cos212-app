@@ -31,8 +31,9 @@ EDITOR NOTES (Galen). Delete this comment before the PDF export.
 | Mthobisi Khoza | u26838852 | 9 |
 | Francois Scholtz | u19024232 | App build; input to 9 |
 
-**Repository:** https://github.com/404-name-not-found-cos750/cos212-app
-**Live app:** https://cos212-tree-hop.vercel.app
+**Repository:** <https://github.com/404-name-not-found-cos750/cos212-app>
+
+**Live app:** <https://cos212-tree-hop.vercel.app>
 
 ---
 
@@ -64,7 +65,7 @@ We chose ADDIE over a rapid-prototyping model such as SAM, or Dick and Carey, fo
 | Design | Refined the objectives; storyboard and wireframes; designed the assessment (quick check, games, Random Order) and the scaffolding (hints, walkthrough). |
 | Development | Francois built the app on the DevFS branch, merged by PR \#33; we reviewed the tutorial text against the objectives (section 6). |
 | Implementation | Deployed to the live URL (https://cos212-tree-hop.vercel.app); presentation and demo. |
-| Evaluation | Formative: the tutorial quick check and game feedback, and a usability test with five adult beginners who had not studied computer science (results in the SE document, section 7). Summative (not done): in a real COS212 rollout we would compare lecture-session performance and quiz results of students who used the app with those who did not. |
+| Evaluation | Formative: the tutorial quick check and game feedback, and a usability test with five adult participants from outside computer science, four of them new to trees (results in the SE document, section 7). Summative (not done): in a real COS212 rollout we would compare lecture-session performance and quiz results of students who used the app with those who did not. |
 
 *Table 2.1: The ADDIE phases and what we did in each.*
 
@@ -105,13 +106,13 @@ We chose ADDIE over a rapid-prototyping model such as SAM, or Dick and Carey, fo
 | LO1 | identify the root, a leaf, a child and a subtree of a binary tree. | Remember | Tutorial step 1 / step 1 tap tasks (root, leaf, right child; subtree is shown, not tapped) |
 | LO2 | explain that a traversal visits every node exactly once, and that the three orders differ only in which of the three passes writes the node down. | Understand | Step 2 (the monkey's walk) / not directly assessed (see section 6) |
 | LO3 | produce the pre-, in- and post-order sequence of a given tree. | Apply | Steps 3 to 5 / game levels 1 to 5 |
-| LO4 | explain why a given node cannot be visited yet. | Analyse | Mistake explanations after a wrong tap / practice and games |
-| LO5 | select the correct sequence from distractors, including a level-order distractor. | Analyse / Evaluate | Step 6 quick check / quick check |
+| LO4 | explain why a given node cannot be visited yet. | Analyse | Mistake explanations after a wrong tap / supported by feedback in practice and games, not directly assessed |
+| LO5 | select the correct sequence from distractors, including a level-order distractor. | Apply / Analyse | Step 6 quick check / quick check |
 | LO6 | apply the correct order when the order changes from tree to tree. | Apply / Analyse | Games / Random Order (the required order is shown for each tree) |
 
 *Table 4.1: Learning objectives.*
 
-**Why the objectives stop at Analyse/Evaluate.** Tree Hop is a pre-lecture app that prepares students for the lecture. Create, for example writing the recursive traversal code, is left for the lecture and practicals.
+**Why the objectives stop at Analyse.** Tree Hop is a pre-lecture app that prepares students for the lecture. Writing the recursive traversal code, and the higher levels it can lead to, are left for the lecture and practicals.
 
 **Scope.** BST insert/search, level-order (breadth-first) traversal and graphs are out of scope (decision 001). Level-order appears only as a distractor.
 
@@ -174,7 +175,7 @@ For issue \#19 we read the tutorial text in `app/js/tutorial.js` and the rule ca
 | LO3 | Steps 3 to 5; game levels | Works: demo, then practice with no hearts. Each order has a rule card, a real-use link (copying, sorted output, deleting) and a hint button. No change. |
 | LO4 | Mistake messages (tree.js) | Works: messages name the violated rule and the nodes involved, e.g. "In post-order, children come before their parent." The generic fallback ("Another node needs to be visited first") explains less. Suggest checking which taps reach it. |
 | LO5 | Step 6, quick check | Works: level-order is a distractor, and wrong answers say what the sequence actually is. The quick check marks the tutorial done whatever the score; this is fine, but it advises rather than gates. |
-| LO6 | Random Order | Works: a banner names the order and its rule before every tree, the order changes between trees (never the same order three times in a row), trees grow to 25 nodes, and there are no hints. After game over the student can watch the tree step by step. This tests applying the right rule, not recalling it, which matches the objective. |
+| LO6 | Random Order | Works: a banner names the order and its rule before every tree, an order is picked for each tree (never the same order three times in a row), trees grow to 25 nodes, and there are no hints. After game over the student can watch the tree step by step. This tests applying the right rule, not recalling it, which matches the objective. |
 
 *Table 6.1: Content review against the objectives.*
 
@@ -214,11 +215,11 @@ In every step, **Next** stays disabled until the step's task is done, and there 
 
 ![Frame 11: Level complete. Feedback: one to three stars, a praise line with the mistakes and hints that earned them ("Perfect run! 0 mistakes, 0 hints."), and the full sequence. The learner chooses the next level, to play again, or to go home.](../se/img/level-complete.png){width=60%}
 
-### After the levels: support fades
+### After the levels: support decreases across harder modes
 
 ![Frame 12: Endless mode, unlocked after level 5. Trees grow bigger, there are no hints, and three hearts last the whole run, with a heart back every 5 trees. Feedback: trees cleared and the best score.](../se/img/endless.png){width=60%}
 
-![Frame 13: Random Order, unlocked at 30 stars. The order changes with every tree and is announced in a large coloured banner. One heart to start, plus one more every 5 trees. Feedback: the score, the trees cleared and the high score.](../se/img/random.png){width=60%}
+![Frame 13: Random Order, unlocked at 30 stars. An order is picked for each tree (never the same one three times in a row) and announced in a large coloured banner. One heart to start, plus one more every 5 trees. Feedback: the score, the trees cleared and the high score.](../se/img/random.png){width=60%}
 
 ---
 
@@ -301,7 +302,7 @@ Tree Hop is used **before** the lecture, on the student's own time, and nobody c
 
 - A character guides the student from the first screen: "Help the monkey visit every node." On every correct tap the monkey swings on a vine to the node.
 - Every attempt uses a **new random tree**, so no two rounds look the same and there is always something new to look at.
-- The modes change the challenge: levels → Endless (no hints) → Random Order, where the order changes on every tree and a large coloured banner pops up to announce it.
+- The modes change the challenge: levels → Endless (no hints) → Random Order, where an order is picked for each tree (never the same one three times in a row) and a large coloured banner pops up to announce it.
 - Questions keep the student thinking instead of reading. Each level opens with "Where does pre-order start?", and the tutorial ends with a quick check.
 
 **Relevance.**
@@ -408,7 +409,7 @@ This extra help is called scaffolding. The student gets it when they need it, an
 ![Figure 9.1: Help is reduced at each stage, from the tutorial to Random Order.](img/scaffolding-fading.png){width=95%}
 
 - **Tutorial:** No hearts. The hint is free. After 2 wrong taps the message adds: "Try the Hint button if you're stuck."
-- **Levels 1 to 5:** Three hearts per attempt. Each mistake is explained. A hint costs stars. The next section describes this in detail.
+- **Levels 1 to 5:** Three hearts per attempt. Each mistake is explained. A hint lowers the stars that attempt can earn. The next section describes this in detail.
 - **Endless mode:** Three hearts for the whole run, with one heart back every 5 trees while below three. No hints. After the run ends, the student can watch a walkthrough of the tree they were on.
 - **Random Order mode:** One heart, plus one more every 5 trees. No hints. A banner states the order and its rule for each tree. A walkthrough is offered at game over.
 
@@ -461,7 +462,7 @@ This is a list of everything the app asks. No questions were added in code. In t
 | Step 1, task 1: "Tap the root." (tree 8, 3, 10, 1, 6, 14) | LO1 | Remember | "{n} has a parent ({p}) above it, so it isn't the root." | Unlimited retries, no penalty |
 | Step 1, task 2: "Now tap any leaf." | LO1 | Remember | "{n} still has children below it. Leaves are at the ends of the branches." | Unlimited retries |
 | Step 1, task 3: "Tap the right child of 3." | LO1 | Remember | If 1 is tapped: "1 is the left child of 3. Look at the other side." Otherwise: "{n} isn't directly below 3." | On success, the left subtree of 8 (3, 1 and 6) is highlighted and named. Subtree is shown but not tested. |
-| Step 2: watch the monkey's walk, one run per order | LO2 | Understand | No wrong answers. Each pass is labelled, for example "2nd pass at 3. Pre-order waits for the 1st pass." | Can be replayed for all three orders. Each run ends with the sequence it produced. |
+| Step 2: watch one complete run of the monkey's walk (the other orders can be replayed) | LO2 | Understand | No wrong answers. Each pass is labelled, for example "2nd pass at 3. Pre-order waits for the 1st pass." | Can be replayed for all three orders. Each run ends with the sequence it produced. |
 | Step 3: pre-order practice, tree 50, 30, 20, 40, 70 (answer 50 → 30 → 20 → 40 → 70) | LO3 | Apply | Pre-order explanations (Table 9.6). After 2 wrong taps: "Try the Hint button if you're stuck." | A demo comes first (tree 7, 4, 9). Free hint. No hearts. |
 | Step 4: in-order practice, tree 40, 20, 10, 30, 60 (answer 10 → 20 → 30 → 40 → 60) | LO3 | Apply | In-order explanations (Table 9.6), same nudge | Same. The tree is a binary search tree, so the answer comes out sorted. |
 | Step 5: post-order practice, tree 9, 4, 2, 7, 12 (answer 2 → 7 → 4 → 12 → 9) | LO3 | Apply | Post-order explanations (Table 9.6), same nudge | Same |
@@ -474,9 +475,9 @@ All three questions use one tree: root 5, left child 8 (with children 1 and 4) a
 
 | **Item** | **Correct answer** | **LO** | **Bloom's** | **Explanation shown** |
 |----|----|----|----|----|
-| Q1: "What is the pre-order sequence?" | 5 → 8 → 1 → 4 → 2 → 9 | LO3, LO5 | Apply, Analyse / Evaluate | "Pre-order starts at the root (5), then does all of the left subtree (8, 1, 4) before the right subtree (2, 9)." |
-| Q2: "What is the in-order sequence?" | 1 → 8 → 4 → 5 → 2 → 9 | LO3, LO5 | Apply, Analyse / Evaluate | "In-order finishes the left subtree (1, 8, 4) before the root 5, then does the right subtree (2, 9)." |
-| Q3: "What is the post-order sequence?" | 1 → 4 → 8 → 9 → 2 → 5 | LO3, LO5 | Apply, Analyse / Evaluate | "Post-order does the left subtree (1, 4, 8), then the right subtree (9, 2), and the root 5 last." |
+| Q1: "What is the pre-order sequence?" | 5 → 8 → 1 → 4 → 2 → 9 | LO3, LO5 | Apply, Analyse | "Pre-order starts at the root (5), then does all of the left subtree (8, 1, 4) before the right subtree (2, 9)." |
+| Q2: "What is the in-order sequence?" | 1 → 8 → 4 → 5 → 2 → 9 | LO3, LO5 | Apply, Analyse | "In-order finishes the left subtree (1, 8, 4) before the root 5, then does the right subtree (2, 9)." |
+| Q3: "What is the post-order sequence?" | 1 → 4 → 8 → 9 → 2 → 5 | LO3, LO5 | Apply, Analyse | "Post-order does the left subtree (1, 4, 8), then the right subtree (9, 2), and the root 5 last." |
 
 *Table 9.4: Quick check. In every question the correct option is highlighted, and "Review" buttons go back to steps 3, 4 or 5.*
 
@@ -515,9 +516,9 @@ A hint names the next node and says why it is next. For example: "Pre-order star
 
 ## Limitations
 
-- Game trees are random, so difficulty within a level varies. A 5-node tree can be nearly a straight line or fairly balanced.
+- Game trees are random, so difficulty within a level varies. Tree shapes vary in balance and branching within the level's depth limit, so two trees of the same size can differ in difficulty.
 - The quick check has only three fixed questions on one tree. The tutorial counts as done whatever the score.
-- LO4 is supported by feedback but not directly tested, and subtree (LO1) is shown but not tapped.
+- LO4 is supported by feedback but not directly tested, LO2 (the three passes) is not directly assessed, and subtree (LO1) is shown but not tapped.
 - Stars are not a reliable measure of mastery, because New tree clears mistakes and hints (see section 9.4).
 - Progress is saved per device and the lecturer cannot see it.
 - Hearts may feel harsh to anxious students. The tutorial practice has none, and the walkthrough replaces a "game over".
@@ -528,7 +529,7 @@ A hint names the next node and says why it is next. For example: "Pre-order star
 
 Tree Hop is a small, focused app: it teaches one data structure and one algorithm, binary trees and their depth-first traversals, to students who have not seen either before. The design choices described in this document all come back to that learner and that purpose. The tutorial teaches one mental model, the monkey's walk in which every node is passed three times, and builds the three orders on it, so the student does not have to memorise three unrelated rules. Every tap is checked immediately and every mistake is explained, and the support steps up only for students who need it: a hint after two mistakes, and a step-by-step walkthrough when the hearts run out. Stars, unlocks and harder modes give confident students a reason to keep going, while the tutorial practice and walkthroughs keep the experience safe for students who struggle.
 
-We followed ADDIE for the instructional design and ran it in Scrum sprints alongside the software work. The usability test, run with five adult beginners rather than COS212 students, showed that all of them could finish the tutorial and the games and explain the post-order rule afterwards, and that the explanation after each mistake was the feature they valued most; the main problems were tree words that clash with everyday trees and nodes that are hard to tap on small touch screens.
+We followed ADDIE for the instructional design and ran it alongside the Scrum-based sprints of the software work; the phases overlapped. The usability test, run with five adult participants (four new to trees) rather than COS212 students, showed that all of them reported finishing the tutorial and the games and explain the post-order rule afterwards, and that the explanation after each mistake was the feature they valued most; the main problems were tree words that clash with everyday trees and nodes that are hard to tap on small touch screens.
 
 The prototype has clear limits. Progress stays on the student's device and is not reported to the lecturer, the tutorial quiz has only three questions, and the app covers depth-first traversal only. It teaches the order in which nodes are visited, not the recursion behind it, and the usability test showed where that matters: on bigger trees, participants were unsure which subtree to finish first. The test also pointed to three concrete changes: a sentence in tutorial step 1 explaining that computer-science trees are drawn upside down, with the root at the top; larger tap targets on phones and tablets; and a graded hint that first gives a nudge (for example, "finish the left subtree first") before it names the next node. Beyond that, natural next steps would be a lecturer view of class progress, a larger question bank tagged by objective, a test with actual COS212 students, and further units on binary search trees and level-order traversal, reusing the same tree view and feedback engine.
 

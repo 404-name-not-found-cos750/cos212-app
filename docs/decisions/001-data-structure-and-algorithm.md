@@ -1,6 +1,6 @@
 # 001 – Data structure and algorithm: binary trees and tree traversal
 
-- **Status:** Proposed (to be accepted by the group at the next stand-up)
+- **Status:** Implemented; formal acceptance by the group was not recorded.
 - **Date:** 2026-11-09
 - **Issue:** #1
 

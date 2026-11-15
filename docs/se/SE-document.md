@@ -17,8 +17,9 @@ date: "16 November 2026"
 | Francois Scholtz | u19024232 | App build |
 | Shekinah Maja | u26825882 | ID document (sections 2–6) |
 
-**Repository:** https://github.com/404-name-not-found-cos750/cos212-app
-**Live app:** https://cos212-tree-hop.vercel.app
+**Repository:** <https://github.com/404-name-not-found-cos750/cos212-app>
+
+**Live app:** <https://cos212-tree-hop.vercel.app>
 
 ---
 
@@ -35,7 +36,7 @@ Tree Hop teaches **binary trees** and **depth-first tree traversal** (pre-order,
 The spec allows one core data structure from the CS2023 Foundational Data Structures and Algorithms knowledge unit (excluding one-dimensional arrays and linked lists) with one core algorithm on it (Kumar et al., 2024). In CS2023 both are CS Core topics of the AL-Foundational knowledge unit: topic 9a, "Trees: Binary, n-ary, and search trees", and topic 11c, "uninformed depth/breadth-first tree search" (Kumar et al., 2024). The app also targets that unit's illustrative learning outcome for every algorithm in it: "Explain step-by-step how the algorithm operates." We chose binary trees with pre-, in- and post-order traversal because a traversal is a sequence of node visits: every tap can be assessed on its own, so the app can give immediate, specific feedback and add scaffolding only where a student struggles. The three orders share one mental model, and the scope was small enough to build, test and demonstrate in the time we had. Binary search trees, level-order traversal and graphs were considered and left out. The full reasoning is in decision 001 (Appendix A).
 
 ## How this document is organised
-Section 2 explains our method (Scrum with short sprints and evolutionary prototyping) and gives an honest account of how the sprints went, including three re-plans. Section 3 lists the requirements and user stories and traces them to the code. Sections 4 and 5 describe the architecture and the user interface. Section 6 covers testing and deployment, section 7 the usability evaluation with five beginners, and section 8 concludes. The decision records that justify our main choices are in Appendix A.
+Section 2 explains our method (a Scrum-based iterative approach with evolutionary prototyping) and gives an honest account of how the sprints went, including three re-plans. Section 3 lists the requirements and user stories and traces them to the code. Sections 4 and 5 describe the architecture and the user interface. Section 6 covers testing and deployment, section 7 the usability evaluation with five adult participants, and section 8 concludes. The decision records that justify our main choices are in Appendix A.
 
 ---
 
@@ -43,7 +44,7 @@ Section 2 explains our method (Scrum with short sprints and evolutionary prototy
 
 ## Approach
 
-We used **Scrum** (Schwaber and Sutherland, 2020) **with short sprints, combined with evolutionary prototyping**. The reasons, and the alternatives we considered (waterfall, pure Scrum, Kanban and prototyping on its own), are in decision 002 (Appendix A). In short:
+We used a **Scrum-based iterative approach with short sprints, combined with evolutionary prototyping**. We took the backlog, sprints, milestones and re-planning checkpoints from Scrum (Schwaber and Sutherland, 2020), but did not run the full framework; for example, sprint lengths changed at each re-plan. The reasons, and the alternatives we considered (waterfall, pure Scrum, Kanban and prototyping on its own), are in decision 002 (Appendix A). In short:
 
 - The requirements were uncertain at the start, and the spec asks for a prototype, so we built a working version early and improved it rather than specifying everything first.
 - The deadline was fixed and close, so we worked in short sprints and re-planned at the end of each one.
@@ -80,7 +81,7 @@ The project ran from the spec's release on 22 Oct to the presentation on 16 Nov.
 
 | Milestone | Due | Goal | Issues |
 |---|---|---|---|
-| Sprint 0 – Decisions | 26 Oct | Topic, SE method, ID model, stack, roles, meetings, onboarding | #1–#7 |
+| Sprint 0 – Decisions | 26 Oct | Topic, SE method, ID model, stack, roles, onboarding | #1–#7 |
 | Sprint 1 – Design | 1 Nov | Learner analysis, objectives, theories, styles, motivation, assessment design, storyboard, requirements, architecture, wireframes, skeleton + CI | #8–#18 |
 | Sprint 2 – Build & content | 8 Nov | Learning content, question bank, visualisation, animation, quiz engine, progress tracking | #19–#24 |
 | Sprint 3 – Polish & documents | 13 Nov | Testing, deployment, SE and ID documents, slides | #25–#29 |
@@ -113,7 +114,6 @@ In Scrum terms, the sprint length was not fixed: we shortened the sprints and mo
 | **Decision records** | `docs/decisions/`: one short file per significant choice (context, options, decision, rationale, consequences). These are our answers to the panel's "why?" questions. |
 | **Plan document** | `docs/PLAN.md`: deadlines, roles, schedule and per-person checklists. Each re-plan adds a section and keeps the old plan as a record. |
 | **GenAI log** | `docs/PROMPTS.md`: every GenAI use with the tool and prompt, as the spec requires. |
-| **Meeting notes** | `docs/meetings/`, one file per meeting from a template (present, agenda, decisions, action items). |
 | **Hosting** | Vercel, deploying `app/` from `main` on every push (see section 6). |
 | **Communication** | A WhatsApp group, used throughout the project for day-to-day coordination, questions and hand-overs. |
 
@@ -142,20 +142,15 @@ The backlog has **32 issues**, each with a "What needs to be done" and a "Done w
 
 On the evening of 15 Nov, before the final documents were merged, there are 31 commits across all branches, including 10 merge commits (22 by Galen, 6 by Francois and 3 by Hendré). The history is short and uneven: the whole app arrived as one commit on 7 Nov, and most other commits are planning, documentation and the demo-readiness fixes.
 
-### Meetings and stand-ups
-
-The plan called for a daily 15-minute stand-up (yesterday / today / blockers) with notes in `docs/meetings/`. In practice we held no stand-ups: the team coordinated in a WhatsApp group instead, and the only meeting was held on 15 Nov at 19:00, to agree the final documents, who presents what in the presentation, and the demo.
-
 ## What we would do differently
 
-- **Make the first decisions in the first week.** Sprint 0 slipped by about two weeks (due 26 Oct; decisions 001 and 004 drafted 9 Nov), and everything after it was compressed. A one-hour decision meeting in the first week, with the topic, method and stack decided together, would have given us a design sprint before the build.
+- **Make the first decisions in the first week.** Sprint 0 slipped by about two weeks (due 26 Oct; decisions 001 and 004 drafted 9 Nov), and everything after it was compressed. Deciding the topic, method and stack together in the first week would have given us a design sprint before the build.
 - **Build a small prototype on purpose, early.** The prototype was the turning point of the project: it settled the topic and made the requirements concrete. We should have planned a deliberate throw-away "spike" in the first sprint instead of a long design phase on paper.
 - **Merge in small pieces.** The app arrived as one commit and one large PR, which is hard to review and gives little evidence of how it grew. Smaller PRs per feature, each reviewed, would have spread the knowledge of the code across the team earlier.
 - **Assign issues and close them as we go.** The backlog was well structured but nobody was assigned, and nothing was closed until 12 Nov, so the board did not show the real state of the project. Closing keywords must be written once per issue.
-- **Write meeting notes when the meeting happens.** They are easy to write in five minutes and impossible to reconstruct honestly afterwards.
 - **Start the ID analysis before the build.** The learning objectives and learner analysis should drive the content and the assessment. Because the app was built first, we had to check the content against the objectives afterwards.
 
-What worked: short sprints and a single plan document let us re-plan quickly three times without losing track; the feature freeze held; and decision records gave us written answers to "why?" for each major choice.
+What worked: short sprints and a single plan document let us re-plan quickly three times without losing track; the feature freeze was mostly respected after the documented exceptions (section 2.3.2); and decision records gave us written answers to "why?" for each major choice.
 
 ---
 
@@ -217,7 +212,7 @@ Following our evolutionary prototyping approach (decision 002, Appendix A), the 
 | ID | Requirement |
 |---|---|
 | **FR-20** | **Endless mode** (one per order) unlocks after level 5 of that order is cleared. Trees start at 5 nodes and grow by one node per tree up to 15. There are no hints and no new-tree button; the student has 3 hearts for the whole run and wins one back every 5 trees (up to 3). The number of trees cleared is the score, and the best score per order is saved and shown on the home page. |
-| **FR-21** | **Random Order mode** unlocks when the student has earned a set number of stars across the three games (`RANDOM_UNLOCK`, 30 of the 45: all 15 levels cleared with an average of 2 stars). Until then the home page shows a locked card with a progress bar towards the unlock. |
+| **FR-21** | **Random Order mode** unlocks when the student has earned a set number of stars across the three games (`RANDOM_UNLOCK`: 30 of the 45 stars in total, for example two stars on each of the 15 levels). Until then the home page shows a locked card with a progress bar towards the unlock. |
 | **FR-22** | In Random Order, each tree gets a random order, shown in a colour-coded banner; the same order never comes up three times in a row. Trees grow from 4 to 25 nodes and from 2 to 4 levels deep. The student starts with one heart and wins another for every 5 trees cleared; a wrong tap costs a heart, and the game ends when the last heart is gone. The score is +1 per correct node plus a bonus equal to the tree's size when it is cleared. The high score is saved. |
 
 ### Rewards: avatars
@@ -231,14 +226,14 @@ Following our evolutionary prototyping approach (decision 002, Appendix A), the 
 |---|---|---|---|
 | **NFR-1** | Portability / offline | The app runs by opening `app/index.html` in a browser. No install, no build step, no network access and no third-party libraries are needed. | The app has no external URLs or dependencies; open it from a USB copy with Wi-Fi off. |
 | **NFR-2** | Access | No accounts, no sign-up, no login. A student can start within one click of opening the link. | Inspection: there is no login screen. |
-| **NFR-3** | Privacy | No personal data is collected. The only data stored is the student's progress, under the `localStorage` key `cos212-tree-hop-v1` on their own device. No cookies, analytics or server. | Code review of `main.js`; browser dev tools show no network requests after load. |
+| **NFR-3** | Privacy | No personal data is collected. The only data stored is the student's progress, under the `localStorage` key `cos212-tree-hop-v1` on their own device. No cookies, analytics or application backend; the app does not send progress anywhere (the static files are served by Vercel). | Code review of `main.js`; browser dev tools show no network requests after load. |
 | **NFR-4** | Compatibility | Works in current versions of Chrome, Edge, Firefox and Safari on laptops and phones, with mouse, touch or keyboard. The layout adapts to phone width (one column below 620 px). | Usability test: Chrome 131 and Edge 131 on laptops, Chrome on an Android phone (Samsung Galaxy A14) and Safari on an iPad (8th gen). Firefox not tested. |
 | **NFR-5** | Appearance | Light and dark themes follow the device setting (`prefers-color-scheme`). | Switch the OS theme. |
-| **NFR-6** | Performance | The first page is usable within 2 seconds on a typical student phone or laptop. The whole app (HTML, CSS and JS) is about 90 KB with no images to download. | Size of the files in `app/`; opening the live URL on a phone and a laptop. |
+| **NFR-6** | Performance | Target: the first page is usable within 2 seconds on a typical student phone or laptop. The whole app (HTML, CSS and JS) is about 90 KB with no images to download. | Partly checked: the file size is measured; the load time was not formally measured. |
 | **NFR-7** | Accessibility | Tree nodes can be reached with Tab and chosen with Enter or Space; nodes, hearts and progress bars have text labels for screen readers; feedback is announced through live regions; animations are reduced when the device asks for reduced motion. Target: WCAG 2.1 level AA colour contrast (W3C, 2018). | Checked after the feature freeze; the contrast results and fixes are in section 5. |
 | **NFR-8** | Usability | A student with no prior knowledge can finish the tutorial in about 10 minutes and play level 1 without help. Text is plain and short, and every mistake is explained. | Usability test (section 7): met on a laptop (tutorial 11–12 min, level 1 unaided); only partly met on a small phone and a tablet. |
 | **NFR-9** | Reliability | The app must not fail during the live demo. No runtime dependency on the network; storage errors are caught; random trees always have exactly the requested number of nodes. Backups: the deployed site, an offline copy and a recorded video. | Unit tests in CI (see section 6); rehearsals. |
-| **NFR-10** | Maintainability | Plain JavaScript split into small files by responsibility (model, drawing, pages, storage and routing), each under 450 lines, with comments explaining intent. Any team member can change the app and see the result with a browser refresh. | Code review; see the architecture section. |
+| **NFR-10** | Maintainability | Plain JavaScript split into small files by responsibility (model, drawing, pages, storage and routing), each under 500 lines, with comments explaining intent. Any team member can change the app and see the result with a browser refresh. | Code review; see the architecture section. |
 | **NFR-11** | Deployability | The app is a static site. Every push to `main` deploys automatically to the live URL. | See section 6. |
 
 ## Constraints
@@ -250,7 +245,7 @@ From the exam specification:
 - **C-3** The app must include an assessment that gives extra scaffolding to students who struggle.
 - **C-4** An SE approach and an ID approach must be used and documented in **separate** documents, available at the presentation.
 - **C-5** GenAI use must be acknowledged, with the prompts and tools, in the ID document.
-- **C-6** Deadlines: documents on ClickUP before 08:00 on Mon 16 Nov; presentation with a live demo of at most 10 minutes on 16 or 17 Nov; slides and a GitHub link to the code.
+- **C-6** Deadlines: documents on ClickUP before 08:00 on Mon 16 Nov; on 16 or 17 Nov, a presentation of up to 10 minutes and a separate live demonstration of up to 10 minutes, followed by 5 minutes of questions and 5 minutes to set up and vacate; slides uploaded before presenting, and a link to the source-code repository.
 - **C-7** Group of five, all present at the presentation.
 
 From the team and the situation:
@@ -371,7 +366,7 @@ As a COS212 student who has finished the levels, I want an endless run of growin
 - *Given* my run ends with a new best, *then* it is saved and shown on the home page.
 
 **US-14: Mix all three orders** (FR-21, FR-22)
-As a COS212 student who knows all three orders, I want a mode that switches order on every tree, so that I can check I can tell the orders apart and not just repeat one.
+As a COS212 student who knows all three orders, I want a mode that picks an order for each tree, so that I can check I can tell the orders apart and not just repeat one.
 
 - *Given* I have fewer stars than the unlock threshold, *then* Random Order shows a lock and my progress towards it.
 - *Given* I play Random Order, *then* each tree shows its order in a banner, the same order never appears three times in a row, I start with one heart and win another every 5 trees, and losing my last heart ends the game with my score and high score.
@@ -492,7 +487,7 @@ The main choice is in decision record 004: plain HTML, CSS and JavaScript with n
 | Drawing the tree | SVG | Each node is its own clickable element, so it works with keyboard and screen readers. It also scales to any screen size. |
 | Screens | One page, with the screen named after \# in the address | Works on any static host without extra setup, and also when the page is opened as a file. |
 | Saving progress | localStorage | No accounts or server needed, and no personal data leaves the device. |
-| Testing | Node's built-in test runner | No packages to install. It tests tree.js, the file that holds the rules. |
+| Testing | Node's built-in test runner | No packages to install. It tests tree.js, the file that holds the rules, and loading saved progress in main.js. |
 | Hosting | Vercel, serving the app folder | The repository is private until the presentation, and GitHub Pages cannot host a private repository on a free organisation. The backups are an offline copy and a recorded video. |
 
 *Table 4.2: Technology choices and reasons.*
@@ -503,18 +498,18 @@ All of these choices serve the same needs. The app must survive a live demo at t
 
 Two separate automatic steps run, as Figure 4.4 shows.
 
-![Figure 4.4: From pull request to live site.](img/arch-pipeline.png){width=85%}
+![Figure 4.4: From pull request to live site. The workflow and Vercel run separately: Vercel does not wait for the tests to pass.](img/arch-pipeline.png){width=85%}
 
 - **GitHub Actions** runs on every push to main and every pull request to main. It checks every script in app/js for syntax errors and then runs the unit tests with npm test.
 - **Vercel** publishes the app. A merge to main goes live, and every pull request gets a preview link.
 
-The workflow tests the code and Vercel publishes it. The workflow does not publish anything itself.
+The workflow tests the code and Vercel publishes it. The two run separately: the workflow does not publish anything, and Vercel does not wait for the tests, so we check that the workflow has passed before merging.
 
 ## Weak points and what we would improve
 
 - **Repeated code.** game.js and random.js repeat some code, such as the message line, the hearts display, the dialogs and the walkthrough. Sharing it would be the first clean-up.
 - **Progress store in the shell file.** Store sits in main.js, so every screen depends on the shell. It could move into its own file.
-- **Limited automatic testing.** Only the rules in tree.js have unit tests. The screens are checked by hand, in the usability test and in rehearsals.
+- **Limited automatic testing.** Only the rules in tree.js and loading saved progress in main.js have unit tests. The screens are checked by hand, in the usability test and in rehearsals.
 
 ---
 
@@ -534,7 +529,7 @@ Tree Hop was built as an evolutionary prototype (decision 002, Appendix A). The 
 The screenshots were taken from the app at laptop width (1200 px) and phone width (390 px), in light and dark mode. They are in `docs/se/img/`.
 
 | # | Screen | File | What the student does | Feedback they get | User stories |
-|---|---|---|---|---|---|
+|--|----------|----------------------|----------------------|-------------------------|-------|
 | 1 | Home | `home.png` | Starts the tutorial or picks a game; sees stars per game, the Random Order card (locked, with a progress bar) and the avatars | "Start here" / "✓ Completed" tag, star totals, unlock progress | US-1, US-12, US-14 |
 | 2 | Tutorial 1: Meet the tree | `tut-1.png` | Taps the root, a leaf and the right child of 3 | A sentence per tap; the left subtree is highlighted at the end | US-2 |
 | 3 | Tutorial 2: Walking around a tree | `tut-2.png` | Picks an order and watches the monkey walk round the tree | Three dots per node fill in; the "Now running" banner names the order and which pass writes the node down; the sequence bar fills | US-3 |
@@ -545,7 +540,7 @@ The screenshots were taken from the app at laptop width (1200 px) and phone widt
 | 8 | Out of hearts → walkthrough | `walkthrough.png` | Chooses "Show me step by step" and presses Next step | Each node is visited with its reason, then a fresh tree | US-9 |
 | 9 | Level complete | `level-complete.png` | Chooses next level, play again or home | Stars, mistakes, hints, the full sequence, any new unlocks and avatars | US-10, US-11 |
 | 10 | Endless | `endless.png` | Clears as many growing trees as possible | Trees cleared, best score, a heart back every 5 trees | US-13 |
-| 11 | Random Order | `random.png` | Clears trees whose order changes each time | Large coloured banner per tree, score, high score | US-14 |
+| 11 | Random Order | `random.png` | Clears trees, each with its own order (never the same three times in a row) | Large coloured banner per tree, score, high score | US-14 |
 
 ![Figure 5.2: Home page for a new student. The tutorial is marked "Start here", every game is at level 1, and Random Order is locked.](img/home.png){width=60%}
 
@@ -583,7 +578,7 @@ The screenshots were taken from the app at laptop width (1200 px) and phone widt
 | **Numbered badges and a sequence bar** | Shows what has been written down so far, so the student doesn't have to hold the sequence in their head (cognitive load, ID section 5). |
 | **Hearts and stars** | Familiar game signals for "how many mistakes I have left" and "how well I did". The stars rule is shown with the mistakes and hints in the level summary. |
 | **Explanations instead of "Wrong!"** | Every wrong tap names the rule and the node involved, because the purpose is learning, not scoring (ID section 9). |
-| **Large tap targets** | Each node has an invisible tap area 10 px wider than the circle, and every button is at least 44 px high, so the app works with a finger on a phone. |
+| **Large tap targets** | Each node has an invisible tap area 10 px wider than the circle, and every button is at least 44 px high. Buttons work well with a finger; tree nodes are smaller, and the usability test found them hard to tap on a small phone and a tablet (section 7). |
 | **Plain HTML, CSS and SVG, no images** | The trees are drawn in SVG, so they stay sharp at any size, and the whole app is about 90 KB and works offline (NFR-1, NFR-6). |
 
 ## Responsive layout, light and dark mode
@@ -592,7 +587,7 @@ The screenshots were taken from the app at laptop width (1200 px) and phone widt
   - The content is at most 760 px wide and centred on a laptop.
   - Below 620 px the three game cards stack in one column (NFR-4).
   - The tree is an SVG that scales with the screen. Deep trees (the largest Random Order trees, up to 4 levels below the root) get a wider drawing, and the board scrolls sideways on a phone instead of shrinking the nodes further.
-  - On a 390 px phone, a node in a game tree is about 26 px across, with a tap area of about 36 px. That is above the WCAG 2.2 minimum target size (24 px) but below the 44 px that the buttons use, so small trees are comfortable and the largest trees are tighter.
+  - On a 390 px phone, a node in a game tree is about 26 px across, with a tap area of about 36 px. That is above the WCAG 2.2 minimum target size (24 px) but below the 44 px that the buttons use, so small trees are easier to tap and the largest trees are tighter; two usability participants on touch screens found the nodes hard to hit (section 7).
 - **Light and dark mode.**
   - Both themes follow the device setting (`prefers-color-scheme`, NFR-5).
   - Every colour is a CSS variable, so the dark theme redefines the palette in one place. The order colours are lighter in dark mode so they stay readable.
@@ -626,7 +621,7 @@ Built in from the start (NFR-7):
 | Green text on the pale green feedback box and "Start here" tag (light) | 4.21 (feedback) / 4.41 (tag) | 5.00 (new `--good`) | **Fixed** |
 | Dark mode: amber text and stars on the card | 7.32 | unchanged | Pass |
 
-The amber outline on the hinted node (2.20 on white) was kept on purpose. It is never the only cue: the hint text names the node ("Tap 30."), and the node pulses unless reduced motion is on.
+The amber outline on the hinted node (2.20 on white) is below the 3:1 that WCAG 2.1 asks for graphics that carry information (W3C, 2018). We kept it because the outline is not the only way the hint is given: the hint text names the node ("Tap 30."), and the node pulses unless reduced motion is on. A darker outline would be a small improvement for a later version.
 
 **Fixes made in PR #39 ("UI and accessibility polish")** after the check:
 
@@ -659,7 +654,7 @@ We test Tree Hop at three levels, each matched to the kind of fault it is best a
 |---|---|---|---|
 | Unit tests | The tree model in `app/js/tree.js`: traversal orders, random trees, mistake explanations and hint text; and loading saved progress in `app/js/main.js` | Node's built-in test runner (`node:test`), `npm test` | On every push and pull request to `main` (CI), and locally before a PR |
 | Manual exploratory testing | The pages, drawing, animation, taps, hearts, stars, unlocks and saved progress | Playing every page in Chrome and Safari, on a laptop and a phone | Before each PR to `main` and after each deployment |
-| Usability test | Whether students without COS212 can learn from the app and use it without help | 5 adult beginners with a self-completed questionnaire (section 7) | Once, before the submission |
+| Usability test | Whether students without COS212 can learn from the app and use it without help | 5 adult participants with a self-completed questionnaire (section 7) | Once, before the submission |
 
 ### Why only the model is unit-tested
 The tree model is where a mistake would teach students something wrong: a wrong traversal sequence, a feedback message that blames the wrong node, or a hint that points to the wrong next step. It is also pure logic with no dependence on the page, so it can be tested quickly and exhaustively. The other files (`view.js`, `game.js`, `random.js`, `tutorial.js`, `main.js`) are mostly drawing, animation and page flow. Faults there are visible on screen, and whether the screens are clear is a question about people rather than code, so we cover them with manual testing and the usability test instead of a browser-automation framework, which would have cost more time than we had. The one exception is loading saved progress in `main.js`: damaged saved data used to leave the page blank on every visit, so the loader has its own tests.
@@ -722,7 +717,7 @@ We planned a moderated test with 3–5 students who had not done COS212 (`docs/s
 
 ## Participants
 
-We could not recruit students in time, so the five participants are adults outside computer science: a hairdresser, a civil engineer, a university administration clerk, a retired farmer and a UX designer, aged 24 to 67. They are referred to only as P1–P5. Four had never learnt about trees; P5 had, so P5 is left out of the learning-gain figures. Three used a laptop (Chrome or Edge), P1 an Android phone (Chrome) and P4 an iPad (Safari). P1 and P4 had help from a family member. This is a real deviation from the plan: the results tell us how usable the app is for complete beginners, which is a harder group than our target learner, but they are not evidence about COS212 students. The answers were written up from what the participants said, so the quotes are close paraphrases.
+We could not recruit students in time, so the five participants are adults outside computer science: a hairdresser, a civil engineer, a university administration clerk, a retired farmer and a UX designer, aged 24 to 67. They are referred to only as P1–P5. Four had never learnt about trees; P5 had, so P5 is left out of the learning-gain figures. Three used a laptop (Chrome or Edge), P1 an Android phone (Chrome) and P4 an iPad (Safari). P1 and P4 had help from a family member. This is a real deviation from the plan: the results tell us how usable the app is for adults new to the topic, but they are not evidence about COS212 students. The questionnaire was self-completed, so completion and times are what participants reported, not what we observed. The answers were written up from what the participants said, so the quotes are close paraphrases.
 
 ## Results
 
@@ -736,10 +731,10 @@ We could not recruit students in time, so the five participants are adults outsi
 
 *Table 7.1: Usability results per participant. ✓ = finished without being stuck; A = finished, but stuck for a while. Times are the participants' own, to the minute.*
 
-- **Completion.** All five finished every task; three did so without getting stuck. Three used the Hint and two (P1, P4) ran out of hearts and reached the walkthrough, which then got them through the level.
-- **Understanding.** All five explained the post-order rule correctly in their own words (children or subtrees before the node), three with an analogy of their own, such as "clearing the sub-folders before closing the main folder". The four beginners went from 0/3 on the pre-check to 3/3 on the post-check, with the caveat that P1 guessed one answer and P4 was helped.
+- **Completion.** All five reported finishing every task; three did so without getting stuck, and two (P1, P4) had help from a family member. Three used the Hint and two (P1, P4) ran out of hearts and reached the walkthrough, which then got them through the level.
+- **Understanding.** All five explained the post-order rule correctly in their own words (children or subtrees before the node), three with an analogy of their own, such as "clearing the sub-folders before closing the main folder". The four participants new to trees went from 0/3 on the pre-check to 3/3 on the post-check. This is encouraging but not proof that the app caused the gain: P1 guessed one answer, P4 was helped, the sample is tiny and there was no comparison group.
 - **Progress.** Everyone read their star count correctly. No one could say how to unlock Endless: they all described the Random Order card (30 stars) instead, because Endless only appears after level 5. We count this as a fault in our question.
-- **SUS.** The mean is 72.5 and the median 92.5, but the scores split by device and experience: the three laptop users gave 92.5, the phone user 57.5 and the tablet user 27.5.
+- **SUS.** The mean is 72.5 and the median 92.5. The three laptop users gave 92.5; the phone and tablet users gave 57.5 and 27.5. Those two were also the least experienced with technology, so we cannot say whether the device or the person explains the lower scores.
 
 ## Issues and what we did
 
@@ -748,8 +743,8 @@ We could not recruit students in time, so the five participants are adults outsi
 | U1 | Tree words still felt foreign, and a root at the top contradicts a real tree. The tutorial defines the words; the metaphor is the problem. | P1, P2, P4 | Medium | Known limitation: add a line saying CS trees are drawn upside down. |
 | U2 | Nodes hard to tap on a small phone and a tablet. | P1, P4 | Medium | Known limitation: set a minimum on-screen tap size. |
 | U3 | Tutorial too fast for one participant, and cannot be skipped by one who already knew trees. | P4, P5 | Low | Kept (the tutorial is learner-paced and optional); skip/replay is future work. |
-| U4 | The Hint shows the next node rather than a nudge. | P5 | Low | Kept: it only appears after two mistakes and explains why. A graded nudge first is future work. |
-| U5 | No summary of the full order after a level; the quick check came as a surprise. | P3, P5 | Low | Future work. |
+| U4 | The Hint shows the next node rather than a nudge. | P5 | Low | Kept: the Hint is always available, is highlighted after two mistakes, and explains why that node is next. A graded nudge first is future work. |
+| U5 | Wish for an animated replay of the full order after a level (the level summary shows the sequence as text); the quick check came as a surprise. | P3, P5 | Low | Future work. |
 | U6 | Applying post-order to bigger trees ("which left?"). | P3, P5 | Medium | Known limitation: the app teaches the order, not the recursion (section 8). |
 
 *Table 7.2: Issues found in the usability test.*
@@ -758,7 +753,7 @@ The full table, with all nine issues and the quotes, is in `docs/se/usability-te
 
 ## What this means for NFR-8
 
-NFR-8 asks that a student with no prior knowledge finishes the tutorial in about 10 minutes and plays level 1 without help. On a laptop, the two beginners finished the tutorial in 11 and 12 minutes and level 1 in 5 minutes without help, which is close to the target. The phone and tablet users needed much longer and some help, so on small touch screens NFR-8 is only partly met, and U2 is the change most likely to close that gap. The mistake explanations were the feature every participant mentioned, which supports the scaffolding design described in the ID document.
+NFR-8 asks that a student with no prior knowledge finishes the tutorial in about 10 minutes and plays level 1 without help. On a laptop, the two participants new to trees reported finishing the tutorial in 11 and 12 minutes and level 1 in 5 minutes without help, which is close to the target. The phone and tablet users needed much longer and some help, so on small touch screens NFR-8 is only partly met, and U2 is the change most likely to close that gap. The mistake explanations were the feature every participant mentioned, which supports the scaffolding design described in the ID document.
 
 ---
 
@@ -766,9 +761,9 @@ NFR-8 asks that a student with no prior knowledge finishes the tutorial in about
 
 We built Tree Hop, a pre-lecture app that teaches binary trees and pre-, in- and post-order traversal to COS212 students with no prior knowledge. It meets the spec's core requirements: it covers one CS2023 core data structure and algorithm, it teaches from first principles through a tutorial, and it assesses every step of a traversal, adding scaffolding (an explanation for each mistake, then a hint, then a full walkthrough) only for students who need it. The requirements in section 3 are traced to the screens and code that implement them.
 
-On the process side, we followed Scrum with short sprints and evolutionary prototyping. It did not run to the original schedule: the first two sprints slipped, and the project turned on a working prototype that was built later than planned. The method's value showed in how we responded: we re-planned three times, cut scope, held the feature freeze and moved the team's effort from building to testing, documenting and preparing the demo. The main lessons, set out in section 2, are to make the first decisions in the first week, to build an early prototype on purpose, to merge in small reviewed pieces, and to record meetings and close issues as we go.
+On the process side, we followed a Scrum-based iterative approach with evolutionary prototyping. It did not run to the original schedule: the first two sprints slipped, and the project turned on a working prototype that was built later than planned. The method's value showed in how we responded: we re-planned three times, cut scope, kept the work after the feature freeze mostly to fixes (with the exceptions in section 2.3.2) and moved the team's effort from building to testing, documenting and preparing the demo. The main lessons, set out in section 2, are to make the first decisions in the first week, to build an early prototype on purpose, to merge in small reviewed pieces, and to close issues as we go.
 
-The app has clear limits that follow from its scope: progress is stored only on the student's device, the lecturer cannot see results, and it teaches the visiting order but not the traversal code. Natural next steps would be an optional lecturer view of anonymous class results, a short section linking the walk around the tree to recursive code, and extending the same tap-in-order design to level-order traversal and binary search trees. In the usability test, five adult beginners all finished the tutorial and the games and could explain post-order afterwards, with a mean SUS score of 72.5; the laptop users rated it highly, while the phone and tablet users struggled with small tap targets, which is the first change we would make.
+The app has clear limits that follow from its scope: progress is stored only on the student's device, the lecturer cannot see results, and it teaches the visiting order but not the traversal code. Natural next steps would be an optional lecturer view of anonymous class results, a short section linking the walk around the tree to recursive code, and extending the same tap-in-order design to level-order traversal and binary search trees. In the usability test with five adult participants (four new to trees), all reported finishing the tutorial and the games and could explain post-order afterwards; the mean SUS score was 72.5, with lower scores on the two touch devices, where small tap targets were the main problem and the first change we would make.
 
 ---
 
@@ -780,4 +775,5 @@ References use the Harvard style, as in the ID document.
 - Cohn, M. (2004) *User Stories Applied: For Agile Software Development*. Boston: Addison-Wesley.
 - Kumar, A.N., Raj, R.K., Aly, S.G., Anderson, M.D., Becker, B.A., Blumenthal, R.L., Eaton, E., Epstein, S.L., Goldweber, M., Jalote, P., Lea, D., Oudshoorn, M., Pias, M., Reiser, S., Servin, C., Simha, R., Winters, T. and Xiang, Q. (2024) *Computer Science Curricula 2023*. New York: Association for Computing Machinery.
 - Schwaber, K. and Sutherland, J. (2020) *The Scrum Guide*. Available at: https://scrumguides.org/ (Accessed: 15 November 2026).
+- W3C (2023) *Web Content Accessibility Guidelines (WCAG) 2.2*. Available at: https://www.w3.org/TR/WCAG22/ (Accessed: 15 November 2026).
 - W3C (2018) *Web Content Accessibility Guidelines (WCAG) 2.1*. Available at: https://www.w3.org/TR/WCAG21/ (Accessed: 15 November 2026).
