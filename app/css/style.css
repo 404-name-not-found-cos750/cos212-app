@@ -1,3 +1,10 @@
+/* Tree Hop styles. Sections: colours, base, buttons, home page, game screen,
+   tree drawing, sequence and feedback, dialogs, tutorial, quiz. */
+
+/* ---------- Colours (light theme; dark theme below) ----------
+   --pre / --in / --post give each traversal its own colour. Any element with
+   data-kind="pre|in|post" sets --mode, and buttons, borders and visited nodes
+   inside it use --mode, so a whole screen takes on its traversal's colour. */
 :root {
   --bg: #f4f7f1;
   --surface: #ffffff;
@@ -21,7 +28,7 @@
   --hint-text: #8a5d00;
   --star: #b07400;
   --star-off: #859080;
-  --vine: #3d8b2f;
+  --vine: #3d8b2f; /* default; the chosen avatar overrides it on the tree */
   --pre: #2f6fd1;
   --in: #23824a;
   --post: #c0571c;
@@ -62,6 +69,7 @@
   }
 }
 
+/* ---------- Base ---------- */
 * { box-sizing: border-box; }
 
 body {
@@ -85,6 +93,7 @@ h1, h2, h3 { line-height: 1.2; }
 [data-kind="in"] { --mode: var(--in); }
 [data-kind="post"] { --mode: var(--post); }
 
+/* ---------- Buttons (44px minimum height: comfortable touch targets) ---------- */
 .btn {
   appearance: none;
   border: 2px solid var(--mode);
@@ -104,11 +113,13 @@ h1, h2, h3 { line-height: 1.2; }
   outline: 3px solid var(--text);
   outline-offset: 2px;
 }
+/* Dark theme: the mode colours are light, so text on them must be dark to stay readable. */
 @media (prefers-color-scheme: dark) {
   .btn:not(.ghost) { color: #0d1a12; }
   .node.visited .label { fill: #0d1a12; }
 }
 
+/* ---------- Home page: hero, cards, Random Order, avatars ---------- */
 .hero { text-align: center; padding: 24px 0 8px; }
 .hero .logo { font-size: 56px; line-height: 1; }
 .hero h1 { font-size: 2.4rem; margin: 8px 0; }
@@ -230,6 +241,7 @@ h1, h2, h3 { line-height: 1.2; }
 
 .foot { margin-top: 40px; text-align: center; color: var(--muted); font-size: .85rem; }
 
+/* ---------- Game screen: top bar, level bar, Endless bar, rule card ---------- */
 .topbar {
   display: flex;
   align-items: center;
@@ -299,6 +311,7 @@ h1, h2, h3 { line-height: 1.2; }
 
 .instruction { margin: 8px 0; color: var(--muted); }
 
+/* ---------- The tree (SVG drawn by view.js) ---------- */
 .board {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -326,6 +339,8 @@ h1, h2, h3 { line-height: 1.2; }
 /* Dashed ring on the outer circle, so focus never looks like a hint. */
 .node.tappable:focus-visible .hit { stroke: var(--text); stroke-width: 3; stroke-dasharray: 6 4; }
 
+/* Node states, set by view.js: visited (correct tap), subtree (tutorial highlight),
+   current (tutorial walker), picked (right answer in step 1), hint, wrong (shakes). */
 .node.visited .body { fill: var(--mode); stroke: var(--mode); }
 .node.visited .label { fill: #fff; }
 .node.subtree .body { stroke: var(--hint); stroke-width: 5; fill: var(--surface-2); }
@@ -335,11 +350,13 @@ h1, h2, h3 { line-height: 1.2; }
 .node.wrong .body { fill: var(--bad-bg); stroke: var(--bad); stroke-width: 5; }
 .node.wrong { animation: shake .4s; }
 
+/* Visit-number badge on a node's top right. */
 .badge { display: none; pointer-events: none; }
 .node.has-badge .badge { display: inline; }
 .badge circle { fill: var(--hint); stroke: var(--surface); stroke-width: 2; }
 .badge text { font-size: 13px; font-weight: 800; fill: #1c2a20; }
 
+/* The climber and its vine never catch taps meant for the nodes underneath. */
 .monkey { font-size: 34px; pointer-events: none; }
 .vine { fill: none; stroke: var(--vine); stroke-width: 4; stroke-linecap: round; pointer-events: none; }
 .vine-tip { fill: var(--vine); pointer-events: none; }
@@ -351,12 +368,14 @@ h1, h2, h3 { line-height: 1.2; }
   60% { translate: -4px 0; }
   80% { translate: 4px 0; }
 }
+/* Reduced motion: no pulsing or shaking (each animated part has a rule like this). */
 @media (prefers-reduced-motion: reduce) {
   .node.hint .body, .node.wrong { animation: none; }
   .card { transition: none; }
   .card:hover { transform: none; }
 }
 
+/* ---------- Sequence bar, feedback messages, action buttons ---------- */
 .seq { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 6px 4px 2px; }
 .seq-label { font-size: .8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
 .seq-slots { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 0; padding: 0; }
@@ -380,12 +399,14 @@ h1, h2, h3 { line-height: 1.2; }
 
 .actions, .walkthrough { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 .actions[hidden] { display: none; }
+/* The Hint button pulses after repeated mistakes (game.js adds .nudge). */
 .hint-btn.nudge { animation: nudge 1s ease-in-out infinite; }
 @keyframes nudge { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--hint) 45%, transparent); } }
 @media (prefers-reduced-motion: reduce) {
   .hint-btn.nudge { animation: none; box-shadow: 0 0 0 4px color-mix(in srgb, var(--hint) 45%, transparent); }
 }
 
+/* ---------- Dialogs (level complete, out of hearts, game over) ---------- */
 .overlay {
   position: fixed;
   inset: 0;
@@ -409,6 +430,7 @@ h1, h2, h3 { line-height: 1.2; }
 .modal .seq-summary { font-weight: 600; color: var(--mode); word-break: break-word; }
 .modal-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
 
+/* ---------- Tutorial ---------- */
 .progress { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
 .progress span { display: block; height: 100%; background: var(--primary); transition: width .3s; }
 @media (prefers-reduced-motion: reduce) { .progress span { transition: none; } }
@@ -460,6 +482,8 @@ h1, h2, h3 { line-height: 1.2; }
 .now-running span { color: var(--muted); font-size: .92rem; }
 .now-running span b { color: var(--text); }
 
+/* The three pass dots under each node, only shown in tutorial step 2:
+   .seen = passed without writing, .write = the pass that writes the node down. */
 .pips { display: none; pointer-events: none; }
 .show-pips .pips { display: inline; }
 .pips circle { fill: var(--surface); stroke: var(--node-stroke); stroke-width: 1.5; }
@@ -474,6 +498,7 @@ h1, h2, h3 { line-height: 1.2; }
   border-top: 1px solid var(--border);
 }
 
+/* ---------- Quiz (tutorial step 6) ---------- */
 .quiz { display: grid; gap: 12px; margin-top: 12px; }
 .q { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; background: var(--surface); margin: 0; }
 .q legend { font-weight: 600; padding: 0 4px; }
@@ -494,4 +519,5 @@ h1, h2, h3 { line-height: 1.2; }
 .opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
 .revisit { display: flex; flex-wrap: wrap; gap: 8px; }
 
+/* The hidden attribute always wins, even over display rules above. */
 [hidden] { display: none !important; }

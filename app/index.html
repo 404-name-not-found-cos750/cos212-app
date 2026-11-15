@@ -9,8 +9,12 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- Each screen (home, tutorial, games) is drawn into #app by js/main.js. -->
   <main id="app"></main>
   <noscript>Tree Hop needs JavaScript turned on.</noscript>
+  <!-- Plain scripts, no build step: the app runs by opening this file.
+       They share globals, so the order matters: tree logic first, then
+       drawing, the screens, and main.js last because it starts the app. -->
   <script src="js/tree.js"></script>
   <script src="js/view.js"></script>
   <script src="js/game.js"></script>

@@ -1,3 +1,7 @@
+// The three traversal games (pre-, in- and post-order): five levels each, then
+// Endless. One screen handles all three; `kind` picks the traversal.
+
+// Each level is a new random tree of n nodes, no deeper than maxDepth.
 const LEVELS = [
   { n: 3, maxDepth: 1 },
   { n: 5, maxDepth: 2 },
@@ -5,32 +9,39 @@ const LEVELS = [
   { n: 9, maxDepth: 3 },
   { n: 12, maxDepth: 3 },
 ];
-const ENDLESS = LEVELS.length;
-const MAX_HEARTS = 3;
-const ENDLESS_HEART_EVERY = 5;
+const ENDLESS = LEVELS.length; // Endless is treated as the "level" after the last one
+const MAX_HEARTS = 3;          // per level, or for a whole Endless run
+const ENDLESS_HEART_EVERY = 5; // Endless gives a heart back every 5 trees
 
+// Stars for a finished level: 3 = no mistakes and no hints, 2 = up to two
+// mistakes and hints together, 1 = more than that.
 function starsFor(mistakes, hints) {
   if (mistakes === 0 && hints === 0) return 3;
   if (mistakes + hints <= 2) return 2;
   return 1;
 }
 
+// Endless trees grow by one node per tree cleared: 5, 6, 7 ... up to 15.
 function endlessSize(score) {
   return Math.min(15, 5 + score);
 }
 
+// Endless opens once the last level of that game has at least one star.
 function endlessUnlocked(kind) {
   return Store.progress()[kind][LEVELS.length - 1] > 0;
 }
 
+// Builds the game screen for one traversal and returns a cleanup function that
+// the router calls when the student leaves the screen.
 function mountGame(root, kind) {
   const mode = Tree.MODES[kind];
   const progress = Store.progress();
+  // Start at the first level without stars; if all are done, go straight to Endless.
   let level = Math.max(0, progress[kind].findIndex((s) => s === 0));
   if (progress[kind].every((s) => s > 0)) level = ENDLESS;
-  let board = null;
-  let state = null;
-  let nextTimer = null;
+  let board = null;     // the current Board (one tree)
+  let state = null;     // this attempt: hearts, mistakes, hints, Endless score
+  let nextTimer = null; // Endless: the short pause before the next tree
   let hintedAt = -1; // step the last hint was for, so asking again doesn't count twice
 
   root.innerHTML = `
@@ -69,6 +80,8 @@ function mountGame(root, kind) {
   const overlay = $('.overlay');
   const modal = $('.modal');
 
+  // Shows a message under the tree. tone: 'good' | 'bad' | 'info' sets the colour;
+  // the element is aria-live, so screen readers read it out.
   function say(text, tone = '') {
     feedback.textContent = text;
     feedback.className = `feedback ${tone}`;
@@ -89,6 +102,8 @@ function mountGame(root, kind) {
     endlessBar.innerHTML = `<span>🌳 Trees cleared: <b>${state.score}</b></span><span>🏆 Best: <b>${Math.max(best, state.score)}</b></span>`;
   }
 
+  // The level bar: one button per level with its best stars. A level unlocks
+  // when the one before it has a star; Endless unlocks after the last level.
   function renderLevels() {
     const stars = Store.progress()[kind];
     levelsEl.innerHTML = '';
@@ -123,12 +138,15 @@ function mountGame(root, kind) {
     );
   }
 
+  // --- Pop-up dialog (level complete, out of hearts, run over) ---
+
   function closeModal() {
     root.querySelectorAll('[inert]').forEach((e) => { e.inert = false; });
     overlay.hidden = true;
     modal.innerHTML = '';
   }
 
+  // buttons: [{ label, cls, run }]; the first one gets keyboard focus.
   function openModal(html, buttons) {
     modal.innerHTML = html + '<div class="modal-actions"></div>';
     modal.querySelector('h2').id = 'modal-title';
@@ -147,6 +165,8 @@ function mountGame(root, kind) {
     row.querySelector('button').focus();
   }
 
+  // Replaces the tree with a new random one. If the student was using the
+  // keyboard on the old tree, focus moves to the new tree's first node.
   function newBoard(cfg) {
     clearTimeout(nextTimer);
     const refocus = host.contains(document.activeElement);
@@ -167,6 +187,7 @@ function mountGame(root, kind) {
     if (refocus) host.querySelector('.node.tappable').focus();
   }
 
+  // Starts (or restarts) the current level, or a new Endless run, with full hearts.
   function startLevel() {
     // Started from a button on this page (modal, level bar, walkthrough)? Then
     // move focus to the new tree, because that button may be gone.
@@ -198,6 +219,8 @@ function mountGame(root, kind) {
     if (first) first.focus();
   }
 
+  // A wrong tap costs a heart and shows why it was wrong. After two mistakes in a
+  // level the Hint button pulses, so a struggling student is pointed to help.
   function onWrong(n, why) {
     state.hearts--;
     state.mistakes++;
@@ -217,6 +240,8 @@ function mountGame(root, kind) {
     }
   }
 
+  // Out of hearts in a level: offer a step-by-step walkthrough of the same tree
+  // (extra scaffolding) or a fresh tree.
   function levelFailed(why) {
     openModal(
       `<h2>Out of hearts 💔</h2>
@@ -229,6 +254,8 @@ function mountGame(root, kind) {
     );
   }
 
+  // Endless: a tree is done. Count it, maybe give a heart back, and load a
+  // bigger tree after a short pause.
   function onEndlessTree() {
     state.score++;
     Store.saveBest(kind, state.score); // saved now in case the student leaves mid-run
@@ -248,6 +275,7 @@ function mountGame(root, kind) {
     }, 1100);
   }
 
+  // Endless: out of hearts. Save the score, report any new avatars, offer a walkthrough.
   function endlessOver(why) {
     const prevBest = state.startBest;
     Store.saveBest(kind, state.score);
@@ -271,8 +299,11 @@ function mountGame(root, kind) {
     );
   }
 
+  // A level is finished: award stars (only a better score is kept) and show the
+  // result, including anything this level just unlocked.
   function onComplete() {
     const stars = starsFor(state.mistakes, state.hints);
+    // Checked before saving, so we can tell whether this level unlocked something.
     const wasLocked = !endlessUnlocked(kind);
     const randomWasLocked = !randomUnlocked();
     Store.saveStars(kind, level, stars);
@@ -300,6 +331,7 @@ function mountGame(root, kind) {
     );
   }
 
+  // Replays the current tree one "Next step" at a time, explaining each visit.
   function startWalkthrough() {
     closeModal();
     board.reset();
@@ -323,6 +355,7 @@ function mountGame(root, kind) {
     btn.focus();
   }
 
+  // Hints cost stars (see starsFor) but no hearts. There are none in Endless.
   hintBtn.addEventListener('click', () => {
     if (!board || board.done || board.locked || state.endless) return;
     const text = board.hint();
@@ -338,6 +371,7 @@ function mountGame(root, kind) {
 
   startLevel();
 
+  // Cleanup for the router: stop timers and animations when leaving this screen.
   return () => {
     clearTimeout(nextTimer);
     if (board) board.destroy();

@@ -1,6 +1,13 @@
-const ENDLESS_GOAL = 10;
-const RANDOM_GOAL = 15;
+// Avatars: playable climbers unlocked by milestones (stars, endless runs, random
+// order). The monkey is free; the dragon needs every other avatar.
+// Unlocks aren't saved: they're worked out from the stars and scores in Store
+// each time, so they can't get out of sync. Only which unlocks the student has
+// already been told about is saved (seenAvatars).
+const ENDLESS_GOAL = 10; // trees in one Endless run
+const RANDOM_GOAL = 15;  // trees in one Random Order run
 
+// target(stats) returns [have, need, unit] for the progress bar; the avatar is
+// unlocked when have >= need. `vine` colours the vine when playing as it.
 const AVATARS = [
   { id: 'monkey', icon: '🐒', name: 'Monkey', goal: 'Your first climber', target: () => [1, 1, ''] },
   { id: 'parrot', vine: '#e23d6d', icon: '🦜', name: 'Parrot', goal: 'Earn 10 stars', target: (s) => [s.stars, 10, '★'] },
@@ -14,6 +21,7 @@ const AVATARS = [
   { id: 'dragon', vine: '#22a88a', icon: '🐉', name: 'Dragon', legendary: true, goal: 'Legendary: unlock every other avatar', target: (s) => [s.achievements, s.achievementsTotal, 'avatars'] },
 ];
 
+// Everything the avatar goals are measured against, read from saved progress.
 function achievementStats() {
   const stats = {
     stars: totalStars(),
@@ -21,6 +29,8 @@ function achievementStats() {
     endlessOrders: KINDS.filter((k) => Store.best(k) >= ENDLESS_GOAL).length,
     randomTrees: Store.best('randomTrees'),
   };
+  // For the legendary dragon: how many of the other unlockable avatars are done.
+  // Counted after the stats above are filled in, because their goals use them.
   const others = AVATARS.filter((a) => a.id !== 'monkey' && !a.legendary);
   stats.achievementsTotal = others.length;
   stats.achievements = others.filter((a) => {
@@ -30,16 +40,20 @@ function achievementStats() {
   return stats;
 }
 
+// Progress towards one avatar, capped at its goal for the progress bar.
 function avatarProgress(a, stats = achievementStats()) {
   const [have, need, unit] = a.target(stats);
   return { have: Math.min(have, need), need, unit, unlocked: have >= need };
 }
 
+// The chosen avatar, or the monkey if the saved choice is unknown or not unlocked.
 function currentAvatar() {
   const a = AVATARS.find((x) => x.id === Store.avatar());
   return a && avatarProgress(a).unlocked ? a : AVATARS[0];
 }
 
+// Avatars unlocked since the student last saw them. Marks them as seen, so each
+// "New avatar unlocked" message appears once (end-of-level modal or home page).
 function claimNewAvatars() {
   const stats = achievementStats();
   const seen = Store.seenAvatars();
@@ -48,6 +62,7 @@ function claimNewAvatars() {
   return fresh;
 }
 
+// HTML announcing newly unlocked avatars ('' when there are none).
 function newAvatarNote(list) {
   if (!list.length) return '';
   const names = list.map((a) => `<b>${a.icon} ${a.name}</b>`).join(', ');
@@ -57,6 +72,8 @@ function newAvatarNote(list) {
   </div>`;
 }
 
+// The Avatars grid on the home page: unlocked ones can be picked, locked ones
+// show their goal and a progress bar. `fresh` get a "New!" tag.
 function avatarSection(fresh) {
   const stats = achievementStats();
   const current = currentAvatar().id;
@@ -83,6 +100,8 @@ function avatarSection(fresh) {
     <div class="avatars">${items}</div>`;
 }
 
+// Makes the avatar buttons work: save the choice and update the page in place
+// (no full re-render, so keyboard focus stays on the button).
 function wireAvatarPicker(root) {
   root.querySelectorAll('.avatar:not(:disabled)').forEach((b) => {
     b.addEventListener('click', () => {

@@ -1,3 +1,12 @@
+// Saved progress, the home page and the router. Loaded last (see index.html),
+// because it starts the app.
+
+// Progress is kept in the browser's localStorage under one key, so it survives
+// closing the tab but stays on this device. Shape:
+//   { stars: { pre: [0-3 x5], in: [...], post: [...] },
+//     best: { pre, in, post (Endless trees), random (score), randomTrees },
+//     tutorialDone, avatar, seenAvatars }
+// Everything is read once into `cache`; each change updates it and saves.
 const Store = (() => {
   const KEY = 'cos212-tree-hop-v1';
 
@@ -30,6 +39,8 @@ const Store = (() => {
     return data;
   }
 
+  // If storage is blocked (e.g. some private windows), the app still works; it
+  // just doesn't remember progress.
   function save(data) {
     try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) { }
   }
@@ -40,12 +51,14 @@ const Store = (() => {
     progress: () => cache.stars,
     tutorialDone: () => cache.tutorialDone,
     best: (kind) => cache.best[kind],
+    // Keeps only a higher score; returns true if it was a new best.
     saveBest(kind, score) {
       if (score <= cache.best[kind]) return false;
       cache.best[kind] = score;
       save(cache);
       return true;
     },
+    // Replaying a level never lowers its stars.
     saveStars(kind, level, stars) {
       cache.stars[kind][level] = Math.max(cache.stars[kind][level], stars);
       save(cache);
@@ -67,6 +80,7 @@ const Store = (() => {
   };
 })();
 
+// Home page card for Random Order: playable, or locked with stars-to-go.
 function randomCard() {
   const have = totalStars();
   if (have >= RANDOM_UNLOCK) {
@@ -87,10 +101,12 @@ function randomCard() {
     </div>`;
 }
 
+// The home page: tutorial card, a card per game with its stars, Random Order
+// and the avatar picker. Returns a no-op cleanup (nothing animates here).
 function mountHome(root) {
   const stars = Store.progress();
   const done = Store.tutorialDone();
-  const fresh = claimNewAvatars();
+  const fresh = claimNewAvatars(); // avatars unlocked since the last visit get a "New!" tag
   const cards = ['pre', 'in', 'post'].map((k) => {
     const m = Tree.MODES[k];
     const total = stars[k].reduce((a, b) => a + b, 0);
@@ -135,6 +151,12 @@ function mountHome(root) {
   return () => {};
 }
 
+// Hash router, so the app is plain files with no server routing:
+//   #/                     home
+//   #/tutorial             tutorial
+//   #/play/pre|in|post     a traversal game
+//   #/play/random          Random Order
+// Every mount function returns a cleanup that runs before the next screen is shown.
 (function router() {
   const app = document.getElementById('app');
   let cleanup = () => {};

@@ -1,6 +1,13 @@
+// Drawing and interaction. Three classes:
+//   TreeView  draws one tree as SVG, makes nodes tappable, moves the climber
+//   SeqBar    the row of slots that fills up with the visit sequence
+//   Board     one playable tree: checks each tap against the correct order and
+//             reports back through callbacks (used by the games and the tutorial)
 const SVGNS = 'http://www.w3.org/2000/svg';
+// Students who ask their OS for less motion get instant moves instead of swings.
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Creates an SVG element with attributes and (optionally) appends it to parent.
 function svgEl(tag, attrs, parent) {
   const e = document.createElementNS(SVGNS, tag);
   for (const k in attrs) e.setAttribute(k, attrs[k]);
@@ -13,15 +20,20 @@ function wait(ms) {
 }
 
 class TreeView {
+  // onTap(node) is called when a node is clicked or chosen with Enter/Space.
+  // Without onTap the tree is display-only (tutorial demos, quiz).
   constructor(container, root, { onTap = null } = {}) {
-    this.alive = true;
-    this.R = 24;
+    this.alive = true;            // false after destroy(): running animations stop
+    this.R = 24;                  // node radius
     this.nodes = Tree.nodes(root);
     this.root = root;
-    this.groups = new Map();
-    this.pos = new Map();
-    this.anim = 0;
+    this.groups = new Map();      // node id -> its SVG <g>
+    this.pos = new Map();         // node id -> {x, y} centre
+    this.anim = 0;                // bumped by every new move; older moves see it changed and stop
 
+    // Layout: each level is split into 2^depth equal slots and a node sits in the
+    // middle of its slot, so the tree always looks like a tree and nothing overlaps.
+    // The drawing gets wider as the tree gets deeper.
     const depth = Math.max(...this.nodes.map((n) => n.depth));
     const W = Math.max(640, 2 ** depth * 60);
     const top = 70;
@@ -43,6 +55,7 @@ class TreeView {
       role: 'group',
       'aria-label': `Binary tree with root ${root.value}. ${shape}.`,
     });
+    // Edges go in their own layer underneath, so lines never cover the nodes.
     const edges = svgEl('g', { class: 'edges' }, svg);
     const nodeLayer = svgEl('g', {}, svg);
 
@@ -56,6 +69,8 @@ class TreeView {
     for (const n of this.nodes) {
       const p = this.pos.get(n.id);
       const g = svgEl('g', { class: 'node', transform: `translate(${p.x} ${p.y})` }, nodeLayer);
+      // Each node: an invisible, larger "hit" circle (an easier target on touch
+      // screens), the visible circle, its value, and a badge for the visit number.
       svgEl('circle', { r: this.R + 10, class: 'hit' }, g);
       svgEl('circle', { r: this.R, class: 'body' }, g);
       const t = svgEl('text', { class: 'label', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, g);
@@ -66,6 +81,7 @@ class TreeView {
       // Three dots under the node that count passes (only shown in the tutorial walk).
       const pips = svgEl('g', { class: 'pips', transform: `translate(0 ${this.R + 11})` }, g);
       [-12, 0, 12].forEach((dx) => svgEl('circle', { cx: dx, r: 4.5 }, pips));
+      // Tappable nodes are also keyboard buttons (Tab to reach, Enter/Space to visit).
       if (onTap) {
         g.classList.add('tappable');
         g.setAttribute('tabindex', '0');
@@ -82,6 +98,8 @@ class TreeView {
       this.groups.set(n.id, g);
     }
 
+    // The climber (an emoji) and its vine are drawn last so they sit on top.
+    // The vine colour comes from the chosen avatar (achievements.js) via --vine.
     this.vine = svgEl('path', { class: 'vine', visibility: 'hidden' }, svg);
     this.vineTip = svgEl('circle', { class: 'vine-tip', r: 5, visibility: 'hidden' }, svg);
     this.monkey = svgEl('text', {
@@ -94,10 +112,14 @@ class TreeView {
     this.monkey.textContent = avatar ? avatar.icon : '🐒';
     if (avatar && avatar.vine) svg.style.setProperty('--vine', avatar.vine);
     this.placeMonkey(this.start());
+    // Big trees keep a minimum width (the board scrolls sideways) instead of
+    // shrinking until the nodes are too small to tap on a phone.
     if (W > 640) svg.style.minWidth = `${Math.round(W * 0.62)}px`;
     this.svg = svg;
     container.appendChild(svg);
   }
+
+  // --- Node marks. The look of each class (visited, hint, wrong, ...) is in style.css. ---
 
   g(n) { return this.groups.get(n.id); }
 
@@ -105,6 +127,7 @@ class TreeView {
 
   clearClass(cls) { this.groups.forEach((g) => g.classList.remove(cls)); }
 
+  // Shows the visit number on a node (null hides it) and updates the screen-reader label.
   setBadge(n, text) {
     const g = this.g(n);
     g.querySelector('.badge text').textContent = text == null ? '' : text;
@@ -114,10 +137,11 @@ class TreeView {
     }
   }
 
+  // Adds a class for ms milliseconds (e.g. the red shake on a wrong tap).
   flash(n, cls, ms = 600) {
     const g = this.g(n);
     g.classList.remove(cls);
-    void g.getBBox();
+    void g.getBBox(); // forces a re-layout so the CSS animation restarts on a repeat tap
     g.classList.add(cls);
     setTimeout(() => g.classList.remove(cls), ms);
   }
@@ -127,6 +151,7 @@ class TreeView {
     this.g(n).querySelectorAll('.pips circle')[pass - 1].setAttribute('class', cls);
   }
 
+  // Clears every mark and sends the climber back to its start (Board.reset, tutorial replays).
   resetMarks() {
     for (const n of this.nodes) {
       this.g(n).querySelectorAll('.pips circle').forEach((c) => c.removeAttribute('class'));
@@ -138,11 +163,15 @@ class TreeView {
     this.placeMonkey(this.start());
   }
 
+  // --- The climber ---
+
+  // Where the climber waits before the first visit: up and to the left of the root.
   start() {
     const p = this.pos.get(this.root.id);
     return { x: p.x - 90, y: p.y - 30 };
   }
 
+  // Where the climber sits when it's at node n: just above the circle.
   perch(n) {
     const p = this.pos.get(n.id);
     return { x: p.x, y: p.y - this.R - 20 };
@@ -159,6 +188,7 @@ class TreeView {
     this.vineTip.setAttribute('visibility', 'hidden');
   }
 
+  // Draws the vine as a curve from a to b; slack makes it sag in the middle.
   drawVine(a, b, slack) {
     const cx = (a.x + b.x) / 2;
     const cy = (a.y + b.y) / 2 + slack;
@@ -169,6 +199,14 @@ class TreeView {
     this.vineTip.setAttribute('visibility', 'visible');
   }
 
+  // Swings the climber to point `to` in two phases:
+  //   1. shoot (an extra 45% of ms, before the swing): the vine flies out from the climber's
+  //      hand to the anchor, 20px below `to` (the top of the node when `to`
+  //      is a perch);
+  //   2. swing (ms): the climber is pulled along an arc (higher in the middle,
+  //      at most `arc` px) while the vine shortens and straightens.
+  // Returns a promise that resolves when the move ends, so the tutorial can
+  // await each move. A newer move (or destroy()) stops this one at the next frame.
   moveMonkey(to, { arc = 70, ms = 420 } = {}) {
     const id = ++this.anim;
     const from = { ...this.mpos };
@@ -185,6 +223,8 @@ class TreeView {
       const anchor = { x: to.x, y: to.y + 20 };
       const lift = Math.min(arc * 0.6, dist * 0.25);
       const hand = (p) => ({ x: p.x, y: p.y - 6 });
+      // Safety net: animation frames pause in background tabs, so after the
+      // expected time put the climber at its destination anyway and resolve.
       setTimeout(() => {
         if (this.alive && id === this.anim) {
           this.placeMonkey(to);
@@ -197,6 +237,7 @@ class TreeView {
         if (!this.alive || id !== this.anim) return resolve();
         const elapsed = t - t0;
         if (elapsed < shootMs) {
+          // Phase 1: the vine tip flies out (fast start, slow finish).
           const k = elapsed / shootMs;
           const e = 1 - Math.pow(1 - k, 3);
           const h = hand(from);
@@ -205,6 +246,7 @@ class TreeView {
           requestAnimationFrame(step);
           return;
         }
+        // Phase 2: swing along the arc (ease in and out), vine still attached.
         const k = Math.min(1, (elapsed - shootMs) / ms);
         const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
         const p = {
@@ -224,9 +266,11 @@ class TreeView {
     });
   }
 
+  // Call when the screen is left, so animations still running stop touching the page.
   destroy() { this.alive = false; }
 }
 
+// The row of empty slots under a tree that fills in as nodes are visited.
 class SeqBar {
   constructor(container, length, label = 'Visit order') {
     this.el = document.createElement('div');
@@ -256,6 +300,14 @@ class SeqBar {
   }
 }
 
+// One playable tree for one traversal (kind). It knows the correct order and
+// checks every tap; the screen using it decides what a mistake costs (hearts,
+// stars, nothing in tutorial practice) through the callbacks:
+//   onCorrect(node)       right node tapped
+//   onWrong(node, why)    wrong node; `why` explains the broken rule (Tree.explain)
+//   onInfo(text)          a neutral note, e.g. the node was already visited
+//   onComplete()          every node visited
+// interactive: false makes a demo board driven by demoStep() instead of taps.
 class Board {
   constructor(host, { tree, kind, interactive = true, onCorrect, onWrong, onComplete, onInfo, seqLabel }) {
     this.kind = kind;
@@ -271,10 +323,11 @@ class Board {
     this.reset();
   }
 
+  // Back to the start of the same tree (used before a walkthrough).
   reset() {
-    this.i = 0;
-    this.visited = new Set();
-    this.locked = false;
+    this.i = 0;                 // index of the next node in this.order
+    this.visited = new Set();   // ids of visited nodes
+    this.locked = false;        // true = ignore taps (between trees, in modals and walkthroughs)
     this.view.resetMarks();
     this.seq.reset();
   }
@@ -283,6 +336,7 @@ class Board {
 
   get next() { return this.order[this.i] || null; }
 
+  // Records a correct visit: colour the node, number it, fill the next slot, swing there.
   visit(n) {
     this.visited.add(n.id);
     this.view.clearClass('hint');
@@ -310,6 +364,7 @@ class Board {
     }
   }
 
+  // Highlights the next node and returns the reason it's next (doesn't visit it).
   hint() {
     const n = this.next;
     if (!n) return null;
@@ -317,6 +372,8 @@ class Board {
     return Tree.visitReason(this.kind, n);
   }
 
+  // Walkthroughs and demos: visits the next node for the student and returns
+  // { node, reason } so the screen can explain the step.
   demoStep() {
     const n = this.next;
     if (!n) return null;
