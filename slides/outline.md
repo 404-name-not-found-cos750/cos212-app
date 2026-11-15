@@ -180,7 +180,7 @@
 - Coherence: nothing on the play screen that isn't needed
 - Accessible: text for every result, screen-reader labels, light and dark mode, phone layout
 
-**Speaker notes:** [TODO Hendré]
+**Speaker notes:** "We didn't build for one 'learning style'. That idea is contested, so instead every student gets the same idea in several forms at once: a tree they can see, a short rule in words, and something to do with their hands, tapping the nodes. We used Mayer's multimedia principles to keep that from becoming overload. Signalling: each order has its own colour everywhere, and the node that matters is highlighted. Contiguity: the rule sits right above the tree and the explanation right below it, at the same moment as the tap. Segmenting: six short tutorial steps, and the demos move one node at a time when the student presses Next. And it has to work for everyone: every result is also a sentence, nodes work with the keyboard and screen readers, and it follows light and dark mode on a phone or a laptop."
 
 ---
 
@@ -191,9 +191,9 @@
 - **Attention:** the monkey, random trees every round
 - **Relevance:** real uses of each order (copying, sorting a BST, deleting a tree)
 - **Confidence:** small first levels, hints, a walkthrough instead of "game over"
-- **Satisfaction:** stars, unlocks (Endless, Random Order), best scores
+- **Satisfaction:** stars, unlocks (Endless, Random Order at 30 stars), avatars, best scores
 
-**Speaker notes:** [TODO Hendré.] End with: "Let me show you how this works for a student who opens it for the first time."
+**Speaker notes:** "Nobody checks whether students use a pre-lecture app, so motivation had to be designed, not hoped for. We used Keller's ARCS model. Attention: a monkey that swings to every node, and a new random tree every round. Relevance: each order is tied to a real job: copying a tree, getting a sorted list out of a search tree, deleting a tree. Confidence: the first level has three nodes, the tutorial has no hearts to lose, and when you run out of hearts you get a walkthrough, not 'game over'. Satisfaction: stars, unlocks and avatars to collect. We lowered the Random Order unlock from 40 to 30 stars, because a goal that feels out of reach hurts confidence. Let me show you how this works for a student who opens it for the first time."
 
 ---
 
@@ -232,11 +232,11 @@
 | 3:00–4:00 | Step 3, Pre-order: two demo steps, then the practice tree with one wrong tap and the hint | Hendré | Hendré | Watch → try with help; no hearts in the tutorial |
 | 4:00–5:00 | Switch to the seeded profile. Tutorial → **Next** to step 6, quick check: answer one question wrong on purpose, show the explanation and the "Review" button | Hendré | **Francois** | Diagnostic check; the level-order distractor; link back to the missed step |
 | 5:00–7:30 | Post-order game (seeded profile, tap **Level 1**): level 1 cleared (show the stars), level 2: two wrong taps → the Hint lights up → use it; then run out of hearts → walkthrough | Hendré | **Francois** | Explanation on every mistake; hint after 2; walkthrough instead of game over; stars rule |
-| 7:30–8:45 | Same profile: Endless mode (trees grow, no hints), then Random Order (order banner changes each tree, one heart to start) | Hendré | Hendré | Faded support; challenge for confident students; ARCS satisfaction |
+| 7:30–8:45 | Same profile: Endless mode (trees grow, no hints), then Random Order (order banner changes each tree; one heart to start, plus one more every 5 trees); end on the home page's avatars | Hendré | Hendré | Faded support; challenge for confident students; ARCS satisfaction (unlocks, avatars) |
 | 8:45–9:30 | Phone (or narrow window) and dark mode | Hendré | Hendré | Works on a phone; accessibility |
 | 9:30–10:00 | Back to the home page with stars showing; hand over to Q&A | Hendré | Galen | One-sentence wrap-up; slide 14 back on screen |
 
-**Rehearsal notes:** time it twice (Sat 14, Sun 15). If running late at 5:00, skip the phone section. If the live URL fails, switch to `app/index.html` from the laptop or USB within 30 seconds; if the laptop fails, play the backup video. [TODO Hendré: replace this with the final demo script from #30 and adjust the timings after rehearsal 1.]
+**Rehearsal notes:** time it twice (Sat 14, Sun 15). If running late at 5:00, skip the phone section. If the live URL fails, switch to `app/index.html` from the laptop or USB within 30 seconds; if the laptop fails, play the backup video. The table above is the demo script (#30). [TODO Hendré: adjust the timings after rehearsal 1.]
 
 ## Likely panel questions
 
@@ -258,4 +258,4 @@ Answerer in bold. Each person prepares two or three sentences for their own ques
 | 12 | Don't hearts punish weak students? | **Francois**, **Hendré** | No hearts in the tutorial; hint after 2 mistakes; walkthrough instead of game over; a fresh tree after. |
 | 13 | Learning styles are contested: why cater for them? | **Hendré** | Multiple representations for everyone (Mayer), not matching a single style. |
 | 14 | Is it accessible? | **Hendré** | Text for every result, screen-reader labels, contrast, light/dark, phone layout. |
-| 15 | How did you decide the star thresholds and the Random Order unlock? | **Francois**, **Hendré** | Stars: 3/2/1 by mistakes + hints. Unlock lowered from 40 to 30 (all 15 levels cleared with an average of 2 stars) because 40/45 was too high for a pre-lecture app. |
+| 15 | How did you decide the star thresholds and the Random Order unlock? | **Francois**, **Hendré** | Stars: 3/2/1 by mistakes + hints. Unlock lowered from 40 to 30 (all 15 levels cleared with an average of 2 stars) because 40/45 needed a near-perfect run, which hurts confidence (ARCS). |

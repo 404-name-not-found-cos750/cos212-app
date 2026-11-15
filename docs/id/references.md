@@ -22,6 +22,8 @@ Kumar, A.N., Raj, R.K., Aly, S.G., Anderson, M.D., Becker, B.A., Blumenthal, R.L
 
 Mayer, R.E. (2009) *Multimedia learning*. 2nd edn. Cambridge: Cambridge University Press.
 
+Pashler, H., McDaniel, M., Rohrer, D. and Bjork, R. (2008) 'Learning styles: Concepts and evidence', *Psychological Science in the Public Interest*, 9(3), pp. 105–119.
+
 Schwaber, K. and Sutherland, J. (2020) *The Scrum Guide*. Available at: https://scrumguides.org/ (Accessed: [TODO Galen: date]).
 
 Sweller, J. (1988) 'Cognitive load during problem solving: Effects on learning', *Cognitive Science*, 12(2), pp. 257–285.
@@ -38,6 +40,7 @@ Where each is used:
 - Vygotsky 1978; Wood, Bruner and Ross 1976: ID 5 and 9 (scaffolding, ZPD)
 - Sweller 1988: ID 5 (cognitive load)
 - Mayer 2009: ID 7 (multimedia principles)
+- Pashler et al. 2008: ID 7 (learning styles caveat). Added by Hendré; keep only if he has read it.
 - Keller 1987 / 2010: ID 8 (ARCS). Cite one or both, and drop the one that is not cited.
 - Brooke 1996: SE usability test (SUS)
 - Schwaber and Sutherland 2020: SE methodology (Scrum), decision 002
