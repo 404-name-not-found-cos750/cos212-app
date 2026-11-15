@@ -17,7 +17,7 @@ The spec asks for a pre-lecture app on one data structure and one algorithm from
 **Binary trees (the data structure) and depth-first tree traversal: pre-order, in-order and post-order (the algorithm).** The app is called **Tree Hop**.
 
 ## Rationale
-- Binary trees and their traversals fall under the CS2023 AL-Foundational knowledge area, so the topic meets the spec.
+- Binary trees and their traversals are CS Core in the CS2023 AL-Foundational knowledge unit (topic 9a "Trees: Binary, n-ary, and search trees"; topic 11c "uninformed depth/breadth-first tree search"), so the topic meets the spec.
 - A traversal is a sequence of node visits, which turns directly into a "tap the nodes in the right order" task. Every tap is assessable on its own, so the app can give immediate, specific feedback and step up its scaffolding (hint → walkthrough) only for students who struggle.
 - The three orders share one idea (the walk around the tree, where each node is passed three times), so the tutorial can teach one mental model and build all three orders on it.
 - The scope is small enough to finish, test with real students, and demo without risk in the time left.

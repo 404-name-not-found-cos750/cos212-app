@@ -10,7 +10,8 @@ For every use we give the date, who used it, the tool and model, what it was use
 |---|---|---|---|---|
 | A1 | 2026-11-07 | Francois Scholtz | Claude Code (Claude Opus 5.5) | Checking the first topic idea against the specification |
 | A2 | 2026-11-07 | Francois Scholtz | Claude Code (Claude Opus 5.5) | Generating the first version of the app (`app/`): home page, tutorial and the three traversal games |
-| ... | [TODO Galen] | | | |
+| A3 | 2026-11-11 to 2026-11-15 | Hendré Beyer | Claude Code (Claude Opus 5.5) | Reviewing the app against the issues; first drafts of ID sections 6 (storyboard), 7 and 8 and SE section 5; contrast measurements; screenshots; speaker notes for slides 12–13 |
+| ... | [TODO Galen: Shekinah, Mthobisi and Galen's own use, after the 19:00 meeting] | | | |
 
 ## A1. Topic check against the specification
 
@@ -37,6 +38,19 @@ For every use we give the date, who used it, the tool and model, what it was use
 
 - **Outcome:** generated the Tree Hop prototype in `app/`: the home page, the tutorial and the three traversal games.
 - **How the team reviewed and changed it:** [TODO Francois/Galen: describe what was checked and changed by hand after generation, e.g. tutorial wording, levels, hearts/hints/walkthrough, Endless and Random Order modes, bug fixes, and any later prompts. If later prompts were used for those changes, add them as separate entries below.] The prototype was merged to `main` through pull request #33, and the tutorial text was reviewed against the learning objectives (section 6). [TODO Galen: confirm the review of PR #33 and the content review actually took place before keeping this sentence.]
+
+## A3. Review, UI section and ID sections 7 and 8
+
+- **Date:** 2026-11-11 to 2026-11-15
+- **Who:** Hendré Beyer
+- **Tool:** Claude Code (model: Claude Opus 5.5)
+- **Purpose:** understand and review the app against the GitHub issues; first drafts of ID sections 6 (storyboard), 7 (learning styles, Mayer) and 8 (ARCS) and SE section 5 (UI design); contrast measurements; screenshots; speaker notes for slides 12–13.
+- **Prompts (summarised by Hendré, not verbatim):**
+
+  > 1. "Read the repository and explain what has been built. Analyse the app in detail against our GitHub issues (#1–#32, pasted in) without changing anything, and tell me what still needs to be done and what my tasks are."
+  > 2. [TODO Hendré: his entry in `docs/PROMPTS.md` stops at prompt 2 ("What do I still have left?"). Complete the list of prompts.]
+
+- **How the output was reviewed and changed:** [TODO Hendré: one or two sentences.]
 
 ## [TODO Galen: further entries before submission]
 

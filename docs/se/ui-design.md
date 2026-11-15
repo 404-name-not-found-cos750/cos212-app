@@ -6,27 +6,10 @@ Tree Hop was built as an evolutionary prototype ([decision 002](../decisions/002
 
 ## 5.1 Screen flow
 
-```mermaid
-flowchart LR
-    H[Home] --> T1[Tutorial 1<br/>Meet the tree]
-    T1 --> T2[2 Walking around a tree] --> T3[3 Pre-order] --> T4[4 In-order] --> T5[5 Post-order] --> T6[6 Quick check]
-    T6 -- "Review an order" --> T3 & T4 & T5
-    T6 -- Finish --> H
-    H --> G[Game: pre / in / post]
-    G --> L[Levels 1–5]
-    L -- "level cleared" --> LC[Level complete<br/>stars + summary]
-    LC -- "next level" --> L
-    L -- "out of hearts" --> OH[Out of hearts] --> W[Step-by-step walkthrough] --> L
-    LC -- "after level 5" --> E[Endless ∞]
-    E -- "run over" --> W
-    H -- "30 stars" --> R[Random Order]
-    R -- "game over" --> W
-    H --> AV[Avatar picker]
-```
+![Figure 5.1: Screen flow.](img/screen-flow.png)
 
-*Figure 5.1: Screen flow. Every screen also has a "← Home" link, and the browser's back button works because each page has its own address (`#/`, `#/tutorial`, `#/play/pre|in|post`, `#/play/random`).*
+*Every screen also has a "← Home" link, and the browser's back button works because each page has its own address (`#/`, `#/tutorial`, `#/play/pre|in|post`, `#/play/random`).*
 
-<!-- TODO Hendré: if the PDF export doesn't render Mermaid, paste this into https://mermaid.live, export as PNG to docs/se/img/screen-flow.png and replace the code block with the image. -->
 
 ## 5.2 Screens
 

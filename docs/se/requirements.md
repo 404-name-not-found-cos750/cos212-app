@@ -50,7 +50,7 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 | **FR-16** | Clearing a level awards stars: 3 for no mistakes and no hints, 2 for at most 2 mistakes and hints combined, 1 otherwise. Only the best result per level is kept. |
 | **FR-17** | Level 1 of each game is open. Each further level unlocks once the previous level has at least one star. The level bar shows the stars per level and a lock on locked levels. A game opens at the first level without stars. |
 | **FR-18** | When a level is cleared, a summary shows the stars, the number of mistakes and hints, and the full sequence, with buttons for the next level, playing again or going home. It also announces anything newly unlocked (Endless, Random Order). |
-| **FR-19** | Progress (stars per level, Endless best per order, Random Order high score, tutorial done) is saved in the browser's `localStorage` on that device and restored on the next visit. If storage is blocked, the app still works for the current visit; saved data that is missing or damaged is reset or corrected when the app loads. |
+| **FR-19** | Progress (stars per level, Endless best per order, Random Order high score and trees cleared, tutorial done, chosen avatar and avatars already announced) is saved in the browser's `localStorage` on that device and restored on the next visit. If storage is blocked, the app still works for the current visit; saved data that is missing or damaged is reset or corrected when the app loads. |
 
 ### Challenge: Endless and Random Order
 | ID | Requirement |
@@ -58,6 +58,11 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 | **FR-20** | **Endless mode** (one per order) unlocks after level 5 of that order is cleared. Trees start at 5 nodes and grow by one node per tree up to 15. There are no hints and no new-tree button; the student has 3 hearts for the whole run and wins one back every 5 trees (up to 3). The number of trees cleared is the score, and the best score per order is saved and shown on the home page. |
 | **FR-21** | **Random Order mode** unlocks when the student has earned a set number of stars across the three games (`RANDOM_UNLOCK`, 30 of the 45: all 15 levels cleared with an average of 2 stars). Until then the home page shows a locked card with a progress bar towards the unlock. |
 | **FR-22** | In Random Order, each tree gets a random order, shown in a colour-coded banner; the same order never comes up three times in a row. Trees grow from 4 to 25 nodes and from 2 to 4 levels deep. The student starts with one heart and wins another for every 5 trees cleared; a wrong tap costs a heart, and the game ends when the last heart is gone. The score is +1 per correct node plus a bonus equal to the tree's size when it is cleared. The high score is saved. |
+
+### Rewards: avatars
+| ID | Requirement |
+|---|---|
+| **FR-23** | **Avatars**: the student unlocks new characters that replace the monkey on every tree. They are unlocked at 10, 20, 30, 40 and 45 stars, for clearing 10 trees in one Endless run and in all three orders, and for clearing 15 trees in one Random Order run; a "legendary" Dragon unlocks when all the others are unlocked. The home page shows the avatars with their goals, and the student picks one there. A newly unlocked avatar is announced in the level summary or game-over dialog. Added after the feature freeze (see the SE methodology, section 3.2). |
 
 ## 3. Non-functional requirements
 
@@ -236,5 +241,6 @@ As the COS212 lecturer, I want to show the app on a projector in the venue, so t
 | FR-20 Endless mode | US-13 | `js/game.js` (`ENDLESS`, `endlessSize`, `onEndlessTree`) |
 | FR-21 Random Order unlock | US-14 | `js/random.js` (`RANDOM_UNLOCK`, `randomUnlocked`), `js/main.js` (`randomCard`) |
 | FR-22 Random Order play | US-14 | `js/random.js` (`pickKind`, `randomTreeCfg`, `treeCleared`, `gameOver`) |
+| FR-23 Avatars | US-10, US-12 | `js/achievements.js` (`AVATARS`, `claimNewAvatars`, `avatarSection`) |
 
 All code paths are relative to `app/`. Non-functional requirements map to the whole app; NFR-1 to NFR-3 are covered by US-1, US-12 and US-15, and NFR-4, NFR-5 and NFR-9 by US-17.

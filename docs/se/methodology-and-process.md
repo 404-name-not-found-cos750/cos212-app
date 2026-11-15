@@ -54,9 +54,9 @@ The project ran from the spec's release on 22 Oct to the presentation on 16 Nov.
 | Re-plan 1 (5 Nov) | – | Compressed the remaining work into four short sprints: decisions on the evening of 5 Nov, design 6–7 Nov with a scope freeze, build 8–11 Nov with a **feature freeze on 11 Nov**, polish and documents 12–14 Nov. | `docs/PLAN.md` (header and "Schedule") |
 | Sprint 2 (build) | Build 8–11 Nov | Francois built a working prototype on 7 Nov, ahead of the compressed build sprint, using GenAI (logged in `docs/PROMPTS.md`). His first idea, decision trees, turned out not to be on the CS2023 list, so the same game moved to binary-tree traversal. This prototype settled the topic and covered most of the planned build issues (#18, #19, #21–#24). | Commit `35d4cd7` on `DevFS` (7 Nov); `PROMPTS.md` |
 | Re-plan 2 (9 Nov) | – | Because the build was mostly done, the build roles were moved to quality, evidence and the demo (section 2). New rules: no more large features, one branch and PR per issue with one review. Decisions 001 (topic) and 004 (stack) were drafted, matching what had been built. | `docs/PLAN.md` ("Re-plan of the build roles"); decisions 001 and 004, dated 9 Nov |
-| Feature freeze | 11 Nov | Held: no features were added after it. | No app changes after `35d4cd7` |
+| Feature freeze | 11 Nov | Mostly held. On 12–13 Nov Francois pushed three commits directly to `main`, without a PR: avatars (`achievements.js`), Random Order with one heart plus one every 5 trees, a vine animation, and new hint and mistake wording with tests. We kept these changes and documented them (FR-22, FR-23), but they broke both the freeze and the one-PR-per-change rule. | Commits `f44f699`, `4ab5817`, `d6d30f5` (12–13 Nov); merged with PR #39 |
 | Re-plan 3 (12 Nov) | – | The prototype was merged to `main` (PR #33). The remaining work was rebalanced (section 2), the deployment moved from GitHub Pages to Vercel because the repository stays private until the presentation, and a Monday deliverables checklist was added. | PRs #33, #34, #35; `docs/PLAN.md` ("Current plan") |
-| Sprint 3 | Polish and documents 12–14 Nov | [TODO Galen: fill in at the end: tests + CI, deployment, usability test, UI fixes, documents assembled, rehearsal 1.] | [TODO Galen: PR numbers] |
+| Sprint 3 | Polish and documents 12–14 Nov | Unit tests and CI (12 Nov); deployment to Vercel (12 Nov); SE and ID drafts and the slide outline (12 Nov); demo-readiness fixes from a review of the app: saved progress, scoring, accessibility, projector and phone layout, tutorial wording, Random Order unlock lowered from 40 to 30 stars (14 Nov); UI design, storyboard, learning styles and ARCS sections (15 Nov). [TODO Galen: usability test and rehearsals: what actually happened.] | PRs #36–#40 |
 | Submission | Docs Sun 15 Nov 22:00 (internal), 16 Nov 08:00 (hard) | [TODO Galen: date and time submitted.] | [TODO Galen: ClickUP receipt] |
 
 In Scrum terms, the sprint length was not fixed: we shortened the sprints and moved the scope at each re-plan instead of carrying the original dates forward. The first two sprints produced no closed work, and the build happened as one large prototype instead of a sequence of small increments. We describe this as it happened because it shaped the rest of the project: once the prototype existed, the backlog changed from "build features" to "test, document and demo what we have", which is the point of evolutionary prototyping, but it came later than planned.
@@ -74,7 +74,7 @@ In Scrum terms, the sprint length was not fixed: we shortened the sprints and mo
 | **GenAI log** | `docs/PROMPTS.md`: every GenAI use with the tool and prompt, as the spec requires. |
 | **Meeting notes** | `docs/meetings/`, one file per meeting from a template (present, agenda, decisions, action items). |
 | **Hosting** | Vercel, deploying `app/` from `main` on every push (see [testing-and-deployment.md](testing-and-deployment.md)). |
-| **Communication** | [TODO Galen: the channel the team actually used, e.g. WhatsApp group, Discord, calls.] |
+| **Communication** | A WhatsApp group, used throughout the project for day-to-day coordination, questions and hand-overs. |
 
 ## 5. Process evidence
 
@@ -85,9 +85,13 @@ In Scrum terms, the sprint length was not fixed: we shortened the sprints and mo
 | #33 | Tree Hop app: tutorial, traversal games and Random Order | galenmyburgh | 12 Nov 2026 | Merges `DevFS`. The app code is Francois's commit `35d4cd7` (SchoItz, 7 Nov). Closed #21. |
 | #34 | Add decisions 001 and 004, re-plan remaining work | galenmyburgh | 12 Nov 2026 | Decision records and re-plan 3 |
 | #35 | Plan: rebalance remaining work and Monday deliverables | galenmyburgh | 12 Nov 2026 | Workload split, Vercel deployment, Monday checklist |
-| [TODO Galen] | [later PRs: tests + CI, UI fixes, decision 002, SE/ID sections] | | | |
+| #36 | Unit tests for the tree model + CI | galenmyburgh | 12 Nov 2026 | 42 unit tests (now 56) and a GitHub Actions workflow. Closed #18. |
+| #37 | Draft SE and ID documents, decision 002 and slides outline | galenmyburgh | 12 Nov 2026 | Document outlines and drafts, decision 002, usability test plan |
+| #38 | Add the live Vercel URL and update decision 004 to Vercel | galenmyburgh | 12 Nov 2026 | Live URL in the docs |
+| #39 | Demo readiness: bug fixes, accessibility and teaching wording | galenmyburgh | 14 Nov 2026 | Fixes from the app review; merged Francois's direct pushes to `main` |
+| #40 | Docs: UI design (SE 5), storyboard (ID 6), learning styles/Mayer (ID 7), ARCS (ID 8) | HendreB | 15 Nov 2026 | Hendré's sections and screenshots; one GitHub review. Closed #11, #12, #14, #17. |
 
-No PR has a review recorded on GitHub. [TODO Galen: if PRs #33–#35 were reviewed outside GitHub (e.g. in a call), say so here; otherwise make sure the PRs from 13 Nov onwards each get one GitHub review, as the working agreement requires.]
+Only PR #40 has a review recorded on GitHub. [TODO Galen: if any of PRs #33–#39 were reviewed outside GitHub (e.g. in a call), say so here; otherwise state plainly that they were merged without a recorded review.]
 
 ### 5.2 Issues
 
@@ -107,7 +111,7 @@ As of 12 Nov 2026: **32 issues**, **1 closed** (#21, by PR #33) and 31 open. Non
 
 PR #33's description lists `Closes #21, #22, #23, #24`, but GitHub only closed #21: each issue needs its own closing keyword. Issues #22 (animation), #23 (quiz engine and scaffolding) and #24 (progress tracking) are done in the code and are being closed by hand with a link to the code.
 
-[TODO Galen: update the closed/open counts and list the issues closed after 12 Nov, just before submission.]
+As of 15 Nov 2026: **6 closed** (#21 and #18 on 12 Nov; #11, #12, #14 and #17 by PR #40 on 15 Nov) and 26 open. [TODO Galen: update just before submission if you close more issues (see the cleanup list).]
 
 ### 5.3 Commit history
 
@@ -119,14 +123,13 @@ As of 12 Nov 2026 there are 10 commits across all branches, including 3 merge co
 | 7 Nov | Francois (SchoItz) | The whole Tree Hop app in one commit on `DevFS` ("Game finished") |
 | 12 Nov | Galen | Merge of PR #33; decisions 001 and 004 and the re-plan (PR #34); rebalanced plan and Monday checklist (PR #35); two small README fixes made directly on `main` |
 
-The history is short and uneven: the app arrived as one large commit, and most other commits are planning and documentation. [TODO Galen: add the commits from 13–15 Nov (tests, CI, deployment, UI fixes, document sections) at the end.]
+The history is short and uneven: the app arrived as one large commit, and most other commits are planning and documentation. By 15 Nov there are 29 commits across all branches, including 10 merge commits: 21 by Galen, 5 by Francois and 3 by Hendré. The later commits are Francois's avatars and hearts changes (12–13 Nov), the demo-readiness fixes (14 Nov) and Hendré's sections (15 Nov).
 
 ### 5.4 Meetings and stand-ups
 
-The plan calls for a daily 15-minute stand-up (yesterday / today / blockers) with notes in `docs/meetings/`. As of 12 Nov there are no meeting notes in the repository.
+The plan called for a daily 15-minute stand-up (yesterday / today / blockers) with notes in `docs/meetings/`. In practice we held no stand-ups: the team coordinated in a WhatsApp group instead, and the only meeting was held on 15 Nov at 19:00, to agree the final documents, who presents what in the presentation, and the demo.
 
-- [TODO Galen: list the meetings that actually took place (date, who was there, what was decided), e.g. the decision meeting planned for 5 Nov and the code walkthrough planned for 12 Nov, and add a notes file for each in `docs/meetings/`.]
-- [TODO Galen: stand-up notes for 13, 14 and 15 Nov.]
+- 15 Nov, 19:00: [TODO Galen: who was there and what was decided.]
 
 ## 6. What we would do differently
 

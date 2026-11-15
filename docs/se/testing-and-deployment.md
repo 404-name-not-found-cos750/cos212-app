@@ -28,7 +28,7 @@ The tree model is where a mistake would teach students something wrong: a wrong 
 
 `tests/store.test.js` has **13 tests** for loading saved progress (`Store` in `main.js`). It loads `main.js` with the scripts it needs into a `vm` context with a fake `localStorage`, and checks that nothing saved, blocked storage, invalid JSON, JSON that isn't an object, star values out of range or of the wrong type, star lists of the wrong length, bad best scores and a `tutorialDone` that isn't exactly `true` all give a working home page with sensible values, and that valid saved data (including the demo seed) loads and saves back unchanged.
 
-[TODO Galen: confirm the final count after any changes to the tests, and note any bugs the tests found. None were found when they were first written.]
+On 15 Nov all **56 tests** pass (43 + 13). The tree tests found no bugs when they were written. The store tests were written for a bug found in the app review: damaged or unexpected saved data made `main.js` throw while loading, which left a blank page. They fail against the old `main.js` and pass after the fix in PR #39.
 
 ### Continuous integration
 A GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push to `main` and on every pull request into `main`. It sets up Node.js 20, runs `node --check` on every file in `app/js/` (so a syntax error in any script fails the build, not only in `tree.js`), and then runs `npm test`. The result shows on each pull request, so the reviewer can see whether the tests pass before merging.
