@@ -1,11 +1,20 @@
+// The tutorial: six short, hands-on steps for students who have never seen a
+// tree. Each step is a function step(body, ctx) that fills `body` and returns a
+// cleanup function. ctx.complete() unlocks the Next button (so every step must
+// be tried before moving on) and ctx.goTo(i) jumps to step i (used by the quiz).
+
+// The small tree used in steps 1 and 2.
 const T_MEET = [8, [3, [1], [6]], [10, null, [14]]];
 
+// Turns an HTML string into one element.
 function el(html) {
   const t = document.createElement('template');
   t.innerHTML = html.trim();
   return t.content.firstElementChild;
 }
 
+// Step 1: the vocabulary (root, leaf, parent/child, subtree), checked with three
+// small tap tasks. Each wrong tap gets a reason specific to the node tapped.
 function stepMeet(body, ctx) {
   body.append(el(`<div>
     <p>A <b>tree</b> is a set of <b>nodes</b> (circles) joined by <b>edges</b> (lines). In a <b>binary tree</b>, every node has at most two children: a <b>left child</b> and a <b>right child</b>.</p>
@@ -21,6 +30,7 @@ function stepMeet(body, ctx) {
   const fb = body.appendChild(el('<p class="feedback" aria-live="polite"></p>'));
   const tree = Tree.fromSpec(T_MEET);
 
+  // Each task: what to ask, which node(s) count as right, and the feedback.
   const tasks = [
     {
       prompt: 'Tap the <b>root</b>.',
@@ -66,6 +76,7 @@ function stepMeet(body, ctx) {
       if (t < tasks.length) {
         task.innerHTML = `Next: ${tasks[t].prompt}`;
       } else {
+        // All three done: highlight 8's left subtree to introduce "subtree".
         task.innerHTML = 'Last idea: <b>subtrees</b>.';
         Tree.nodes(tree.left).forEach((x) => view.setClass(x, 'subtree', true));
         fb.innerHTML = `${fb.textContent} The highlighted nodes <b>3, 1 and 6</b> form the <b>left subtree</b> of 8. Every traversal is defined in terms of left and right subtrees, so keep this in mind!`;
@@ -76,6 +87,9 @@ function stepMeet(body, ctx) {
   return () => view.destroy();
 }
 
+// Step 2: the key idea behind all three traversals. An animation walks the climber
+// around the tree (Tree.euler); the dots under each node fill as it's passed,
+// and the chosen traversal writes the node down on its 1st, 2nd or 3rd pass.
 function stepWalk(body, ctx) {
   body.append(el(`<div>
     <p>To <b>traverse</b> a tree means to visit every node <b>exactly once</b>, following a rule. Here's a trick that makes all three rules easy to remember.</p>
@@ -110,10 +124,10 @@ function stepWalk(body, ctx) {
   const view = new TreeView(host, tree);
   view.svg.classList.add('show-pips');
   const seq = new SeqBar(host, Tree.nodes(tree).length, 'Written down');
-  const PASS = { pre: 1, in: 2, post: 3 };
+  const PASS = { pre: 1, in: 2, post: 3 }; // which pass writes the node down
   const ORD = ['', '1st', '2nd', '3rd'];
   let kind = 'pre';
-  let running = false;
+  let running = false; // the order can't be changed mid-animation
 
   function showBanner(label) {
     const m = Tree.MODES[kind];
@@ -153,9 +167,10 @@ function stepWalk(body, ctx) {
     status.className = 'feedback info';
     const name = Tree.MODES[kind].name;
     const pass = PASS[kind];
-    let k = 0;
-    let at = null;
+    let k = 0;      // nodes written down so far
+    let at = null;  // node the climber is on
     for (const e of Tree.euler(tree)) {
+      // Stop if the student left this step mid-animation (view destroyed).
       if (!view.alive) return;
       // Jump only when moving to a different node; repeat passes happen in place.
       if (e.node !== at) {
@@ -175,7 +190,7 @@ function stepWalk(body, ctx) {
         view.setPip(e.node, e.pass, 'seen');
         status.textContent = `${ORD[e.pass]} pass at ${v}. ${name} waits for the ${ORD[pass]} pass.`;
       }
-      await wait(e.pass === pass ? 900 : 550);
+      await wait(e.pass === pass ? 900 : 550); // linger longer when a node is written down
     }
     if (!view.alive) return;
     status.textContent = `Done! Writing each node down on its ${ORD[pass]} pass gives the ${name.toLowerCase()} sequence: ${seq.slots.map((s) => s.textContent).join(' → ')}.`;
@@ -191,6 +206,10 @@ function stepWalk(body, ctx) {
   return () => view.destroy();
 }
 
+// Steps 3-5: one per traversal, built from the same template ("I do, you do"):
+// first a demo the student steps through on a 3-node tree (demoSpec), then
+// practice on a bigger tree (practiceSpec) with explained mistakes and hints but
+// no hearts. `extra` is a line on what the traversal is used for.
 function makeOrderStep(kind, demoSpec, practiceSpec, extra) {
   const m = Tree.MODES[kind];
   return function (body, ctx) {
@@ -215,9 +234,11 @@ function makeOrderStep(kind, demoSpec, practiceSpec, extra) {
     const hintBtn = practice.appendChild(el('<button class="btn ghost" type="button">💡 Hint</button>'));
 
     const demo = new Board(demoHost, { tree: Tree.fromSpec(demoSpec), kind, interactive: false });
-    let board = null;
+    let board = null; // the practice board, created after the demo is watched
     let wrong = 0;
 
+    // Each click visits one more node of the demo with its reason; at the end the
+    // practice tree appears, and the button replays the demo.
     demoBtn.addEventListener('click', () => {
       if (demo.done) {
         demo.reset();
@@ -276,6 +297,9 @@ function makeOrderStep(kind, demoSpec, practiceSpec, extra) {
   };
 }
 
+// Step 6: a three-question check, one per traversal. The wrong options are the
+// other traversals (and level order) of the same tree, i.e. the real mix-ups
+// students make. Missed questions get a button back to the step that teaches it.
 function stepQuiz(body, ctx) {
   // Deliberately not a binary search tree, so in-order isn't just the values sorted.
   const spec = [5, [8, [1], [4]], [2, null, [9]]];
@@ -292,7 +316,7 @@ function stepQuiz(body, ctx) {
     in: 'In-order finishes the left subtree (1, 8, 4) before the root 5, then does the right subtree (2, 9).',
     post: 'Post-order does the left subtree (1, 4, 8), then the right subtree (9, 2), and the root 5 last.',
   };
-  const revisitStep = { pre: 2, in: 3, post: 4 };
+  const revisitStep = { pre: 2, in: 3, post: 4 }; // indexes into TUTORIAL_STEPS
 
   body.append(el('<p>Three questions about this tree. Pick the correct sequence for each.</p>'));
   const host = body.appendChild(el('<div></div>'));
@@ -300,8 +324,9 @@ function stepQuiz(body, ctx) {
   const qWrap = body.appendChild(el('<div class="quiz"></div>'));
   const summary = body.appendChild(el('<div class="callout" hidden aria-live="polite"></div>'));
 
-  const results = {};
+  const results = {}; // kind -> answered correctly? (one try per question)
   ['pre', 'in', 'post'].forEach((kind, qi) => {
+    // Shuffled so the right answer isn't always in the same place.
     const opts = ['pre', 'in', 'post', 'level'].sort(() => Math.random() - 0.5);
     const q = qWrap.appendChild(el(`<fieldset class="q">
       <legend>${qi + 1}. What is the <b>${Tree.MODES[kind].name.toLowerCase()}</b> sequence?</legend>
@@ -334,6 +359,8 @@ function stepQuiz(body, ctx) {
     });
   });
 
+  // All three answered: the tutorial counts as done whatever the score; a lower
+  // score adds review buttons for the missed traversals.
   function finish() {
     const score = Object.values(results).filter(Boolean).length;
     const missed = Object.keys(results).filter((k) => !results[k]);
@@ -355,6 +382,9 @@ function stepQuiz(body, ctx) {
   return () => view.destroy();
 }
 
+// The steps in order. Each traversal step gets a demo tree and a practice tree.
+// The practice trees are binary search trees, which the in-order note uses: its
+// practice sequence comes out sorted.
 const TUTORIAL_STEPS = [
   { title: 'Meet the tree', render: stepMeet },
   { title: 'Walking around a tree', render: stepWalk },
@@ -376,9 +406,11 @@ const TUTORIAL_STEPS = [
   { title: 'Quick check', render: stepQuiz },
 ];
 
+// The tutorial screen: progress bar, the current step, Back/Next. Returns a
+// cleanup for the router.
 function mountTutorial(root) {
   let index = 0;
-  let cleanup = () => {};
+  let cleanup = () => {}; // cleanup of the step on screen
   // Once the tutorial has been finished, every step is open on later visits.
   const reached = new Set(Store.tutorialDone() ? TUTORIAL_STEPS.map((_, i) => i) : []);
 
@@ -403,6 +435,7 @@ function mountTutorial(root) {
   const prev = $('.prev');
   const next = $('.next');
 
+  // Shows step i: clean up the old step, then let the new one draw itself.
   function show(i) {
     cleanup();
     index = i;

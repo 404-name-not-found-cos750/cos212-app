@@ -6,6 +6,7 @@ const RANDOM_UNLOCK = 30;
 const KINDS = ['pre', 'in', 'post'];
 const RANDOM_HEART_EVERY = 5;
 
+// Stars across all three games (out of 45). Also used by achievements.js.
 function totalStars() {
   const p = Store.progress();
   return KINDS.reduce((sum, k) => sum + p[k].reduce((a, b) => a + b, 0), 0);
@@ -15,13 +16,17 @@ function randomUnlocked() {
   return totalStars() >= RANDOM_UNLOCK;
 }
 
+// Size of the i-th tree in a run (0-based): 4, 6, 8 ... nodes, up to 25. The
+// depth limit grows with it, so there is always room for every node.
 function randomTreeCfg(i) {
   const n = Math.min(25, 4 + 2 * i);
   const maxDepth = n <= 6 ? 2 : n <= 13 ? 3 : 4;
   return { n, maxDepth };
 }
 
+// Builds the Random Order screen and returns a cleanup function for the router.
 function mountRandom(root) {
+  // Reached by typing the URL before unlocking it: explain instead of playing.
   if (!randomUnlocked()) {
     root.innerHTML = `
       <div class="page play">
@@ -34,9 +39,9 @@ function mountRandom(root) {
     return () => {};
   }
 
-  let board = null;
-  let state = null;
-  let nextTimer = null;
+  let board = null;     // the current tree
+  let state = null;     // this run: score, trees, lives, recent orders
+  let nextTimer = null; // the pause before the next tree
 
   root.innerHTML = `
     <div class="page play random-mode">
@@ -77,6 +82,7 @@ function mountRandom(root) {
     bar.innerHTML = `<span>⭐ Score: <b>${state.score}</b></span><span>🌳 Trees: <b>${state.trees}</b></span><span>🏆 High score: <b>${best}</b></span>`;
   }
 
+  // Same dialog helpers as game.js.
   function openModal(html, buttons) {
     modal.innerHTML = html + '<div class="modal-actions"></div>';
     modal.querySelector('h2').id = 'modal-title';
@@ -101,6 +107,8 @@ function mountRandom(root) {
     modal.innerHTML = '';
   }
 
+  // Random traversal for the next tree, but never the same one three times in a
+  // row, so the student keeps having to switch rules.
   function pickKind() {
     const h = state.history;
     let options = KINDS;
@@ -110,6 +118,8 @@ function mountRandom(root) {
     return k;
   }
 
+  // Loads the next tree and announces its order in the banner (with a "pop" so
+  // the change is noticed; aria-live reads it out).
   function nextTree() {
     clearTimeout(nextTimer);
     const refocus = host.contains(document.activeElement);
@@ -122,13 +132,14 @@ function mountRandom(root) {
     page.dataset.kind = kind;
     banner.innerHTML = `This tree: <b>${m.name}</b> <span>${m.rule}</span>`;
     banner.classList.remove('pop');
-    void banner.offsetWidth;
+    void banner.offsetWidth; // re-layout so the pop animation plays again
     banner.classList.add('pop');
     board = new Board(host, {
       tree: Tree.random(cfg.n, cfg.maxDepth),
       kind,
       onCorrect: () => {
-        state.score++;
+        state.score++; // 1 point per correct node
+        // (and a bonus equal to the tree's size when it's cleared, see treeCleared)
         renderBar();
         say('');
       },
@@ -150,6 +161,7 @@ function mountRandom(root) {
     say(`${why} You lost a heart: ${state.lives} left.`, 'bad');
   }
 
+  // Tree finished: bonus points, maybe an extra heart, then the next tree.
   function treeCleared() {
     state.trees++;
     const bonus = randomTreeCfg(state.trees - 1).n;
@@ -167,6 +179,8 @@ function mountRandom(root) {
     nextTimer = setTimeout(nextTree, 1300);
   }
 
+  // Out of hearts: save the high score and trees cleared (the Phoenix avatar
+  // goal), then offer a walkthrough of the tree that ended the run.
   function gameOver(n, why) {
     board.locked = true;
     say(why, 'bad');
@@ -191,6 +205,7 @@ function mountRandom(root) {
     );
   }
 
+  // Replays the last tree one step at a time, explaining each visit.
   function walkthrough() {
     closeModal();
     board.reset();
@@ -214,6 +229,7 @@ function mountRandom(root) {
     btn.focus();
   }
 
+  // A new run: score 0, one heart.
   function start() {
     // Started from the modal or the walkthrough? Then move focus to the new
     // tree, because that button is about to go.

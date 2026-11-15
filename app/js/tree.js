@@ -1,4 +1,15 @@
+// Binary tree model and traversal logic. Pure data and rules: no DOM code here,
+// so tests/tree.test.js can check it with node --test.
+//
+// A node is { id, value, left, right, parent, depth, slot }:
+//   - id    0..n-1 in breadth-first order (used as a key in Sets and Maps)
+//   - depth 0 for the root
+//   - slot  the node's left-to-right position among the 2^depth places on its
+//           level (left child = 2*slot, right child = 2*slot + 1); view.js uses
+//           it to lay the tree out without nodes overlapping.
 const Tree = (() => {
+  // The three depth-first traversals. `pass` is which of the walker's three
+  // passes of a node (see euler below) writes it down; the tutorial uses it.
   const MODES = {
     pre: {
       name: 'Pre-order',
@@ -20,6 +31,7 @@ const Tree = (() => {
     },
   };
 
+  // side is 'left' or 'right' (null for the root).
   function makeNode(value, parent, side) {
     return {
       id: 0,
@@ -32,11 +44,15 @@ const Tree = (() => {
     };
   }
 
+  // Gives every node its id once the tree is complete.
   function numberNodes(root) {
     nodes(root).forEach((n, i) => { n.id = i; });
     return root;
   }
 
+  // Builds a fixed tree from a nested array [value, leftSpec, rightSpec], where
+  // a missing child is null or left out. Used for the tutorial's hand-picked trees,
+  // e.g. [8, [3, [1], [6]], [10, null, [14]]].
   function fromSpec(spec) {
     function build(s, parent, side) {
       if (!s) return null;
@@ -48,6 +64,8 @@ const Tree = (() => {
     return numberNodes(build(spec, null, null));
   }
 
+  // `count` different numbers from 1..99, shuffled (Fisher-Yates), so no two
+  // nodes share a value and a tap is never ambiguous.
   function uniqueValues(count) {
     const pool = [];
     for (let v = 1; v <= 99; v++) pool.push(v);
@@ -58,6 +76,11 @@ const Tree = (() => {
     return pool.slice(0, count);
   }
 
+  // A random binary tree with n nodes, no deeper than maxDepth. Each new node is
+  // attached to a random free child spot, so shapes vary (bushy or lopsided).
+  // Values are random too: this is a plain binary tree, not a search tree, so the
+  // student must follow the traversal rule rather than sort the numbers.
+  // Callers must keep n <= 2^(maxDepth+1) - 1, or there would be no free spot left.
   function random(n, maxDepth) {
     const values = uniqueValues(n);
     const root = makeNode(values[0], null, null);
@@ -77,6 +100,7 @@ const Tree = (() => {
     return numberNodes(root);
   }
 
+  // Every node in breadth-first (level) order: top to bottom, left to right.
   function nodes(root) {
     const out = [];
     const queue = root ? [root] : [];
@@ -89,6 +113,11 @@ const Tree = (() => {
     return out;
   }
 
+  // The correct visit order for kind 'pre' | 'in' | 'post'. One recursive walk;
+  // only the moment the node is written down changes:
+  //   pre-order  before both subtrees  (node, left, right)
+  //   in-order   between them         (left, node, right)
+  //   post-order after both           (left, right, node)
   function order(root, kind) {
     const out = [];
     (function go(n) {
@@ -102,6 +131,10 @@ const Tree = (() => {
     return out;
   }
 
+  // The "Euler tour" used in tutorial step 2: walking around the tree, the walker
+  // passes each node three times: on arrival (pass 1), back from its left
+  // subtree (pass 2) and back from its right subtree (pass 3). Writing nodes down
+  // on pass 1, 2 or 3 gives pre-, in- or post-order respectively.
   function euler(root) {
     const ev = [];
     (function go(n) {
@@ -115,21 +148,29 @@ const Tree = (() => {
     return ev;
   }
 
+  // --- Helpers for the feedback messages below ---
+
+  // Parent, grandparent, ... up to the root (nearest first).
   function ancestors(n) {
     const out = [];
     for (let p = n.parent; p; p = p.parent) out.push(p);
     return out;
   }
 
+  // Is node n somewhere in the subtree rooted at sub (including sub itself)?
   function isInside(n, sub) {
     for (let x = n; x; x = x.parent) if (x === sub) return true;
     return false;
   }
 
+  // Does the subtree still contain a node the student hasn't visited?
+  // visited is a Set of node ids.
   function hasUnvisited(sub, visited) {
     return !!sub && nodes(sub).some((x) => !visited.has(x.id));
   }
 
+  // Shared by pre- and post-order: was the tapped node in some ancestor's right
+  // subtree while that ancestor's left subtree is unfinished?
   function leftBeforeRight(tapped, visited) {
     for (const a of ancestors(tapped)) {
       if (isInside(tapped, a.right) && hasUnvisited(a.left, visited)) {
@@ -139,6 +180,10 @@ const Tree = (() => {
     return null;
   }
 
+  // Feedback for a WRONG tap: explains which rule of the traversal the tap broke,
+  // naming the actual nodes, instead of just saying "wrong". Checks run from the
+  // most specific reason to the general one; the last line is a fallback.
+  // (expected, the correct node, is passed in but not needed by the current rules.)
   function explain(kind, tapped, expected, visited) {
     const v = tapped.value;
     if (kind === 'pre') {
@@ -167,24 +212,31 @@ const Tree = (() => {
     return `Not ${v} yet. Another node needs to be visited first. Remember the rule: ${MODES[kind].rule}.`;
   }
 
+  // --- Helpers for visitReason ---
+
   function rootOf(n) {
     let r = n;
     while (r.parent) r = r.parent;
     return r;
   }
 
+  // First in-order node: keep going left from the root.
   function firstIn(root) {
     let n = root;
     while (n.left) n = n.left;
     return n;
   }
 
+  // First post-order node: keep going down, left if possible, else right,
+  // until reaching a leaf.
   function firstPost(root) {
     let n = root;
     while (n.left || n.right) n = n.left || n.right;
     return n;
   }
 
+  // Explains why n is the CORRECT next node. Used by the Hint button and by the
+  // step-by-step walkthroughs, so a hint teaches the rule, not just the answer.
   function visitReason(kind, n) {
     const v = n.value;
     const p = n.parent;
