@@ -31,4 +31,6 @@ Log every use here as it happens; it is much harder to reconstruct afterwards.
    - Outcome: first drafts of `docs/id/learning-styles-multimedia.md`, `docs/id/motivation-arcs.md` and `docs/se/ui-design.md`; screenshots in `docs/se/img/`; speaker notes for slides 12–13; local UI fixes in `app/` (contrast, screen-reader labels, dialog focus, `RANDOM_UNLOCK` 40 → 30).
 5. (15 Nov) "so what do i still have left", then "can you doo all i need to do please"
    - Outcome: PR #39 (Galen) had already merged the same UI fixes, so the local `app/` changes were dropped in favour of `main`. Section 5.5 and section 7.3 were rewritten to describe PR #39, with contrast ratios measured on the merged colours. All screenshots were retaken from the merged app, and 14 automated browser checks passed. Wording was matched to the app ("pass" for the monkey's three passes, the new step 2 title).
+6. (15 Nov) "yes do what is missing and then double check everything"
+   - Outcome: added the storyboard for ID section 6 (`docs/id/storyboard.md`, 13 frames with captions) and the missing screenshots of tutorial steps 4 and 5. Checked every image link, citation and number in Hendré's sections against the app code.
    - Hendré reviewed and edited the drafts before submission. <!-- TODO Hendré: replace this line with what you actually changed. -->
