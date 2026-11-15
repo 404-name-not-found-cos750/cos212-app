@@ -50,7 +50,7 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 | **FR-16** | Clearing a level awards stars: 3 for no mistakes and no hints, 2 for at most 2 mistakes and hints combined, 1 otherwise. Only the best result per level is kept. |
 | **FR-17** | Level 1 of each game is open. Each further level unlocks once the previous level has at least one star. The level bar shows the stars per level and a lock on locked levels. A game opens at the first level without stars. |
 | **FR-18** | When a level is cleared, a summary shows the stars, the number of mistakes and hints, and the full sequence, with buttons for the next level, playing again or going home. It also announces anything newly unlocked (Endless, Random Order). |
-| **FR-19** | Progress (stars per level, Endless best per order, Random Order high score, tutorial done) is saved in the browser's `localStorage` on that device and restored on the next visit. If storage is blocked, the app still works for the current visit; saved data that is missing or damaged is reset or corrected when the app loads. |
+| **FR-19** | Progress (stars per level, Endless best per order, Random Order high score and trees cleared, tutorial done, chosen avatar and avatars already announced) is saved in the browser's `localStorage` on that device and restored on the next visit. If storage is blocked, the app still works for the current visit; saved data that is missing or damaged is reset or corrected when the app loads. |
 
 ### Challenge: Endless and Random Order
 | ID | Requirement |
@@ -59,6 +59,11 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 | **FR-21** | **Random Order mode** unlocks when the student has earned a set number of stars across the three games (`RANDOM_UNLOCK`, 30 of the 45: all 15 levels cleared with an average of 2 stars). Until then the home page shows a locked card with a progress bar towards the unlock. |
 | **FR-22** | In Random Order, each tree gets a random order, shown in a colour-coded banner; the same order never comes up three times in a row. Trees grow from 4 to 25 nodes and from 2 to 4 levels deep. The student starts with one heart and wins another for every 5 trees cleared; a wrong tap costs a heart, and the game ends when the last heart is gone. The score is +1 per correct node plus a bonus equal to the tree's size when it is cleared. The high score is saved. |
 
+### Rewards: avatars
+| ID | Requirement |
+|---|---|
+| **FR-23** | **Avatars**: the student unlocks new characters that replace the monkey on every tree. They are unlocked at 10, 20, 30, 40 and 45 stars, for clearing 10 trees in one Endless run and in all three orders, and for clearing 15 trees in one Random Order run; a "legendary" Dragon unlocks when all the others are unlocked. The home page shows the avatars with their goals, and the student picks one there. A newly unlocked avatar is announced in the level summary or game-over dialog. Added after the feature freeze (see the SE methodology, section 3.2). |
+
 ## 3. Non-functional requirements
 
 | ID | Category | Requirement | How we check it |
@@ -66,11 +71,11 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 | **NFR-1** | Portability / offline | The app runs by opening `app/index.html` in a browser. No install, no build step, no network access and no third-party libraries are needed. | The app has no external URLs or dependencies; open it from a USB copy with Wi-Fi off. |
 | **NFR-2** | Access | No accounts, no sign-up, no login. A student can start within one click of opening the link. | Inspection: there is no login screen. |
 | **NFR-3** | Privacy | No personal data is collected. The only data stored is the student's progress, under the `localStorage` key `cos212-tree-hop-v1` on their own device. No cookies, analytics or server. | Code review of `main.js`; browser dev tools show no network requests after load. |
-| **NFR-4** | Compatibility | Works in current versions of Chrome, Edge, Firefox and Safari on laptops and phones, with mouse, touch or keyboard. The layout adapts to phone width (one column below 620 px). | [TODO Galen: list the browsers and devices actually tested, e.g. in the usability test.] |
+| **NFR-4** | Compatibility | Works in current versions of Chrome, Edge, Firefox and Safari on laptops and phones, with mouse, touch or keyboard. The layout adapts to phone width (one column below 620 px). | Usability test: Chrome 131 and Edge 131 on laptops, Chrome on an Android phone (Samsung Galaxy A14) and Safari on an iPad (8th gen). Firefox not tested. |
 | **NFR-5** | Appearance | Light and dark themes follow the device setting (`prefers-color-scheme`). | Switch the OS theme. |
-| **NFR-6** | Performance | The first page is usable within 2 seconds on a typical student phone or laptop. The whole app (HTML, CSS and JS) is about 90 KB with no images to download. | [TODO Galen: run Lighthouse on the Vercel URL and record the performance score and load time.] |
-| **NFR-7** | Accessibility | Tree nodes can be reached with Tab and chosen with Enter or Space; nodes, hearts and progress bars have text labels for screen readers; feedback is announced through live regions; animations are reduced when the device asks for reduced motion. Target: WCAG 2.1 level AA colour contrast. | [TODO Galen: record the result of Hendré's contrast and phone-layout check.] |
-| **NFR-8** | Usability | A student with no prior knowledge can finish the tutorial in about 10 minutes and play level 1 without help. Text is plain and short, and every mistake is explained. | Usability test with 3–5 students ([TODO Galen: link section 7 results]). |
+| **NFR-6** | Performance | The first page is usable within 2 seconds on a typical student phone or laptop. The whole app (HTML, CSS and JS) is about 90 KB with no images to download. | Size of the files in `app/`; opening the live URL on a phone and a laptop. |
+| **NFR-7** | Accessibility | Tree nodes can be reached with Tab and chosen with Enter or Space; nodes, hearts and progress bars have text labels for screen readers; feedback is announced through live regions; animations are reduced when the device asks for reduced motion. Target: WCAG 2.1 level AA colour contrast (W3C, 2018). | Checked after the feature freeze; the contrast results and fixes are in the SE document, section 5. |
+| **NFR-8** | Usability | A student with no prior knowledge can finish the tutorial in about 10 minutes and play level 1 without help. Text is plain and short, and every mistake is explained. | Usability test (SE document, section 7): met on a laptop (tutorial 11–12 min, level 1 unaided); only partly met on a small phone and a tablet. |
 | **NFR-9** | Reliability | The app must not fail during the live demo. No runtime dependency on the network; storage errors are caught; random trees always have exactly the requested number of nodes. Backups: the deployed site, an offline copy and a recorded video. | Unit tests in CI (see [testing-and-deployment.md](testing-and-deployment.md)); rehearsals. |
 | **NFR-10** | Maintainability | Plain JavaScript split into small files by responsibility (model, drawing, pages, storage and routing), each under 450 lines, with comments explaining intent. Any team member can change the app and see the result with a browser refresh. | Code review; see the architecture section. |
 | **NFR-11** | Deployability | The app is a static site. Every push to `main` deploys automatically to the live URL. | See [testing-and-deployment.md](testing-and-deployment.md). |
@@ -103,7 +108,7 @@ These were left out on purpose to keep the scope small enough to build, test and
 
 ## 6. User stories
 
-Format: *As a … I want … so that …*, with acceptance criteria in *Given / When / Then* form. "Student" means a COS212 student with no prior knowledge of trees.
+Format: *As a … I want … so that …* (Cohn, 2004), with acceptance criteria in *Given / When / Then* form. "Student" means a COS212 student with no prior knowledge of trees.
 
 ### Epic A: Learn
 
@@ -236,5 +241,6 @@ As the COS212 lecturer, I want to show the app on a projector in the venue, so t
 | FR-20 Endless mode | US-13 | `js/game.js` (`ENDLESS`, `endlessSize`, `onEndlessTree`) |
 | FR-21 Random Order unlock | US-14 | `js/random.js` (`RANDOM_UNLOCK`, `randomUnlocked`), `js/main.js` (`randomCard`) |
 | FR-22 Random Order play | US-14 | `js/random.js` (`pickKind`, `randomTreeCfg`, `treeCleared`, `gameOver`) |
+| FR-23 Avatars | US-10, US-12 | `js/achievements.js` (`AVATARS`, `claimNewAvatars`, `avatarSection`) |
 
 All code paths are relative to `app/`. Non-functional requirements map to the whole app; NFR-1 to NFR-3 are covered by US-1, US-12 and US-15, and NFR-4, NFR-5 and NFR-9 by US-17.

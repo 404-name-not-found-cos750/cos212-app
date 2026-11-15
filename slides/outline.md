@@ -1,6 +1,8 @@
 # Presentation outline: Tree Hop
 
-- **Slot:** Mon 16 Nov 2026, [TODO Galen: time and venue]. 30 min in total: 10 min talk, 10 min demo, 5 min Q&A, 5 min setup and handover.
+> This is the planning outline from 12 Nov. The final slides and speaker notes are in `Tree-Hop-presentation.pptx` (PDF copy alongside), and who presents what is in `speaker-roster.md`.
+
+- **Slot:** Mon 16 Nov 2026, 14:30–15:00. 30 min in total: 10 min talk, 10 min demo, 5 min Q&A, 5 min setup and handover.
 - **Slides:** 14, about 40 seconds each. Each speaker sends their slides to Galen by **Sat 14 Nov 12:00**; Galen assembles them. Upload to ClickUP with the GitHub link on **Sun 15 Nov**.
 - **Speaker order** follows the story: problem → SE approach → architecture → ID approach → assessment and scaffolding → learning styles and UI → demo. This puts Francois before Hendré (a change from the order in `PLAN.md`) so that Hendré ends the talk and goes straight into the demo he drives.
 - Slides marked **[owner to confirm]** are suggestions; the owner rewrites them in their own words.
@@ -76,7 +78,7 @@
 - GitHub Issues as the backlog, a branch and PR per change, decision records for every major choice
 - Re-planned when the first sprints slipped: scope frozen, work rebalanced
 
-**Speaker notes:** "For the software side we used Scrum with short sprints, combined with prototyping. Four sprints: decisions, design, build, and polish and documents. [TODO Galen: align with decision 002 once written.] We tracked work as GitHub issues, made every change on a branch with a pull request, and wrote a short decision record for each major choice, so we can always say why we did something. Prototyping mattered because we had a working prototype early and could then check it against the learning objectives and real students. To be honest about the process: our first two sprint deadlines slipped. We re-planned, froze features on 11 November, and rebalanced the work so that each person owned a few clear sections. That re-plan is in the repository too."
+**Speaker notes:** "For the software side we used Scrum with short sprints, combined with prototyping. Four sprints: decisions, design, build, and polish and documents. We tracked work as GitHub issues, made every change on a branch with a pull request, and wrote a short decision record for each major choice, so we can always say why we did something. Prototyping mattered because we had a working prototype early and could then check it against the learning objectives and real students. To be honest about the process: our first two sprint deadlines slipped. We re-planned, froze features on 11 November, and rebalanced the work so that each person owned a few clear sections. That re-plan is in the repository too."
 
 ---
 
@@ -84,12 +86,12 @@
 
 **Speaker:** Galen · 0:30
 
-- [TODO Galen: final counts] issues, [N] pull requests, [N] decision records, daily stand-up notes
-- Unit tests on the tree logic, run in CI on every push [TODO Galen: confirm tests and CI are merged]
-- Usability test with [N] students who haven't done COS212: [TODO Galen: one headline result, e.g. mean SUS and the main fix]
+- 32 issues, 8 pull requests (#33–#40), 4 decision records
+- Unit tests on the tree logic, run in CI on every push: 56 tests
+- Usability test with five adult beginners: all finished the tasks; mean SUS 72.5 (92.5 on laptops); main issue: small tap targets on phones and tablets
 - Deployed on Vercel; offline copy and backup video for the demo
 
-**Speaker notes:** "Briefly, the evidence: [N] issues, [N] pull requests and [N] decision records, all on GitHub. The tree logic, which decides what's right and wrong, has unit tests that run automatically on every push. [TODO Galen: confirm.] We tested the app with [N] students who haven't done COS212, using think-aloud tasks, a short before-and-after knowledge check and the System Usability Scale. [TODO Galen: headline result.] Mthobisi will now show how the app is built."
+**Speaker notes:** "Briefly, the evidence: 32 issues, 8 pull requests and 4 decision records, all on GitHub. The tree logic, which decides what's right and wrong, has unit tests that run automatically on every push. We tested the app with five adult beginners, using a questionnaire with tasks, a short before-and-after knowledge check and the System Usability Scale. All five finished the tasks and could explain post-order afterwards; small tap targets on phones were the main problem. Mthobisi will now show how the app is built."
 
 ---
 
@@ -102,7 +104,7 @@
 - Data: progress (stars per level, best scores, tutorial done) in the browser's `localStorage`
 - Visual: the architecture diagram from the SE document
 
-**Speaker notes:** [TODO Mthobisi]
+**Speaker notes:** see the final deck.
 
 ---
 
@@ -115,7 +117,7 @@
 - No accounts, no server: progress stays on the student's device
 - Hosted on Vercel, deployed automatically from `main`
 
-**Speaker notes:** [TODO Mthobisi]
+**Speaker notes:** see the final deck.
 
 ---
 
@@ -128,7 +130,7 @@
 - Uses it alone, before the lecture, on a laptop or phone
 - Likely misconceptions we designed for: reading level by level, "in-order means left to right on the page"
 
-**Speaker notes:** [TODO Shekinah]
+**Speaker notes:** see the final deck.
 
 ---
 
@@ -141,7 +143,7 @@
 - Scaffolding and the zone of proximal development: support given when needed, then withdrawn
 - Active learning: every step is something the student does
 
-**Speaker notes:** [TODO Shekinah]
+**Speaker notes:** see the final deck.
 
 ---
 
@@ -154,7 +156,7 @@
 - Wrong quiz answers link back to the tutorial step that was missed
 - Stars measure progress: 3 = no mistakes or hints, 2 = up to 2, 1 = finished
 
-**Speaker notes:** [TODO Francois]
+**Speaker notes:** see the final deck.
 
 ---
 
@@ -167,7 +169,7 @@
 - The struggling student gets more help; the confident student never sees it
 - Question bank documented against the objectives (ID document, section 9)
 
-**Speaker notes:** [TODO Francois]
+**Speaker notes:** see the final deck.
 
 ---
 
@@ -236,7 +238,7 @@
 | 8:45–9:30 | Phone (or narrow window) and dark mode | Hendré | Hendré | Works on a phone; accessibility |
 | 9:30–10:00 | Back to the home page with stars showing; hand over to Q&A | Hendré | Galen | One-sentence wrap-up; slide 14 back on screen |
 
-**Rehearsal notes:** time it twice (Sat 14, Sun 15). If running late at 5:00, skip the phone section. If the live URL fails, switch to `app/index.html` from the laptop or USB within 30 seconds; if the laptop fails, play the backup video. The table above is the demo script (#30). [TODO Hendré: adjust the timings after rehearsal 1.]
+**Rehearsal notes:** time it twice (Sat 14, Sun 15). If running late at 5:00, skip the phone section. If the live URL fails, switch to `app/index.html` from the laptop or USB within 30 seconds; if the laptop fails, play the backup video. The table above is the demo script (#30).
 
 ## Likely panel questions
 
@@ -245,8 +247,8 @@ Answerer in bold. Each person prepares two or three sentences for their own ques
 | # | Question | Answers | Pointers |
 |---|---|---|---|
 | 1 | Why binary trees and traversal, and is it really CS2023 core? | **Galen** | Decision 001. AL Foundational data structures and algorithms, Kumar et al. (2024). Decision trees rejected because they aren't on the list; BST insert/search tests mostly one rule; graphs harder to lay out. Traversal = sequence of visits, so each tap is assessable and explainable. |
-| 2 | Why Scrum for a two-week project with five people? | **Galen** | Short sprints gave fixed checkpoints; the backlog in GitHub Issues made the split visible; the re-plan after the slipped sprints is exactly what Scrum's review/re-planning is for. Prototyping because we needed something to test with students early. [TODO Galen: align with decision 002.] |
-| 3 | How did you test the app? / Does it actually work for learners? | **Galen** | Unit tests on `tree.js` in CI [TODO confirm]. Usability test: [N] students who haven't done COS212, 6 tasks, think-aloud, pre/post check (0–3), SUS. [TODO Galen: headline numbers and one fix it led to.] Be clear it's a small formative test, not proof of learning gains. |
+| 2 | Why Scrum for a two-week project with five people? | **Galen** | Short sprints gave fixed checkpoints; the backlog in GitHub Issues made the split visible; the re-plan after the slipped sprints is exactly what Scrum's review/re-planning is for. Prototyping because we needed something to test with students early. |
+| 3 | How did you test the app? / Does it actually work for learners? | **Galen** | Unit tests on `tree.js` and saved progress in CI (56 tests). Usability test: five adult beginners (not students; we say so), tasks, pre/post check (0–3), SUS. Mean SUS 72.5, 92.5 on laptops; beginners 0 → 3 on the check; main finding: tap targets on phones and tablets. Be clear it's a small formative test, not proof of learning gains. |
 | 4 | How did you use GenAI, and how do you know the content is correct? | **Galen** (Francois for the code) | Acknowledged in Appendix A of the ID document with prompts and tools. Used for the first prototype and drafting; the tutorial text was reviewed against the objectives (ID section 6); tree logic covered by unit tests. |
 | 5 | How does the lecturer see how students are doing? | **Galen** | They don't, in this prototype: progress stays in the student's browser. Deliberate: no accounts, no personal data, no server to fail during the demo. Next step: an export or a lecturer dashboard. |
 | 6 | What would you do with more time? | **Galen** | Lecturer view of progress; larger question bank tagged by objective; BST and level-order units on the same engine; a longer study with more students. |

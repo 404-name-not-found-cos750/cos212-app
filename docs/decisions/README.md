@@ -9,4 +9,5 @@ Copy [`000-template.md`](000-template.md) to start a new one.
 |---|---|---|---|
 | [001](001-data-structure-and-algorithm.md) | Binary trees + pre-, in- and post-order traversal | Proposed | 2026-11-09 |
 | [002](002-se-methodology.md) | Scrum with short sprints + evolutionary prototyping | Proposed | 2026-11-12 |
+| [003](003-id-model.md) | ADDIE, run iteratively | Proposed | 2026-11-15 |
 | [004](004-tech-stack-and-hosting.md) | Plain HTML/CSS/JS, no build step, hosted on Vercel | Proposed | 2026-11-09 |
