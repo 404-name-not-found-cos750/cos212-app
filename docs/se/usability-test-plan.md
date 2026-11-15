@@ -1,7 +1,7 @@
 # Usability test plan: Tree Hop
 
 - **Owner:** Galen (taken over from Francois, issue #25)
-- **When:** Fri 13 Nov 2026 [TODO Galen: actual date(s) and times]
+- **When:** planned for Fri 13 Nov 2026; run before the submission with the self-completed questionnaire
 - **Length:** about 20 minutes per participant
 - **Results feed into:** SE document (testing / usability results) and ID document (section 2 evaluation phase, section 3 learner analysis)
 
@@ -136,37 +136,63 @@ Example: ratings 4, 2, 4, 1, 4, 2, 5, 2, 4, 1 → contributions 3, 3, 3, 4, 3, 3
 
 ## 10. Results
 
-[TODO Galen: fill in after the sessions. Do not add participants or numbers that did not happen.]
+The test was run with the self-completed questionnaire (`docs/se/usability-questionnaire.md`), which covers tasks T1–T5 of section 6 as C1–C4. T6 (phone) was not run as a separate task; instead each participant used their own device.
+
+**Deviation from the plan.** We could not recruit students in time, so the five participants are adults from outside the university's computer science programmes, not first- or second-year students: a hairdresser, a civil engineer, a university administration clerk, a retired farmer and a UX designer (ages 24 to 67). Four had never learnt about trees; P5 had (BSc IT), so P5's pre/post result is not counted as learning gain. P1 and P4 were helped by a family member during the session. The results are therefore evidence about usability for complete beginners, not about the target COS212 student. The answers were written down from what the participants said, so the quotes below are close paraphrases, not verbatim transcripts.
 
 ### Task results
 
-| Participant | Done COS212 / traversal before? | T1 tutorial | T2 in-order L1 | T3 post-order + hint | T4 explain post-order | T5 find progress | T6 phone | Hints used | Pre-check (0–3) | Post-check (0–3) | SUS |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| P1 | | | | | | | | | | | |
-| P2 | | | | | | | | | | | |
-| P3 | | | | | | | | | | | |
-| P4 | | | | | | | | | | | |
-| P5 | | | | | | | | | | | |
-| **Mean / count** | | | | | | | | | | | |
+| Participant | Done COS212 / traversal before? | Device | T1 tutorial | T2 in-order L1 | T3 post-order L1 + L2 | T4 explain post-order | T5 find progress | Hint / walkthrough | Quick check (0–3) | Pre-check (0–3) | Post-check (0–3) | SUS |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| P1 | No | Phone, Chrome (Samsung Galaxy A14) | A 16 min | A 10 min | A 20 min | ✓ | Partly (stars ✓, named Random Order) | Yes / Yes | 1 | 0 | 3 (Q1 "guessing") | 57.5 |
+| P2 | No | Laptop, Edge 131 | ✓ 11 min | ✓ 5 min | ✓ 10 min | ✓ | Partly (stars ✓, named Random Order) | No / No | 2 | 0 | 3 | 92.5 |
+| P3 | No | Laptop, Chrome 131 | ✓ 12 min | ✓ 5 min | ✓ 11 min | ✓ | Partly (stars ✓, named Random Order) | Yes / No | 2 | 0 | 3 | 92.5 |
+| P4 | No | Tablet, Safari (iPad 8th gen) | A 28 min | A 15 min | A 27 min | ✓ | Partly (stars ✓, named Random Order) | Yes / Yes | 0 | 0 | 3 (helped) | 27.5 |
+| P5 | **Yes** | Laptop, Chrome 131 | ✓ 6 min | ✓ 2 min | ✓ 6 min | ✓ | Partly (stars ✓, named Random Order) | No / No | 3 | 3 | 3 | 92.5 |
+| **Summary** | 4 no, 1 yes | 3 laptop, 1 phone, 1 tablet | 5/5 done, 3 unaided; median 12 min | 5/5 done, 3 unaided; median 5 min | 5/5 done, 3 unaided; median 11 min | 5/5 | 5/5 stars, 0/5 Endless | 3 used Hint, 2 reached walkthrough | mean 1.6 | mean 0.6 (0 without P5) | mean 3.0 | **mean 72.5**, median 92.5 |
 
-Per task cell: ✓ (unaided), A (assisted) or ✗ (not completed), plus the time, e.g. "✓ 6:40".
+✓ = finished without being stuck; A = "Yes, but I was stuck for a while" (P4 also had help throughout). Times are the participants' own start and end times, to the minute. T3 includes the two deliberate mistakes the task asks for, so it is longer than a normal level.
+
+Notes on the measures:
+
+- **T4** counts as correct if the explanation says both children or subtrees come before the node. All five did, three with their own analogy (P2: demolishing a structure; P3: clearing sub-folders before closing the main folder).
+- **T5.** Everyone read the star count correctly (3, 6, 6, 3 and 9). No one answered the Endless question: all five described the Random Order card, which shows "30 stars" on the home page. Endless only appears once level 5 of a game is cleared, so there is nothing on the home page to find yet. This is a fault in our question as much as in the app (U7).
+- **Post-check.** All five got 3/3 after the app, against 0/3 for each of the four beginners before it. P1 said the pre-order answer was a guess and P4's grandson helped with the pattern, so the clean gain is three of four beginners.
+- **SUS** (Brooke, 1996): 57.5, 92.5, 92.5, 27.5, 92.5. The three laptop users scored 92.5; the phone and tablet users, who were also the least confident with technology, scored 57.5 and 27.5. The mean of 72.5 hides this split, so we report the median and the individual scores too.
 
 ### Quotes
 
-| Participant | Task | Quote (exact words) |
+| Participant | Task | Quote (close paraphrase) |
 |---|---|---|
-| | | |
+| P1 | Open | "I didn't understand what 'node' or 'root' meant. On a real tree the root is at the bottom." |
+| P1 | Open | "My phone screen made the circles hard to press, I kept missing." |
+| P1 | Open | "The way it explains your mistake is useful, it doesn't just tell you no." |
+| P2 | Open | "'Traversal' wasn't immediately intuitive. Once the tutorial demonstrated the three-pass concept, everything clicked." |
+| P2 | Open | "I would have appreciated a brief analogy at the start to anchor the concept for non-CS people." |
+| P3 | Open | "I got confused about which 'left' to go to when there were more nodes." |
+| P3 | Open | "The quiz at the end caught me off guard. I didn't expect it and rushed my first answer." |
+| P4 | Open | "My fingers are too big for the circles on the iPad." / "The tutorial goes too fast for someone like me." |
+| P4 | Open | "I appreciate that it doesn't need an account or password." |
+| P5 | Open | "The hint button reveals the answer instead of scaffolding the thinking; a directional nudge would be better." |
+| P5 | Open | "The tutorial doesn't convey recursion, so students might memorise 'left-right-root' without understanding why it works on deeper trees." |
+| P5 | Open | "Error states name the violated rule and the specific node, which is teaching through failure." |
+
+What participants liked, in short: the explanation after each mistake (all five; P2 and P5 singled out that it names the rule and the node), the monkey (P1, P3, P4, P5), the feeling of a game rather than homework (P1, P3), the stars as goals (P2, P3) and no sign-up (P4, P5). Four of five said the app would be useful before a lecture; P4 said it was not for someone like them, but probably useful for students.
 
 ### Issues found → severity → fix or decision
 
-Severity: **High** = stops the task or teaches something wrong; **Medium** = slows the participant or needs a moderator prompt; **Low** = cosmetic or a preference. Fix High issues before the code freeze if they are small; otherwise record them as known limitations.
-
 | # | Issue observed | Seen by (P#) | Severity | Fix or decision | Issue / PR |
 |---|---|---|---|---|---|
-| U1 | | | | | |
-| U2 | | | | | |
-| U3 | | | | | |
+| U1 | Tree words (node, root, subtree, traversal) still felt foreign, and a root at the top contradicts a real tree. Step 1 of the tutorial does define them, so the gap is the metaphor, not a missing definition. | P1, P2, P4 | Medium | Known limitation. Next step: one sentence in step 1 saying computer-science trees are drawn upside down, root at the top (P2's "analogy at the start"). | – |
+| U2 | Nodes hard to tap on a small phone and on a tablet; repeated wrong taps. | P1, P4 | Medium | Known limitation. The tap area is already larger than the drawn circle, but the tree scales down on small screens. Next step: a minimum on-screen tap size. | – |
+| U3 | Tutorial too fast for a very inexperienced user; no way to skip it for someone who already knows trees. | P4, P5 | Low | Keep. The tutorial is learner-paced (Next button) and the games are open without it. Skip/replay noted as future work. | – |
+| U4 | The Hint shows the next node instead of a nudge. | P5 | Low | Design decision kept: the hint comes only after two mistakes and explains *why* that node is next, so it is the second step of the support, not the first. A graded nudge before it is future work. | – |
+| U5 | No summary or replay of the full order after a level. | P5 | Low | Future work (the walkthrough already replays a tree step by step). | – |
+| U6 | The step 6 quick check came as a surprise. | P3 | Low | Future work: say at the start of the tutorial that it ends with three questions. | – |
+| U7 | Nobody could say how to unlock Endless; everyone named Random Order (30 stars). | All | Low | Endless is hidden until level 5 is cleared, which is intended. The question in the questionnaire was unfair; noted for the next test. | – |
+| U8 | Applying post-order on bigger trees ("which left?"): the rule was understood on small trees but not yet as recursion. | P3, P5 | Medium (learning) | Covered in the ID document as a limitation: the app teaches the visiting order, not the recursive code. Bigger trees in levels 3–5 and Random Order give the practice. | – |
+| U9 | "Private/incognito window" in the questionnaire was not understood. | P1 | Low | Questionnaire wording, not the app: next time say "or clear the app's progress" and explain. | – |
 
 ### Summary for the documents
 
-[TODO Galen: 4–6 sentences: number of participants, completion rates, mean SUS, pre → post change, the main issues and what was changed. Use these sentences in the SE testing section and the ID evaluation (ADDIE) section, and in the conclusion of the ID document.]
+Five adults who had never studied computer science (one of them, P5, already knew traversals) used Tree Hop on their own laptop, phone or tablet with a self-completed questionnaire; we could not recruit COS212-age students in time, so this is a test of usability for complete beginners rather than of the target learner. All five finished the tutorial, the in-order level and both post-order levels, three without getting stuck, and all five could explain the post-order rule in their own words afterwards. On the pre/post check the four beginners went from 0/3 to 3/3, although two were partly helped or guessing. The mean SUS score was 72.5 (median 92.5), with a clear split: the three laptop users scored 92.5, the phone and tablet users 57.5 and 27.5. The main problems were tree vocabulary that clashes with everyday trees, nodes that are hard to tap on small touch screens, and a hint that gives the answer rather than a nudge; the explanation after each mistake was the feature every participant praised.

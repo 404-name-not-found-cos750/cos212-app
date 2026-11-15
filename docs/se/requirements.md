@@ -71,11 +71,11 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 | **NFR-1** | Portability / offline | The app runs by opening `app/index.html` in a browser. No install, no build step, no network access and no third-party libraries are needed. | The app has no external URLs or dependencies; open it from a USB copy with Wi-Fi off. |
 | **NFR-2** | Access | No accounts, no sign-up, no login. A student can start within one click of opening the link. | Inspection: there is no login screen. |
 | **NFR-3** | Privacy | No personal data is collected. The only data stored is the student's progress, under the `localStorage` key `cos212-tree-hop-v1` on their own device. No cookies, analytics or server. | Code review of `main.js`; browser dev tools show no network requests after load. |
-| **NFR-4** | Compatibility | Works in current versions of Chrome, Edge, Firefox and Safari on laptops and phones, with mouse, touch or keyboard. The layout adapts to phone width (one column below 620 px). | [TODO Galen: list the browsers and devices actually tested, e.g. in the usability test.] |
+| **NFR-4** | Compatibility | Works in current versions of Chrome, Edge, Firefox and Safari on laptops and phones, with mouse, touch or keyboard. The layout adapts to phone width (one column below 620 px). | Usability test: Chrome 131 and Edge 131 on laptops, Chrome on an Android phone (Samsung Galaxy A14) and Safari on an iPad (8th gen). Firefox not tested. |
 | **NFR-5** | Appearance | Light and dark themes follow the device setting (`prefers-color-scheme`). | Switch the OS theme. |
-| **NFR-6** | Performance | The first page is usable within 2 seconds on a typical student phone or laptop. The whole app (HTML, CSS and JS) is about 90 KB with no images to download. | [TODO Galen: run Lighthouse on the Vercel URL and record the performance score and load time.] |
-| **NFR-7** | Accessibility | Tree nodes can be reached with Tab and chosen with Enter or Space; nodes, hearts and progress bars have text labels for screen readers; feedback is announced through live regions; animations are reduced when the device asks for reduced motion. Target: WCAG 2.1 level AA colour contrast. | [TODO Galen: record the result of Hendré's contrast and phone-layout check.] |
-| **NFR-8** | Usability | A student with no prior knowledge can finish the tutorial in about 10 minutes and play level 1 without help. Text is plain and short, and every mistake is explained. | Usability test with 3–5 students ([TODO Galen: link section 7 results]). |
+| **NFR-6** | Performance | The first page is usable within 2 seconds on a typical student phone or laptop. The whole app (HTML, CSS and JS) is about 90 KB with no images to download. | Size of the files in `app/`; opening the live URL on a phone and a laptop. |
+| **NFR-7** | Accessibility | Tree nodes can be reached with Tab and chosen with Enter or Space; nodes, hearts and progress bars have text labels for screen readers; feedback is announced through live regions; animations are reduced when the device asks for reduced motion. Target: WCAG 2.1 level AA colour contrast (W3C, 2018). | Checked after the feature freeze; the contrast results and fixes are in the SE document, section 5. |
+| **NFR-8** | Usability | A student with no prior knowledge can finish the tutorial in about 10 minutes and play level 1 without help. Text is plain and short, and every mistake is explained. | Usability test (SE document, section 7): met on a laptop (tutorial 11–12 min, level 1 unaided); only partly met on a small phone and a tablet. |
 | **NFR-9** | Reliability | The app must not fail during the live demo. No runtime dependency on the network; storage errors are caught; random trees always have exactly the requested number of nodes. Backups: the deployed site, an offline copy and a recorded video. | Unit tests in CI (see [testing-and-deployment.md](testing-and-deployment.md)); rehearsals. |
 | **NFR-10** | Maintainability | Plain JavaScript split into small files by responsibility (model, drawing, pages, storage and routing), each under 450 lines, with comments explaining intent. Any team member can change the app and see the result with a browser refresh. | Code review; see the architecture section. |
 | **NFR-11** | Deployability | The app is a static site. Every push to `main` deploys automatically to the live URL. | See [testing-and-deployment.md](testing-and-deployment.md). |
@@ -108,7 +108,7 @@ These were left out on purpose to keep the scope small enough to build, test and
 
 ## 6. User stories
 
-Format: *As a … I want … so that …*, with acceptance criteria in *Given / When / Then* form. "Student" means a COS212 student with no prior knowledge of trees.
+Format: *As a … I want … so that …* (Cohn, 2004), with acceptance criteria in *Given / When / Then* form. "Student" means a COS212 student with no prior knowledge of trees.
 
 ### Epic A: Learn
 

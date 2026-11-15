@@ -49,7 +49,7 @@ Figure 4.3 shows the three kinds of data. A tree node and the board only exist w
 - **Where it is saved:** one small record in the browser (localStorage). Nothing is sent to a server, and there are no accounts.
 - **What is saved:** best stars for each level and order, best Endless and Random Order scores, whether the tutorial is finished, and the chosen avatar.
 - **What is not saved:** hearts, mistakes and hints. They only last while a level is open.
-- **If the record is damaged or storage is blocked:** missing values are reset to defaults and the app keeps working. Progress is simply not kept.
+- **If the record is damaged or storage is blocked:** missing values are reset to defaults and the app keeps working. Progress is simply not kept. (This was a bug until PR #39; it is now fixed and tested, see section 6.)
 - **Limit:** progress is tied to one browser on one device. Clearing browser data removes it, and the lecturer cannot see it.
 
 ## Technology choices
@@ -62,7 +62,7 @@ The main choice is in decision record 004: plain HTML, CSS and JavaScript with n
 | Drawing the tree | SVG | Each node is its own clickable element, so it works with keyboard and screen readers. It also scales to any screen size. |
 | Screens | One page, with the screen named after \# in the address | Works on any static host without extra setup, and also when the page is opened as a file. |
 | Saving progress | localStorage | No accounts or server needed, and no personal data leaves the device. |
-| Testing | Node's built-in test runner | No packages to install. It tests tree.js, the file that holds the rules. |
+| Testing | Node's built-in test runner | No packages to install. It tests tree.js, the file that holds the rules, and the loading of saved progress in main.js. |
 | Hosting | Vercel, serving the app folder | The repository is private until the presentation, and GitHub Pages cannot host a private repository on a free organisation. The backups are an offline copy and a recorded video. |
 
 *Table 4.2: Technology choices and reasons.*
@@ -84,4 +84,4 @@ The workflow tests the code and Vercel publishes it. The workflow does not publi
 
 - **Repeated code.** game.js and random.js repeat some code, such as the message line, the hearts display, the dialogs and the walkthrough. Sharing it would be the first clean-up.
 - **Progress store in the shell file.** Store sits in main.js, so every screen depends on the shell. It could move into its own file.
-- **Limited automatic testing.** Only the rules in tree.js have unit tests. The screens are checked by hand, in the usability test and in rehearsals.
+- **Limited automatic testing.** Only the rules in tree.js and the loading of saved progress in main.js have unit tests. The screens are checked by hand, in the usability test and in rehearsals.

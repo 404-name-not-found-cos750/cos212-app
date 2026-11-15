@@ -21,7 +21,7 @@ The spec asks for an instructional design (ID) approach, documented separately f
 | Design | Objectives refined (LO1–LO6); storyboard and wireframes; assessment (quick check, games, Random Order) and scaffolding (hints, walkthrough) designed. |
 | Development | App built on `DevFS` and merged by PR #33; tutorial text reviewed against the objectives. |
 | Implementation | Deployed to https://cos212-tree-hop.vercel.app; presentation and demo. |
-| Evaluation | Formative: the quick check, game feedback and the usability test plan. Summative (not done): comparing lecture performance of students who used the app with those who did not. |
+| Evaluation | Formative: the quick check, game feedback and the usability test (SE document, section 7). Summative (not done): comparing lecture performance of students who used the app with those who did not. |
 
 ## Rationale
 ADDIE is the most widely documented ID model (Branch, 2009), so every phase can be explained to the panel and maps directly to a section of the ID document. Running it iteratively lets it sit inside the Scrum sprints instead of competing with them.

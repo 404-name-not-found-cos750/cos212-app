@@ -42,4 +42,3 @@ In every step, **Next** stays disabled until the step's task is done, and there 
 
 ![Frame 13: Random Order, unlocked at 30 stars. The order changes with every tree and is announced in a large coloured banner. One heart to start, plus one more every 5 trees. Feedback: the score, the trees cleared and the high score.](../se/img/random.png)
 
-<!-- TODO Galen: if the page budget is tight, the minimum set is frames 2, 3, 6, 8, 9 and 11; refer to the SE document for the rest. -->

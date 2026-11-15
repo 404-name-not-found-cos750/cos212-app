@@ -29,8 +29,6 @@ The screenshots were taken from the app at laptop width (1200 px) and phone widt
 | 10 | Endless | `endless.png` | Clears as many growing trees as possible | Trees cleared, best score, a heart back every 5 trees | US-13 |
 | 11 | Random Order | `random.png` | Clears trees whose order changes each time | Large coloured banner per tree, score, high score | US-14 |
 
-<!-- TODO Galen: for the PDF, pick the figures that fit the page budget. Suggested minimum: home, tut-2, game-wrong, out-of-hearts, level-complete, random, phone-game. -->
-
 ![Figure 5.2: Home page for a new student. The tutorial is marked "Start here", every game is at level 1, and Random Order is locked.](img/home.png)
 
 ![Figure 5.3: Tutorial step 1. The student tapped 3 when asked for a leaf, and the feedback explains why it is not one.](img/tut-1.png)
