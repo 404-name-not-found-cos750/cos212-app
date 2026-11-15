@@ -56,7 +56,7 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 | ID | Requirement |
 |---|---|
 | **FR-20** | **Endless mode** (one per order) unlocks after level 5 of that order is cleared. Trees start at 5 nodes and grow by one node per tree up to 15. There are no hints and no new-tree button; the student has 3 hearts for the whole run and wins one back every 5 trees (up to 3). The number of trees cleared is the score, and the best score per order is saved and shown on the home page. |
-| **FR-21** | **Random Order mode** unlocks when the student has earned a set number of stars across the three games (`RANDOM_UNLOCK`, 30 of the 45: all 15 levels cleared with an average of 2 stars). Until then the home page shows a locked card with a progress bar towards the unlock. |
+| **FR-21** | **Random Order mode** unlocks when the student has earned a set number of stars across the three games (`RANDOM_UNLOCK`: 30 of the 45 stars in total, for example two stars on each of the 15 levels). Until then the home page shows a locked card with a progress bar towards the unlock. |
 | **FR-22** | In Random Order, each tree gets a random order, shown in a colour-coded banner; the same order never comes up three times in a row. Trees grow from 4 to 25 nodes and from 2 to 4 levels deep. The student starts with one heart and wins another for every 5 trees cleared; a wrong tap costs a heart, and the game ends when the last heart is gone. The score is +1 per correct node plus a bonus equal to the tree's size when it is cleared. The high score is saved. |
 
 ### Rewards: avatars
@@ -70,14 +70,14 @@ Following our evolutionary prototyping approach ([decision 002](../decisions/002
 |---|---|---|---|
 | **NFR-1** | Portability / offline | The app runs by opening `app/index.html` in a browser. No install, no build step, no network access and no third-party libraries are needed. | The app has no external URLs or dependencies; open it from a USB copy with Wi-Fi off. |
 | **NFR-2** | Access | No accounts, no sign-up, no login. A student can start within one click of opening the link. | Inspection: there is no login screen. |
-| **NFR-3** | Privacy | No personal data is collected. The only data stored is the student's progress, under the `localStorage` key `cos212-tree-hop-v1` on their own device. No cookies, analytics or server. | Code review of `main.js`; browser dev tools show no network requests after load. |
+| **NFR-3** | Privacy | No personal data is collected. The only data stored is the student's progress, under the `localStorage` key `cos212-tree-hop-v1` on their own device. No cookies, analytics or application backend; the app does not send progress anywhere (the static files are served by Vercel). | Code review of `main.js`; browser dev tools show no network requests after load. |
 | **NFR-4** | Compatibility | Works in current versions of Chrome, Edge, Firefox and Safari on laptops and phones, with mouse, touch or keyboard. The layout adapts to phone width (one column below 620 px). | Usability test: Chrome 131 and Edge 131 on laptops, Chrome on an Android phone (Samsung Galaxy A14) and Safari on an iPad (8th gen). Firefox not tested. |
 | **NFR-5** | Appearance | Light and dark themes follow the device setting (`prefers-color-scheme`). | Switch the OS theme. |
-| **NFR-6** | Performance | The first page is usable within 2 seconds on a typical student phone or laptop. The whole app (HTML, CSS and JS) is about 90 KB with no images to download. | Size of the files in `app/`; opening the live URL on a phone and a laptop. |
+| **NFR-6** | Performance | Target: the first page is usable within 2 seconds on a typical student phone or laptop. The whole app (HTML, CSS and JS) is about 90 KB with no images to download. | Partly checked: the file size is measured; the load time was not formally measured. |
 | **NFR-7** | Accessibility | Tree nodes can be reached with Tab and chosen with Enter or Space; nodes, hearts and progress bars have text labels for screen readers; feedback is announced through live regions; animations are reduced when the device asks for reduced motion. Target: WCAG 2.1 level AA colour contrast (W3C, 2018). | Checked after the feature freeze; the contrast results and fixes are in the SE document, section 5. |
 | **NFR-8** | Usability | A student with no prior knowledge can finish the tutorial in about 10 minutes and play level 1 without help. Text is plain and short, and every mistake is explained. | Usability test (SE document, section 7): met on a laptop (tutorial 11–12 min, level 1 unaided); only partly met on a small phone and a tablet. |
 | **NFR-9** | Reliability | The app must not fail during the live demo. No runtime dependency on the network; storage errors are caught; random trees always have exactly the requested number of nodes. Backups: the deployed site, an offline copy and a recorded video. | Unit tests in CI (see [testing-and-deployment.md](testing-and-deployment.md)); rehearsals. |
-| **NFR-10** | Maintainability | Plain JavaScript split into small files by responsibility (model, drawing, pages, storage and routing), each under 450 lines, with comments explaining intent. Any team member can change the app and see the result with a browser refresh. | Code review; see the architecture section. |
+| **NFR-10** | Maintainability | Plain JavaScript split into small files by responsibility (model, drawing, pages, storage and routing), each under 500 lines, with comments explaining intent. Any team member can change the app and see the result with a browser refresh. | Code review; see the architecture section. |
 | **NFR-11** | Deployability | The app is a static site. Every push to `main` deploys automatically to the live URL. | See [testing-and-deployment.md](testing-and-deployment.md). |
 
 ## 4. Constraints
@@ -88,7 +88,7 @@ From the exam specification:
 - **C-3** The app must include an assessment that gives extra scaffolding to students who struggle.
 - **C-4** An SE approach and an ID approach must be used and documented in **separate** documents, available at the presentation.
 - **C-5** GenAI use must be acknowledged, with the prompts and tools, in the ID document.
-- **C-6** Deadlines: documents on ClickUP before 08:00 on Mon 16 Nov; presentation with a live demo of at most 10 minutes on 16 or 17 Nov; slides and a GitHub link to the code.
+- **C-6** Deadlines: documents on ClickUP before 08:00 on Mon 16 Nov; on 16 or 17 Nov, a presentation of up to 10 minutes and a separate live demonstration of up to 10 minutes, followed by 5 minutes of questions and 5 minutes to set up and vacate; slides uploaded before presenting, and a link to the source-code repository.
 - **C-7** Group of five, all present at the presentation.
 
 From the team and the situation:

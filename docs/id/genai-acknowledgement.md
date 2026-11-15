@@ -2,7 +2,7 @@
 
 The examination specification allows generative AI (GenAI) to be used for the app's content and GUI, on condition that we acknowledge it and include the prompt and the tool used. This appendix does that. It is built from the team's log in `docs/PROMPTS.md` and from what each member reported; where a prompt was reconstructed afterwards, the entry says so.
 
-For every use we give the date, who used it, the tool and model, what it was used for, the prompt (exactly as typed where it was recorded, otherwise marked as summarised), and how the team reviewed and changed the output.
+For every use we give the date (where it was recorded), who used it, the tool and model, what it was used for, the prompt (exactly as typed where it was recorded, otherwise marked as summarised), and how the team reviewed and changed the output.
 
 ## Summary
 

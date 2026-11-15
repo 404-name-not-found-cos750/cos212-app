@@ -1,6 +1,6 @@
 # 002 – SE methodology: Scrum with short sprints and evolutionary prototyping
 
-- **Status:** Proposed (to be accepted by the group at the next stand-up)
+- **Status:** Implemented; formal acceptance by the group was not recorded.
 - **Date:** 2026-11-12
 - **Issue:** #2
 
@@ -25,12 +25,12 @@ The plan of 23 Oct already set the project up as sprints (GitHub milestones Spri
 - Galen acts as Scrum Master and project lead (R1). The COS212 lecturer, as described in the spec, is the product owner; we stand in for them by checking every change against the spec.
 - The app is built as an **evolutionary prototype**: the first working version is kept and improved, not thrown away. Requirements and user stories are written against it and the gaps become backlog items.
 - A **feature freeze** at the end of the build sprint: after it, only tests, bug and UI fixes, and deployment work go in.
-- Lightweight practices instead of the full ceremony set: a short stand-up with notes in `docs/meetings/`, one branch and PR per issue with a review before merging, and a decision record for each significant choice.
+- Lightweight practices instead of the full ceremony set: one branch and PR per issue with a review before merging, and a decision record for each significant choice.
 
 ## Rationale
 - **Requirements were uncertain.** We could not write a complete specification before seeing the app. Scrum accepts that the backlog changes, and prototyping lets the team (and test users) react to something concrete instead of a description.
 - **Hard, fixed deadline.** Short sprints give several checkpoints in three weeks. When a sprint slips, the next planning point is days away, not weeks, so we can cut scope early. This happened three times (5, 9 and 12 Nov) and is described in [methodology-and-process.md](../se/methodology-and-process.md).
-- **Part-time team.** Lightweight practices (short stand-ups, issues, PRs) cost little time but still keep everyone informed, and they leave a written trail.
+- **Part-time team.** Lightweight practices (issues, PRs, decision records) cost little time but still keep everyone informed, and they leave a written trail.
 - **The spec asks for a prototype.** Evolutionary prototyping fits that directly and means no work is wasted on a throw-away version.
 - **Fits the ID process.** ADDIE's phases map onto the sprints (Analysis and Design in Sprints 0–1, Development in Sprint 2, Implementation and Evaluation in Sprint 3), so the SE and ID work can run in step.
 - **Evidence for the SE document.** Milestones, issues, PRs and decision records are the evidence of the process the SE document has to describe.

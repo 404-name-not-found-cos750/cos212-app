@@ -9,12 +9,12 @@ Deck: [Tree-Hop-presentation.pptx](Tree-Hop-presentation.pptx) (PDF copy alongsi
 | 1 | Tree Hop | Galen | 0:20 | 0:00 | "This is Tree Hop: binary trees and traversal, before the lecture." |
 | 2 | The brief | Galen | 0:40 | 0:20 | Four constraints shaped every decision. |
 | 3 | Why binary tree traversal | Galen | 0:40 | 1:00 | Every tap can be checked and explained; one mental model for three orders. |
-| 4 | SE approach: Scrum + prototyping | Galen | 0:50 | 1:40 | Sprints slipped; we re-planned three times and froze features on 11 Nov. |
+| 4 | SE approach: Scrum-based sprints + prototyping | Galen | 0:50 | 1:40 | Sprints slipped; we re-planned three times and froze features on 11 Nov. |
 | 5 | Process evidence and testing | Mthobisi | 0:30 | 2:30 | 32 issues, 8 PRs, 4 decisions, 56 unit tests in CI. |
 | 6 | Architecture | Mthobisi | 0:50 | 3:00 | Rules kept apart from the screens, so only the help changes. |
 | 7 | Tech choices and pipeline | Mthobisi | 0:40 | 3:50 | Plain JS, no build; a merge to main goes live on Vercel. |
 | 8 | ADDIE, run inside our sprints | Shekinah | 0:35 | 4:30 | One honest limitation: content reviewed after the build. |
-| 9 | The learner and objectives | Shekinah | 0:35 | 5:05 | Six objectives, Remember to Analyse/Evaluate. |
+| 9 | The learner and objectives | Shekinah | 0:35 | 5:05 | Six objectives, Remember to Analyse. |
 | 10 | Learning theories | Shekinah | 0:30 | 5:40 | One example per theory from the app. |
 | 11 | Assessment and feedback | Francois | 0:50 | 6:10 | Every tap is assessed; the quick check sends you back to what you missed. |
 | 12 | Scaffolding (slide by Mthobisi) | Francois | 0:50 | 7:00 | Help is given when needed, then removed. |

@@ -1,6 +1,6 @@
 # 003 – ID model: ADDIE, run iteratively
 
-- **Status:** Proposed (to be accepted by the group)
+- **Status:** Implemented; formal acceptance by the group was not recorded.
 - **Date:** 2026-11-15
 - **Issue:** #3
 
