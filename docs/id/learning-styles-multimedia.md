@@ -15,8 +15,6 @@ Students who open Tree Hop before the lecture arrive with different habits. Some
 
 The idea of matching teaching to a single preferred "learning style" is contested. Reviews have found little evidence that it improves learning (Pashler et al., 2008). This is why Tree Hop gives **multiple representations to everyone** rather than giving each student a style quiz. The design rationale for combining pictures and words comes from Mayer's cognitive theory of multimedia learning (Mayer, 2009), which section 7.2 applies.
 
-<!-- TODO Hendré: Pashler et al. (2008) is added to references.md. Read at least its abstract before you keep this sentence (the references rule: only cite what you have looked at). If you remove the sentence, remove the reference too. -->
-
 ## 7.2 Mayer's multimedia principles in Tree Hop
 
 Mayer (2009) argues that people learn better from words and pictures together than from words alone, provided the material is designed so that it does not overload working memory. This links to cognitive load theory in section 5 (Sweller, 1988). Tree Hop applies the following principles.
