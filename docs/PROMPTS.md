@@ -6,7 +6,6 @@ Log every use here as it happens; it is much harder to reconstruct afterwards.
 | Date | Who | Tool (and model) | Used for | Prompt (or link to full prompt below) |
 |---|---|---|---|---|
 | 2026-11-07, 2026-11-12 to 2026-11-13, 2026-11-15 | Francois Scholtz | Claude Code (Claude Opus 5.5) | Topic check against the spec and the first version of the app (`app/`), including stars, Endless and Random Order; avatars and achievements, the vine animation and Random Order hearts; code comments | See [2026-11-07 – Francois – app prototype](#2026-11-07--francois--app-prototype) |
-| 2026-11-07, 2026-11-12 to 2026-11-13, 2026-11-15 | Francois Scholtz | Claude Code (Claude Opus 5.5) | Topic check against the spec and the first version of the app (`app/`), including stars, Endless and Random Order; avatars and achievements, the vine animation and Random Order hearts; code comments | See [2026-11-07 – Francois – app prototype](#2026-11-07--francois--app-prototype) |
 | 2026-11-11 to 2026-11-15 | Hendré Beyer | Claude Code (Claude Opus 5.5) | Review of the app against the issues; first drafts of ID sections 6 (storyboard), 7 (learning styles, Mayer) and 8 (ARCS) and SE section 5 (UI design); contrast measurements; screenshots; speaker notes for slides 12–13; presentation preparation | See [2026-11-11 – Hendré – review, UI fixes and sections](#2026-11-11--hendré--review-ui-fixes-and-sections) |
 | Not recorded | Shekinah Maja | Claude (model not recorded) | Understanding the code; comparing her ID sections against the repository; aligning and structuring her sections | See ID document, Appendix A12 |
 | 2026-11-08 to 2026-11-15 | Mthobisi Khoza | Claude (Claude Sonnet 5.5) | Structuring ID section 9, then reviewing it for gaps, repetition and clarity | See ID document, Appendix A13 |
@@ -47,7 +46,5 @@ The prompts below are summarised, with spelling corrected; they are not verbatim
 
 1. **Understand and review the app (11–12 Nov).** "Read the repository and explain what has been built. Analyse the app in detail against our GitHub issues (#1–#32, pasted in) without changing anything, and tell me what still needs to be done and what my tasks are."
    - Outcome: a summary of the app, a review (the logic was tested and no correctness bugs were found) with suggested improvements, the status of each issue, and Hendré's task list from `docs/PLAN.md`.
-2. **Update after the team's changes (15 Nov).** "What do I still have left?
-
 2. **Update after the team's changes (15 Nov).** "What do I still have left?
 
