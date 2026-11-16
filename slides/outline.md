@@ -52,7 +52,7 @@
 - **No prior knowledge** assumed
 - An assessment that gives **extra scaffolding** to students who struggle
 
-**Speaker notes:** "The COS212 lecturer asked for an app students can use before the lecture on a topic. Four things shaped every decision we made. It had to cover one data structure and one algorithm from the CS2023 Algorithmic Foundations core. It could not assume the student knows anything about the topic. It had to assess the student. And when a student struggles, the app itself should step in with more support, so they arrive at the lecture ready."
+**Speaker notes:** "The COS212 lecturer gave us a brief with the four requirements on this slide, and every design choice we will show you goes back to one of them. One: a tutor-style app that students use before the topic is lectured. Two: one data structure and one algorithm from the CS2023 core. Three: no prior knowledge, because the student may never have seen the topic. And four: the app must assess the student and give extra support to anyone who struggles, so they still arrive at the lecture ready."
 
 ---
 
@@ -76,9 +76,9 @@
 - **Scrum** (Schwaber and Sutherland, 2020) with short sprints: Decisions → Design → Build → Polish
 - **Prototyping**: a working prototype early, then improved against the objectives and user feedback
 - GitHub Issues as the backlog, a branch and PR per change, decision records for every major choice
-- Re-planned when the first sprints slipped: scope frozen, work rebalanced
+- Checkpoints to adjust the plan: scope frozen, work rebalanced
 
-**Speaker notes:** "For the software side we used Scrum with short sprints, combined with prototyping. Four sprints: decisions, design, build, and polish and documents. We tracked work as GitHub issues, made every change on a branch with a pull request, and wrote a short decision record for each major choice, so we can always say why we did something. Prototyping mattered because we had a working prototype early and could then check it against the learning objectives and real students. To be honest about the process: our first two sprint deadlines slipped. We re-planned, froze features on 11 November, and rebalanced the work so that each person owned a few clear sections. That re-plan is in the repository too."
+**Speaker notes:** "For the software side we used Scrum with short sprints, combined with prototyping. Four sprints: decisions, design, build, and polish and documents. We tracked work as GitHub issues, made every change on a branch with a pull request, and wrote a short decision record for each major choice, so we can always say why we did something. Prototyping mattered because we had a working prototype early and could then check it against the learning objectives and real students. At checkpoints we adjusted the plan, froze features on 11 November, and rebalanced the work so that each person owned a few clear sections."
 
 ---
 
@@ -247,12 +247,12 @@ Answerer in bold. Each person prepares two or three sentences for their own ques
 | # | Question | Answers | Pointers |
 |---|---|---|---|
 | 1 | Why binary trees and traversal, and is it really CS2023 core? | **Galen** | Decision 001. AL Foundational data structures and algorithms, Kumar et al. (2024). Decision trees rejected because they aren't on the list; BST insert/search tests mostly one rule; graphs harder to lay out. Traversal = sequence of visits, so each tap is assessable and explainable. |
-| 2 | Why Scrum for a two-week project with five people? | **Galen** | Short sprints gave fixed checkpoints; the backlog in GitHub Issues made the split visible; the re-plan after the slipped sprints is exactly what Scrum's review/re-planning is for. Prototyping because we needed something to test with students early. |
+| 2 | Why Scrum for a two-week project with five people? | **Galen** | Short sprints gave fixed checkpoints; the backlog in GitHub Issues made the split visible; adjusting the plan at each checkpoint is what Scrum's re-planning is for. Prototyping because we needed something to test with students early. |
 | 3 | How did you test the app? / Does it actually work for learners? | **Galen** | Unit tests on `tree.js` and saved progress in CI (56 tests). Usability test: five adult beginners (not students; we say so), tasks, pre/post check (0–3), SUS. Mean SUS 72.5, 92.5 on laptops; beginners 0 → 3 on the check; main finding: tap targets on phones and tablets. Be clear it's a small formative test, not proof of learning gains. |
 | 4 | How did you use GenAI, and how do you know the content is correct? | **Galen** (Francois for the code) | Acknowledged in Appendix A of the ID document with prompts and tools. Used for the first prototype and drafting; the tutorial text was reviewed against the objectives (ID section 6); tree logic covered by unit tests. |
 | 5 | How does the lecturer see how students are doing? | **Galen** | They don't, in this prototype: progress stays in the student's browser. Deliberate: no accounts, no personal data, no server to fail during the demo. Next step: an export or a lecturer dashboard. |
 | 6 | What would you do with more time? | **Galen** | Lecturer view of progress; larger question bank tagged by objective; BST and level-order units on the same engine; a longer study with more students. |
-| 7 | How did the team split the work, and what went wrong? | **Galen** | Roles in `PLAN.md`; each person owns sections of both documents and part of the talk. Sprints slipped early; we re-planned, froze features, and moved build work into tests, docs and the demo. |
+| 7 | How did the team split the work, and what went wrong? | **Galen** | Roles in `PLAN.md`; each person owns sections of both documents and part of the talk. We adjusted the plan at checkpoints, froze features, and moved build work into tests, docs and the demo. |
 | 8 | Why plain JavaScript and not React? | **Mthobisi** | Decision 004: demo safety, no build, works offline, everyone can read it. |
 | 9 | How is the code structured / how is the feedback generated? | **Mthobisi**, **Francois** | `tree.js` computes the order and the reason for each node (`explain`, `visitReason`); views and pages use it. |
 | 10 | Why ADDIE and not a rapid model such as SAM? | **Shekinah** | ADDIE section of the ID document. |

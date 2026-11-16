@@ -9,7 +9,7 @@ Deck: [Tree-Hop-presentation.pptx](Tree-Hop-presentation.pptx) (PDF copy alongsi
 | 1 | Tree Hop | Galen | 0:20 | 0:00 | "This is Tree Hop: binary trees and traversal, before the lecture." |
 | 2 | The brief | Galen | 0:40 | 0:20 | Four constraints shaped every decision. |
 | 3 | Why binary tree traversal | Galen | 0:40 | 1:00 | Every tap can be checked and explained; one mental model for three orders. |
-| 4 | SE approach: Scrum-based sprints + prototyping | Galen | 0:50 | 1:40 | Sprints slipped; we re-planned three times and froze features on 11 Nov. |
+| 4 | SE approach: Scrum-based sprints + prototyping | Galen | 0:50 | 1:40 | Four sprints; checkpoints on 5, 9 and 12 Nov, feature freeze on 11 Nov. |
 | 5 | Process evidence and testing | Mthobisi | 0:30 | 2:30 | 32 issues, 8 PRs, 4 decisions, 56 unit tests in CI. |
 | 6 | Architecture | Mthobisi | 0:50 | 3:00 | Rules kept apart from the screens, so only the help changes. |
 | 7 | Tech choices and pipeline | Mthobisi | 0:40 | 3:50 | Plain JS, no build; a merge to main goes live on Vercel. |
